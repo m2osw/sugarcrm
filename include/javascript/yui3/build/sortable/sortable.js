@@ -1,0 +1,25 @@
+/*
+ Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+ Code licensed under the BSD License:
+ http://developer.yahoo.com/yui/license.html
+ version: 3.3.0
+ build: 3167
+ */
+YUI.add('sortable',function(Y){var Sortable=function(o){Sortable.superclass.constructor.apply(this,arguments);},CURRENT_NODE='currentNode',OPACITY_NODE='opacityNode',CONT='container',ID='id',ZINDEX='zIndex',OPACITY='opacity',PARENT_NODE='parentNode',NODES='nodes',NODE='node';Y.extend(Sortable,Y.Base,{delegate:null,initializer:function(){var id='sortable-'+Y.guid(),c,delConfig={container:this.get(CONT),nodes:this.get(NODES),target:true,invalid:this.get('invalid'),dragConfig:{groups:[id]}},del;if(this.get('handles')){delConfig.handles=this.get('handles');}
+del=new Y.DD.Delegate(delConfig);this.set(ID,id);del.dd.plug(Y.Plugin.DDProxy,{moveOnEnd:false,cloneNode:true});c=new Y.DD.Drop({node:this.get(CONT),bubbleTarget:del,groups:del.dd.get('groups')}).on('drop:over',Y.bind(this._onDropOver,this));del.on({'drag:start':Y.bind(this._onDragStart,this),'drag:end':Y.bind(this._onDragEnd,this),'drag:over':Y.bind(this._onDragOver,this),'drag:drag':Y.bind(this._onDrag,this)});this.delegate=del;Sortable.reg(this);},_up:null,_y:null,_onDrag:function(e){if(e.pageY<this._y){this._up=true;}else if(e.pageY>this._y){this._up=false;}
+this._y=e.pageY;},_onDropOver:function(e){if(!e.drop.get(NODE).test(this.get(NODES))){var nodes=e.drop.get(NODE).all(this.get(NODES));if(nodes.size()===0){e.drop.get(NODE).append(e.drag.get(NODE));}}},_onDragOver:function(e){if(!e.drop.get(NODE).test(this.get(NODES))){return;}
+if(e.drag.get(NODE)==e.drop.get(NODE)){return;}
+if(e.drag.get(NODE).contains(e.drop.get(NODE))){return;}
+var same=false,dir,oldNode,newNode,dropsort,dropNode,moveType=this.get('moveType').toLowerCase();if(e.drag.get(NODE).get(PARENT_NODE).contains(e.drop.get(NODE))){same=true;}
+if(same&&moveType=='move'){moveType='insert';}
+switch(moveType){case'insert':dir=((this._up)?'before':'after');dropNode=e.drop.get(NODE);if(Y.Sortable._test(dropNode,this.get(CONT))){dropNode.append(e.drag.get(NODE));}else{dropNode.insert(e.drag.get(NODE),dir);}
+break;case'swap':Y.DD.DDM.swapNode(e.drag,e.drop);break;case'move':case'copy':dropsort=Y.Sortable.getSortable(e.drop.get(NODE).get(PARENT_NODE));if(!dropsort){return;}
+Y.DD.DDM.getDrop(e.drag.get(NODE)).addToGroup(dropsort.get(ID));if(same){Y.DD.DDM.swapNode(e.drag,e.drop);}else{if(this.get('moveType')=='copy'){oldNode=e.drag.get(NODE);newNode=oldNode.cloneNode(true);newNode.set(ID,'');e.drag.set(NODE,newNode);dropsort.delegate.createDrop(newNode,[dropsort.get(ID)]);oldNode.setStyles({top:'',left:''});}
+e.drop.get(NODE).insert(e.drag.get(NODE),'before');}
+break;}
+this.fire(moveType,{same:same,drag:e.drag,drop:e.drop});this.fire('moved',{same:same,drag:e.drag,drop:e.drop});},_onDragStart:function(e){this.delegate.get('lastNode').setStyle(ZINDEX,'');this.delegate.get(this.get(OPACITY_NODE)).setStyle(OPACITY,this.get(OPACITY));this.delegate.get(CURRENT_NODE).setStyle(ZINDEX,'999');},_onDragEnd:function(e){this.delegate.get(this.get(OPACITY_NODE)).setStyle(OPACITY,1);this.delegate.get(CURRENT_NODE).setStyles({top:'',left:''});this.sync();},plug:function(cls,config){if(cls&&cls.NAME.substring(0,4).toLowerCase()==='sort'){this.constructor.superclass.plug.call(this,cls,config);}else{this.delegate.dd.plug(cls,config);}
+return this;},sync:function(){this.delegate.syncTargets();return this;},destructor:function(){this.delegate.destroy();Sortable.unreg(this);},join:function(sel,type){if(!(sel instanceof Y.Sortable)){Y.error('Sortable: join needs a Sortable Instance');return this;}
+if(!type){type='full';}
+type=type.toLowerCase();var method='_join_'+type;if(this[method]){this[method](sel);}
+return this;},_join_none:function(sel){this.delegate.dd.removeFromGroup(sel.get(ID));sel.delegate.dd.removeFromGroup(this.get(ID));},_join_full:function(sel){this.delegate.dd.addToGroup(sel.get(ID));sel.delegate.dd.addToGroup(this.get(ID));},_join_outer:function(sel){this.delegate.dd.addToGroup(sel.get(ID));},_join_inner:function(sel){sel.delegate.dd.addToGroup(this.get(ID));},getOrdering:function(callback){var ordering=[];if(!Y.Lang.isFunction(callback)){callback=function(node){return node;};}
+Y.one(this.get(CONT)).all(this.get(NODES)).each(function(node){ordering.push(callback(node));});return ordering;}},{NAME:'sortable',ATTRS:{handles:{value:false},container:{value:'body'},nodes:{value:'.dd-draggable'},opacity:{value:'.75'},opacityNode:{value:'currentNode'},id:{value:null},moveType:{value:'insert'},invalid:{value:''}},_sortables:[],_test:function(node,test){if(test instanceof Y.Node){return(test===node);}else{return node.test(test);}},getSortable:function(node){var s=null;node=Y.one(node);Y.each(Y.Sortable._sortables,function(v){if(Y.Sortable._test(node,v.get(CONT))){s=v;}});return s;},reg:function(s){Y.Sortable._sortables.push(s);},unreg:function(s){Y.each(Y.Sortable._sortables,function(v,k){if(v===s){Y.Sortable._sortables[k]=null;delete Sortable._sortables[k];}});}});Y.Sortable=Sortable;},'3.3.0',{requires:['dd-delegate','dd-drop-plugin','dd-proxy']});

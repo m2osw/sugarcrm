@@ -1,0 +1,186 @@
+                                                                     
+                                                                     
+                                                                     
+                                             
+PLEASE READ THIS MASTER SUBSCRIPTION AGREEMENT CAREFULLY BEFORE ACCEPTING.  THE TERMS AND CONDITIONS OF THIS MASTER SUBSCRIPTION AGREEMENT, ANY ADDITIONAL TERMS AND ANY ORDER FORMS ENTERED INTO BY YOU AND SUGARCRM ARE COLLECTIVELY REFERRED TO AS THE "AGREEMENT."  UNLESS OTHERWISE DEFINED HEREIN, CAPITALIZED TERMS SHALL HAVE THE MEANINGS SET FORTH IN SECTION 11 BELOW.
+
+BY ACCEPTING, YOU ARE AGREEING ON BEHALF OF THE ENTITY ORDERING THE SUGARCRM PRODUCT ("COMPANY") THAT COMPANY WILL BE BOUND BY AND BECOME A PARTY TO THE AGREEMENT AND CERTIFYING THAT YOU HAVE THE AUTHORITY TO BIND COMPANY.  IF COMPANY DOES NOT AGREE TO ALL OF THE TERMS OF THE AGREEMENT, DO NOT SELECT THE "ACCEPT" BOX OR SIGN (EITHER MANUALLY OR ELECTRONICALLY) THE ORDER FORM ISSUED TO YOU BY SUGARCRM.
+
+UNLESS AND UNTIL COMPANY HAS AGREED TO BE BOUND BY ALL OF THE TERMS OF THE AGREEMENT, COMPANY HAS NOT BECOME A LICENSEE OF, AND IS NOT AUTHORIZED TO USE, THE SUGARCRM PRODUCT. THE "EFFECTIVE DATE" OF THIS AGREEMENT IS THE DAY THAT YOU CHECK THE "ACCEPT" BOX OR SIGN (EITHER MANUALLY OR ELECTRONICALLY) THE ORDER FORM ISSUED TO YOU BY SUGARCRM.
+
+1. Subscription.
+
+1.1. Subscription. During the Subscription Term, SugarCRM shall make the SugarCRM Product available to Company pursuant to the terms of this Agreement.  All rights not expressly granted to Company are reserved by SugarCRM and its licensors.
+
+1.2. SugarCRM Product Usage Rights; APIs; License Key and Critical Control Software:
+
+1.2.1. Use of Software. This Section 1.2.1 is applicable when the SugarCRM Product is Software: During the Subscription Term, Company has a non-exclusive, revocable, non-transferable right to install (at Company's facility or at a Company-controlled space within a third-party data center), use and modify the Software, solely for Company's own internal business purposes and limited to the number of Subscription Users for which Company has paid the applicable fees.
+
+1.2.2. Use of Service. This Section 1.2.2 is applicable when the SugarCRM Product is a Service: During the Subscription Term, Company has a non-exclusive, revocable, non-transferable right to access and use the Service solely for Company's own internal business purposes and limited to the number of Subscription Users for which Company has paid the applicable fees.
+
+1.2.3. Use of SugarCRM APIs.  In order for Company to utilize Company Software and/or Third Party Software to access Company Data, Company must establish a dedicated Subscription User account and password, with credentials sufficient to enable API access to the desired Company Data by such Company Software and/or Third Party Software.
+
+1.2.4. License Key. SugarCRM shall provide Company with a license key to allow the specific number of Subscription Users for which Company has paid the applicable fees access to the applicable SugarCRM Product.
+
+1.2.5. Critical Control Software. Company acknowledges that: (i) the SugarCRM Product includes Critical Control Software that reports the number of authorized Subscription Users and permits SugarCRM and a SugarCRM Authorized Reseller, if applicable, the ability to monitor usage of the SugarCRM Product, and (ii) use of such Critical Control Software is fundamental to the business of SugarCRM.
+
+1.3. Support Levels. SugarCRM shall provide Company with the level of support purchased by Company and specified in the applicable Order Form.  Details regarding each of the support level options currently provided by SugarCRM are available at: https://www.sugarcrm.com/crm/services/support-services.html.  SugarCRM reserves the right, from time to time, to modify any of the support levels offered.  SugarCRM will provide notice of any changes to a level of support by posting notice of the changes on SugarCRM's website.
+
+1.4. Company Responsibilities. Company shall: (a) be responsible for all Subscription Users' compliance with the Agreement, (b) be solely responsible for the accuracy, integrity, and legality of Company Data and the means by which it acquires and uses such Company Data, (c) use the SugarCRM Product in accordance with applicable laws, rules, regulations (including, without limitation, export, data protection and privacy laws, rules and regulations) and any SugarCRM Product documentation, and (d) notify SugarCRM immediately of any unauthorized use of, or access to, the SugarCRM Product or any account or password thereof.  Company agrees to defend, indemnify and hold SugarCRM and its Affiliates, and its and their employees, subcontractors and agents, harmless from any and all claims, damages, losses, liabilities, costs (including attorneys' fees and court costs) arising from or resulting from any act or failure of Company that violates or breaches any of the responsibilities of Company set forth above.
+
+1.5. Restrictions. Company shall not, directly or indirectly: (a) sublicense, resell, rent, lease, distribute, market, commercialize or otherwise transfer rights or usage to the SugarCRM Product or any modified version or derivative work of the SugarCRM Product created by or for Company, (b) provide the SugarCRM Product, or any modified version or derivative work of the SugarCRM Product created by or for Company, on a timesharing, service bureau or other similar basis, (c) remove or alter any copyright, trademark or proprietary notice in the SugarCRM Product, (d) develop Forked Software, (e) reverse engineer, decompile, disassemble or otherwise attempt to discover the source code of any encrypted or encoded portion the SugarCRM Product, (f) copy any  features, functions or graphics of the SugarCRM Product for any purpose other than what is expressly authorized in this Agreement, (g) modify any portion of the Critical Control Software, (h) use or modify the SugarCRM Product in any way that would subject the SugarCRM Product, in whole in or in part, to a Copyleft License, or (i) send or store spam, unlawful, infringing, obscene, or libelous material, or Malicious Code.
+
+2. Third-Party Software; Third-Party Plug-Ins.
+
+2.1. Third-Party Software. Company agrees to comply with all applicable Third-Party Software terms and conditions.
+
+2.2. Third-Party Plug-Ins.  Company may use Third-Party Plug Ins to add functionality to the SugarCRM Product, provided that such use is limited to internal use by Company in a manner that does violate any provisions of Section 1.5 of this Agreement.
+
+3. Proprietary Rights.
+
+3.1. SugarCRM Intellectual Property.  SugarCRM owns the Intellectual Property Rights in and to the SugarCRM Product and any modifications thereto, including, without limitation, any modifications created by or for Company under the Agreement. Company assigns to SugarCRM all Intellectual Property Rights worldwide in any modifications it creates to the SugarCRM Product. Company covenants, represents and warrants that each of Company's employees and independent contractors who create any modifications to the SugarCRM Product for Company has or will have a written agreement with Company that provides Company with all necessary rights to fulfill its obligations under this Section 3.1. This Agreement does not convey or transfer any ownership rights in the SugarCRM Product, or any Intellectual Property Rights therein, to Company. SugarCRM's name, logo, trade names and trademarks are owned by SugarCRM, and no right is granted to Company to use any of the foregoing except as expressly permitted herein.  SugarCRM reserves all rights, title, and interest in and to all copies of the SugarCRM Product.
+
+3.2. Ownership of Company Data; License.  As between Company and SugarCRM, Company owns all Intellectual Property Rights in and to the Company Data.  Company hereby grants to SugarCRM a worldwide, non-exclusive, fully-paid, royalty-free, transferable license to use, reproduce and display the Company Data in order to provide the Service to Company.
+
+3.3. Suggestions.  SugarCRM shall have a royalty-free, worldwide, transferable, sublicensable, irrevocable, perpetual license to use, copy, modify, or distribute, including by incorporating into any product or service owned by SugarCRM, any suggestions, enhancement requests, recommendations or other feedback provided by Company and any of its Subscription Users, relating to any product or service owned by SugarCRM.
+
+4. Fees and Payment.
+
+4.1. Fees.  Company shall pay all fees specified in all Order Forms. Except as otherwise provided, fees set forth in each Order Form hereunder will be: (i) fixed during the Subscription Term set forth in such Order Form; (ii) invoiced upon the Order Form date or upon SugarCRM's acceptance of a purchase order, as applicable; (iii) quoted and payable in United States dollars; (iv) based upon the number of Subscription User licenses purchased, even if actual usage is lower; (v) non-cancelable and non-refundable.
+
+4.2. Additional Subscription Users.  Subscription Users added under a specific Order Form during a month will be charged for that full monthly period and each of the monthly periods remaining in the then-current Subscription Term set forth on such Order Form at the Subscription User fee set forth on such Order Form.  The number of Subscription Users purchased under a specific Order Form cannot be decreased during the relevant Subscription Term set forth on such Order Form.
+
+4.3. Renewal.  Except as otherwise set forth in an Order Form, the Subscription Term of an Order Form shall automatically renew for additional one year terms, unless either party gives the other written notice of non-renewal at least 30 days prior to the end of the relevant Subscription Term.  Unless Company's renewal is by credit card (or other applicable SugarCRM-approved automated-payment mechanism), all fees will be invoiced annually in advance approximately 30 days prior to the applicable anniversary date, and any pricing or Subscription User changes for such renewal term will be reflected on such SugarCRM invoice. SugarCRM reserves the right to modify the fees set forth in a specific Order Form in connection with Subscription Term renewal of such Order Form.
+
+4.4. Reporting.  Upon SugarCRM's request, Company shall provide SugarCRM with a written report in a mutually-agreed-upon format regarding the number of Company's Subscription Users.  For avoidance of doubt, Subscription Users accounts and passwords are specific to individual Subscription Users, and under no circumstance may Subscription Users accounts or passwords be shared among or by different Subscription Users.
+
+4.5. Payment.  Unless Company pays by credit card (or other applicable SugarCRM-approved automated-payment mechanism), fees are due net 15 days from the invoice date.  Notwithstanding the foregoing, if Company purchases subscriptions through a SugarCRM Authorized Reseller and such SugarCRM Authorized Reseller's order form or invoice includes different payment terms, the SugarCRM Authorized Reseller's payment terms shall prevail. Company agrees to provide SugarCRM with complete and accurate billing and contact information.
+
+4.6. Overdue Charges.  Overdue amounts are subject to interest at 1.5% per month, or the maximum rate permitted by law, whichever is lower.  Notwithstanding the foregoing, if the applicable charges are under reasonable and good faith dispute and Company is cooperating diligently to resolve the dispute, SugarCRM will not exercise its rights set forth under this section.
+
+4.7. Taxes.  Unless otherwise provided, all fees do not include any Taxes, and Company is responsible for paying all Taxes associated with its purchases hereunder, excluding any Taxes based on SugarCRM's net income or property.
+
+4.8. Audit.  Company shall maintain accurate records (including, without limitation, the reports described above in Section 4.3) necessary to verify the number of Subscription Users.  Upon SugarCRM's or its third party appointee's written request, Company shall provide SugarCRM or its third party appointee with such records within ten (10) days.  If Company has more Subscription Users than Company has paid for, Company shall immediately pay the applicable fees for such additional Subscription Users, commencing on the Effective Date of the applicable Order Form, in addition to reasonable costs incurred by SugarCRM associated with reviewing such records.
+
+5. Term and Termination.
+
+5.1. Term.  This Agreement commences on the Effective Date and continues until all Subscription Users granted in accordance with this Agreement and all Order Forms have expired or been terminated.  An Order Form commences on the effective date of the Order Form and continues for the Subscription Term specified in such Order Form.
+
+5.2. Termination for Incurable Breach.  The Agreement shall terminate immediately if Company violates Section 1.5(h).
+
+5.3. Termination by Company or SugarCRM.  Either party may terminate this Agreement prior to the end of a Subscription Term if the other party: (i) materially breaches its obligations hereunder and, where such breach is curable, such breach remains uncured for thirty (30) days following written notice of the breach or (ii) becomes the subject of a petition in bankruptcy or any other proceeding relating to insolvency, receivership, liquidation, or assignment for the benefit of creditors.
+
+5.4. Surviving Provisions.  Company's obligation to make a payment of any outstanding, unpaid fees, the defined terms used in the Agreement and the terms of Sections 1.5, 3, 4, 5.4, 6, 7.2, 8, 9, 10 and 11 shall survive termination or expiration of this Agreement.
+
+6. Confidentiality.
+
+6.1. Confidentiality.  The Receiving Party will not disclose or cause to be disclosed any Confidential Information of the Disclosing Party, except (a) to those employees, representatives, or contractors of the Receiving Party who require access to the Confidential Information to exercise its rights under this Agreement and who are bound by written agreement not to disclose third-party confidential or proprietary information disclosed to such party, or (b) as such disclosure may be required by law or governmental regulation, subject to the Receiving Party providing to the Disclosing Party written notice to allow the Disclosing Party to seek a protective order or otherwise prevent the disclosure. Nothing in this Agreement will prohibit or limit the Receiving Party's use of information (a) previously known to it without obligation of confidence, (b) independently developed by or for it without use of or access to the Disclosing Party's Confidential Information, (c) acquired by it from a third party that is not under an obligation of confidence with respect to such information, or (d) that is or becomes publicly available through no breach of this Agreement. The Receiving Party acknowledges the irreparable harm that improper disclosure of Confidential Information may cause; therefore, the injured party is entitled to seek equitable relief, including temporary restraining order(s) or preliminary or permanent injunction, in addition to all other remedies, for any violation or threatened violation of this Section.  The terms of this Agreement, Original Code and the structure, sequence and organization of the SugarCRM Product are Confidential Information of SugarCRM or its licensors.
+
+6.2. Destruction.  Within five (5) days after a Disclosing Party's request, the Receiving Party shall return or destroy the Disclosing Party's Confidential Information.
+
+6.3. Exclusion.  The confidentiality obligations under Section 6.1 above shall not apply to any publicly available or independently developed information or the SugarCRM Community Edition.
+
+7. Warranties, Exclusive Remedies and Disclaimers.
+
+7.1. SugarCRM Warranties.  SugarCRM warrants that (i) it will provide the Service in a manner consistent with general industry standards for services that are similar to the Service; (ii) the SugarCRM Product shall perform materially in accordance with the online user guide for the applicable SugarCRM Product.  For any breach of either warranty, Company's sole and exclusive remedy shall be to terminate the Agreement pursuant to Section 5.3 and, notwithstanding anything to the contrary in Section 4.1 of the Agreement, have SugarCRM refund to Company the pro rata unused portion of any pre-paid subscription fees.
+
+7.2. Disclaimer of Warranties.  EXCEPT AS EXPRESSLY PROVIDED IN THIS AGREEMENT, THE SUGARCRM PRODUCT IS PROVIDED TO COMPANY STRICTLY ON AN "AS IS" BASIS.  ALL CONDITIONS, REPRESENTATIONS AND WARRANTIES, WHETHER EXPRESS, IMPLIED, STATUTORY OR OTHERWISE, INCLUDING, WITHOUT LIMITATION, ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT OF THIRD PARTY RIGHTS, ARE HEREBY DISCLAIMED TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW. SUGARCRM'S SERVICE MAY BE SUBJECT TO LIMITATIONS OR ISSUES INHERENT IN THE USE OF THE INTERNET AND SUGARCRM IS NOT RESPONSIBLE FOR ANY PROBLEMS OR OTHER DAMAGE RESULTING FROM SUCH LIMITATIONS OR ISSUES.  SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OF IMPLIED WARRANTIES AND SO THE ABOVE EXCLUSIONS MAY NOT APPLY TO COMPANY.
+
+8. Limitation of Liability.
+
+8.1. Limitation on All Damages.  EXCEPT FOR COMPANY'S BREACH OF SECTION 1.5 AND 6.1, IN NO EVENT SHALL EITHER PARTY'S LIABILITY ARISING OUT OF OR RELATED TO THIS AGREEMENT WHETHER IN CONTRACT, TORT OR UNDER ANY OTHER THEORY OF LIABILITY, EXCEED IN THE AGGREGATE THE TOTAL AMOUNT PAID BY COMPANY TO SUGARCRM UNDER THIS AGREEMENT DURING THE TWELVE (12) MONTHS IMMEDIATELY PRECEDING THE ACT OR OMISSION GIVING RISE TO THE LIABILITY.  THE FOREGOING SHALL NOT LIMIT COMPANY'S PAYMENT OBLIGATIONS UNDER SECTION 4.
+
+8.2. Disclaimer of Consequential Damages.  EXCEPT FOR COMPANY'S BREACH OF SECTION 1.5 AND 6.1, IN NO EVENT SHALL EITHER PARTY BE LIABLE FOR ANY LOST PROFITS OR REVENUE OR FOR ANY INDIRECT, SPECIAL, COVER, PUNITIVE, INCIDENTAL OR CONSEQUENTIAL DAMAGES, REGARDLESS OF THE LEGAL OR EQUITABLE THEORY (CONTRACT, TORT (INCLUDING NEGLIGENCE OR OTHERWISE), ARISING UNDER THIS AGREEMENT AND WHETHER OR OT THE PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.  THE FOREGOING DISCLAIMER SHALL NOT APPLY TO THE EXTENT PROHIBITED BY APPLICABLE LAW.
+
+9. United States Government Users.
+
+9.1. Commercial Computer Software.  The SugarCRM Product is "Commercial Computer Software," as that term is defined in 48 C.F.R. 2.101, and as the term is used in 48 C.F.R. Part 12, and is a Commercial Item comprised of "commercial computer software" and "commercial computer software documentation".
+
+9.2. United States Federal Civilian Government Entities.  If Company is a federal civilian government entity, SugarCRM provides the SugarCRM Product, for ultimate federal government end use solely in accordance with the license rights customarily provided to the public as defined in this "standard" or "customary" commercial license Agreement, as specified in 48 C.F.R. 12.212 (Computer Software) and 12.211 (Technical Data) of the Federal Acquisition Regulation ("FAR") and its successors.
+
+9.3. United States Department of Defense Agencies.  If Company is any agency within the Department of Defense ("DOD"), SugarCRM provides the SugarCRM Product, for ultimate federal government end use solely in accordance with the license rights customarily provided to the public as defined in this "standard" or "customary" commercial Agreement, as specified in 48 C.F.R. §§227.7202-3 and 48 C.F.R. §§227.7202-4 of the DOD FAR Supplement ("DFARS") and its successors, and consistent with 48 C.F.R.  227.7202.  This Government Users clause, consistent with 48 C.F.R. 12.212 and 48 C.F.R. 227.7202, is in lieu of, and supersedes, any other FAR, DFARS, or other clause or provision that addresses Government rights in computer software, computer software documentation or technical data related to the SugarCRM Product under this Agreement and in any subcontract under which this commercial computer software and commercial computer software documentation is acquired or licensed.
+
+10. General.
+
+10.1. Publicity.  Either party may include the other's name and logo in customer or vendor lists. Company also agrees to: (i) serve as a reference or hosting onsite reference visits; (ii) collaborate on press releases announcing or promoting the relationship; and (iii) collaborate on case studies or other marketing collateral.
+
+10.2. Export Compliance.  Each party shall comply with the export laws and regulations of the United States and other applicable jurisdictions in providing and using the SugarCRM Product.  Without limiting the foregoing, (i) each of SugarCRM and Company represents that it is not named on any U.S. government list of person or entities prohibited from receiving exports, and (ii) Company shall not permit Subscription Users to access and/or use the SugarCRM Product in violation of any U.S. export embargo, prohibition, or restriction.
+
+10.3. Assignment.  Company may not assign any of its rights or obligations hereunder, whether by operation of law or otherwise, without the prior written consent of SugarCRM.  Any attempted assignment in breach of this section shall be void. This Agreement shall bind and inure to the benefit of the parties and their respective successors and permitted assigns.
+
+10.4. Relationship of the Parties.  SugarCRM and Company are independent contractors, and nothing in this Agreement or any attachment hereto will create any partnership, joint venture, agency, franchise, sales representative, or employment relationship between the parties.
+
+10.5. No Third-Party Beneficiaries.  There are no third party beneficiaries to this Agreement.
+
+10.6. Choice of Law and Jurisdiction.  This Agreement will be governed by and construed in accordance with the laws of the State of California and the federal U.S. laws applicable therein, excluding its conflicts of law provisions.  Company and SugarCRM agree to submit to the personal and non-exclusive jurisdiction of the courts located in Santa Clara County, California. The parties agree that the United Nations Convention on Contracts for the International Sale of Goods will not apply to this Agreement.
+
+10.7. Attorneys Fees.  In any action related to this Agreement, if any party is successful in obtaining some or all of the relief it is seeking or in defending against the action, the other party shall pay, on demand, the successful party's reasonable attorneys' fees and reasonable costs.
+
+10.8. Manner of Giving Notice.  Notices regarding this Agreement shall be in writing and addressed to Company at the address Company provides, or, in the case of SugarCRM, when addressed to SugarCRM, Inc., Attn. General Counsel, 10050 North Wolfe Road SW2-130, Cupertino, CA 95014 USA. Notices regarding the SugarCRM Product in general may be given by electronic mail to Company's e-mail address on record with SugarCRM and such notice shall be deemed to have been delivered twelve (12) hours after sending.
+
+10.9. Force Majeure.  Neither party shall be liable to the other for any delay or failure to perform hereunder (excluding payment obligations) due to circumstances beyond such party's reasonable control, including acts of God, acts of government, flood, fire, earthquakes, civil unrest, acts of terror, strikes or other labor problems (excluding those involving such party's employees), service disruptions involving hardware, software or power systems not within such party's reasonable control, and denial of service attacks.
+
+10.10. Amendment and Waiver.  No amendment or waiver of any provision of this Agreement shall be effective unless in writing and signed (either manually or electronically) by an authorized representative of Company and SugarCRM. To the extent of any conflict between these terms and conditions (as may be modified by an amendment signed by Company and SugarCRM) and any other schedule or attachment hereto, these terms and conditions (as may be modified by an amendment signed by Company and SugarCRM) shall prevail unless expressly stated otherwise. Notwithstanding any language to the contrary therein, and except as set forth in Section 4.3, no terms stated in a purchase order or in any other order document (other than an Order Form expressly incorporated herein) shall be incorporated into this Agreement, and all such terms shall be void. No failure or delay in exercising any right hereunder shall constitute a waiver of such right. Except as otherwise provided, remedies provided herein are in addition to, and not exclusive of, any other remedies of a party at law or in equity.
+
+10.11. Severability.  If any provision of this Agreement is held by a court of competent jurisdiction to be contrary to law, such provision shall be modified by the court and interpreted so as best to accomplish the objectives of the original provision to the fullest extent permitted by law, and the remaining provisions shall remain in effect.
+
+11. Definitions.
+
+11.1. "Accepting" means clicking "accept" or signing (either manually or electronically) and, if applicable, returning a manually-signed Order Form issued to you by SugarCRM.
+
+11.2. "Additional Terms" means terms and conditions that may be applicable based upon the manner of installation and usage of the SugarCRM Product specified in an Order Form.  Any Additional Terms will be specified in an Order Form (or attached as an exhibit thereto) and/or specified at the following SugarCRM URL:  https://www.sugarcrm.com/crm/en/legal/msa/additional_terms_1_April_2011.pdf .
+
+11.3. "Affiliate" means a company that is Controlled by, under common Control with or Controlling the Company during the period of such control.
+
+11.4. "AGPL" means the GNU Affero General Public License version 3 (a copy of which is available at:  http://gnu.org/licenses/agpl.html).
+
+11.5. "API" means application programming interfaces provided by SugarCRM as part of the SugarCRM Product, which set forth rules and specifications that Third Party Plug-Ins may utilize to access Company Data in accordance with this Agreement.
+
+11.6. "Company Data" means any data, information or material submitted by Company to, or stored by Company in, a database related primarily to a SugarCRM Product.
+
+11.7. "Company Software" means online, Web-based applications and offline software products that are developed by or for Company.
+
+11.8. "Confidential Information" means information that one party (the "Disclosing Party") provides to the other party ("Receiving Party") during the term of this Agreement that is identified in writing at the time of disclosure as confidential or that reasonably should be understood to be confidential given the nature of the information and the circumstances of disclosure.
+
+11.9. "Control" means ownership, directly or indirectly, of more than 50% of the voting securities that vote for the election of the board of directors or other managing body.
+
+11.10. "Copyleft License" means a software license that requires that information necessary for reproducing and modifying such software must be made available publicly to recipients of executable versions of such software (see, e.g., GNU General Public License and http://www.gnu.org/copyleft/).
+
+11.11. "Critical Control Software" means modules that report the number of authorized Subscription Users, permit SugarCRM (and Authorized SugarCRM Resellers where applicable) the ability to monitor certain usage of the SugarCRM Product. 
+11.12. "Forked Software" means modifications to any open source version of the Original Code to develop a separately maintained source code program (a) with features not present in the Original Code or (b) where modifications to the Original Code are not automatically integrated with the Original Code.
+
+11.13. "Intellectual Property Rights" means any patents and applications therefore, copyrights, trademarks, service marks, trade names, domain name rights, trade secret rights, and all other intellectual property rights.
+
+11.14. "Malicious Code" means viruses, worms, time bombs, Trojan horses and other harmful or malicious code, files, scripts, agents, or programs.
+
+11.15. "Order Form" means the documents for purchases of subscriptions hereunder, including order forms, purchase orders, order notifications and order confirmation documents and addenda thereto, that are agreed to by SugarCRM, or entered into between SugarCRM and Company or Company and a SugarCRM Authorized Reseller, as applicable, from time to time.  Order Forms are deemed incorporated herein by reference.
+
+11.16. "Original Code" means Software source code.
+
+11.17. "Service" means the online, Web-based SugarCRM platform and applications (excluding any Third Party Software) that are hosted by SugarCRM or a third party hosting facility designated by SugarCRM.
+
+11.18. "Software" means the SugarCRM edition (excluding any Third Party Software) that is specified in an Order Form, which is installed by Company or Company's agent at Company's premises or at a Company-controlled space within a third party data center.
+
+11.19. "Subscription Term" means the period of time which Company may access the applicable SugarCRM Product as set forth in an Order Form.
+
+11.20. "Subscription User" means an individual employee, contractor or agent of the Company and its Affiliates authorized by Company to use the applicable SugarCRM Product for which a subscription has been purchased and who has been given a user identification and password.
+
+11.21. "SugarCRM" means SugarCRM, Inc.
+
+11.22. "SugarCRM Authorized Reseller" means a SugarCRM Product reseller that is in good standing with SugarCRM under a fully-executed SugarCRM reseller agreement and is associated with an Order Form under this Agreement.
+
+11.23. "SugarCRM Community Edition" means the open source version of the Software that is licensed under the AGPL, with the addition of the following permission added to Section 15 of the AGPL as permitted in Section 7(a) of the AGPL:  "FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY SUGARCRM, SUGARCRM DISCLAIMS THE WARRANTY OF NON INFRINGEMENT OF THIRD PARTY RIGHTS."
+
+11.24. "SugarCRM Product" means the version of the Software or Service, as applicable, including associated APIs, that is ordered by Company under an Order Form.
+
+11.25. "Taxes" means any direct or indirect local, state, federal or foreign taxes, levies, duties or similar governmental assessments of any nature, including VAT (subject to reverse charge), GST (subject to reverse charge), excise, sales, use or withholding taxes.
+
+11.26. "Third-Party Plug-Ins" means software developed by a third party that Company may use to add functionality to the SugarCRM Product, the use of which software is governed by the applicable terms and conditions of such third party.
+
+11.27. "Third-Party Software" means online, Web-based applications and offline software products that are developed by third parties, and may interoperate with the SugarCRM Product.  For a listing of Third-Party Software licenses and/or notices that may be applicable, visit: https://www.sugarcrm.com/crm/en/legal/msa/ third_party_software_1_April_2011.pdf .
+
+
+MASTER SUBSCRIPTION AGREEMENT              Effective: 1 June 2011
+
+(c) 2012 SugarCRM, Inc.  SugarCRM and the SugarCRM logo are trademarks of SugarCRM, Inc.
+
