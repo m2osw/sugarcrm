@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -40,25 +40,37 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
  * Description:  Defines the English language pack for the base application.
  * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
  * All Rights Reserved.
- * Contributor(s): ______________________________________..
+ * Contributor(s):
  ********************************************************************************/
  
- require_once('include/SugarObjects/templates/basic/Basic.php');
- class Sale extends Basic{
+require_once('include/SugarObjects/templates/basic/Basic.php');
+
+class Sale extends Basic
+{
 
  	function Sale(){
  		parent::Basic();
 
  	}
  	
- 	function create_new_list_query($order_by, $where,$filter=array(),$params=array(), $show_deleted = 0,$join_type='', $return_array = false,$parentbean=null, $singleSelect = false)
+ 	function create_new_list_query(
+				$order_by,
+				$where,
+				$filter = array(),
+				$params = array(),
+				$show_deleted = 0,
+				$join_type = '',
+				$return_array = false,
+				$parentbean = null,
+				$singleSelect = false,
+				$ifListForExport = false)
  	{
  		//Ensure that amount is always on list view queries if amount_usdollar is as well.
  		if (!empty($filter) && isset($filter['amount_usdollar']) && !isset($filter['amount']))
  		{
  			$filter['amount'] = true;
  		}
- 		return parent::create_new_list_query($order_by, $where, $filter, $params, $show_deleted, $join_type, $return_array, $parentbean, $singleSelect);
+ 		return parent::create_new_list_query($order_by, $where, $filter, $params, $show_deleted, $join_type, $return_array, $parentbean, $singleSelect, $ifListForExport);
  	}
  	
  	function fill_in_additional_list_fields()
@@ -100,5 +112,6 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 		
 		return parent::save($check_notify);
  	}
- }
-?>
+}
+
+// vim: ts=4 sw=4

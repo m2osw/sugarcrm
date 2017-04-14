@@ -41,7 +41,7 @@
 
 <table>
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 $prompt_users = 'checked';
 if(isset($_POST['preview']) && !isset($_POST['prompt_users'])){
 	$prompt_users = '';

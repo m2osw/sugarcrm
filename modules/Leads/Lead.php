@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -55,7 +55,8 @@ require_once('include/SugarObjects/templates/person/Person.php');
 require_once('include/SugarObjects/templates/person/Person.php');
 
 // Lead is used to store profile information for people who may become customers.
-class Lead extends Person {
+class Lead extends Person
+{
 	var $field_name_map;
 	// Stored fields
 	var $id;
@@ -233,13 +234,27 @@ class Lead extends Person {
 		return $query;
 	}
 
-	function create_new_list_query($order_by, $where,$filter=array(),$params=array(), $show_deleted = 0,$join_type='', $return_array = false, $parentbean = null, $singleSelect = false){
-		
-		$ret_array = parent::create_new_list_query($order_by, $where, $filter, $params, $show_deleted, $join_type, true, $parentbean, $singleSelect);
+	function create_new_list_query(
+				$order_by,
+				$where,
+				$filter = array(),
+				$params = array(),
+				$show_deleted = 0,
+				$join_type = '',
+				$return_array = false,
+				$parentbean = null,
+				$singleSelect = false,
+				$ifListForExport = false)
+	{
+		$ret_array = parent::create_new_list_query($order_by, $where, $filter, $params, $show_deleted, $join_type, true, $parentbean, $singleSelect, $ifListForExport);
 		if(strpos($ret_array['select'],"leads.account_name") == false && strpos($ret_array['select'],"leads.*") == false)
+		{
 			$ret_array['select'] .= " ,leads.account_name";
-    	if ( !$return_array )
-            return  $ret_array['select'] . $ret_array['from'] . $ret_array['where']. $ret_array['order_by'];
+		}
+    	if(!$return_array)
+		{
+            return $ret_array['select'] . $ret_array['from'] . $ret_array['where'] . $ret_array['order_by'];
+		}
         return $ret_array;
 	}
 
@@ -547,3 +562,4 @@ class Lead extends Person {
 
 }
 
+// vim: ts=4 sw=4

@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -46,14 +46,15 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 require_once("include/JSON.php");
 
 
-class SugarEmailAddress extends SugarBean {
+class SugarEmailAddress extends SugarBean
+{
     var $table_name = 'email_addresses';
     var $module_name = "EmailAddresses";
     var $module_dir = 'EmailAddresses';
     var $object_name = 'EmailAddress';
 
     //bug 40068, According to rules in page 6 of http://www.apps.ietf.org/rfc/rfc3696.html#sec-3,
-	//allowed special characters ! # $ % & ' * + - / = ?  ^ _ ` . { | } ~ in local part
+    //allowed special characters ! # $ % & ' * + - / = ?  ^ _ ` . { | } ~ in local part
     var $regex = "/^(?:['\.\-\+&#!\$\*=\?\^_`\{\}~\/\w]+)@(?:(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|\w+(?:[\.-]*\w+)*(?:\.[\w-]{2,})+)\$/";
     var $disable_custom_fields = true;
     var $db;
@@ -170,8 +171,10 @@ class SugarEmailAddress extends SugarBean {
      * @param string $replyTo GUID of reply-to address
      * @param string $invalid GUID of invalid address
      */
-    function save($id, $module, $new_addrs=array(), $primary='', $replyTo='', $invalid='', $optOut='', $in_workflow=false) {
-        if(empty($this->addresses) || $in_workflow){
+    function save_email_addresses($id, $module, $new_addrs=array(), $primary='', $replyTo='', $invalid='', $optOut='', $in_workflow=false)
+    {
+        if(empty($this->addresses) || $in_workflow)
+        {
             $this->populateAddresses($id, $module, $new_addrs,$primary);
         }
 
@@ -1118,16 +1121,23 @@ class SugarEmailAddress extends SugarBean {
  * @param string $view DetailView or EditView
  * @return string
  */
-function getEmailAddressWidget($focus, $field, $value, $view, $tabindex='0') {
+function getEmailAddressWidget($focus, $field, $value, $view, $tabindex = '0')
+{
     $sea = new SugarEmailAddress();
     $sea->setView($view);
 
-        if($view == 'EditView' || $view == 'QuickCreate' || $view == 'ConvertLead') {
-            $module = $focus->module_dir;
-            if ($view == 'ConvertLead' && $module == "Contacts")  $module = "Leads";
-
-            return $sea->getEmailAddressWidgetEditView($focus->id, $module, false,'',$tabindex);
+    if($view == 'EditView' || $view == 'QuickCreate' || $view == 'ConvertLead')
+    {
+        $module = $focus->module_dir;
+        if($view == 'ConvertLead' && $module == "Contacts")
+        {
+            $module = "Leads";
         }
+
+        return $sea->getEmailAddressWidgetEditView($focus->id, $module, false,'',$tabindex);
+    }
 
     return $sea->getEmailAddressWidgetDetailView($focus);
 }
+
+// vim: ts=4 sw=4 et

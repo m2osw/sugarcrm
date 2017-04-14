@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -43,7 +43,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
  * Contributor(s): ______________________________________..
  ********************************************************************************/
 
-class Call extends SugarBean {
+class Call extends SugarBean
+{
 	var $field_name_map;
 	// Stored fields
 	var $id;
@@ -235,97 +236,60 @@ class Call extends SugarBean {
 		return "$this->name";
 	}
 
-	function create_list_query($order_by, $where, $show_deleted=0)
-	{
+    function create_list_query($order_by, $where, $show_deleted=0)
+    {
         $custom_join = $this->getCustomJoin();
-                $query = "SELECT ";
-		$query .= "
-			calls.*,";
-			if ( preg_match("/calls_users\.user_id/",$where))
-			{
-				$query .= "calls_users.required,
-				calls_users.accept_status,";
-			}
+        $query = "SELECT ";
+        $query .= "calls.*,";
+        if(preg_match("/calls_users\.user_id/",$where))
+        {
+            $query .= "calls_users.required,
+                       calls_users.accept_status,";
+        }
 
-			$query .= "
-			users.user_name as assigned_user_name";
+        $query .= "users.user_name AS assigned_user_name";
         $query .= $custom_join['select'];
 
-			// this line will help generate a GMT-metric to compare to a locale's timezone
+        // this line will help generate a GMT-metric to compare to a locale's timezone
 
-			if ( preg_match("/contacts/",$where)){
-				$query .= ", contacts.first_name, contacts.last_name";
-				$query .= ", contacts.assigned_user_id contact_name_owner";
-			}
-			$query .= " FROM calls ";
-
-			if ( preg_match("/contacts/",$where)){
-				$query .=	"LEFT JOIN calls_contacts
-	                    ON calls.id=calls_contacts.call_id
-	                    LEFT JOIN contacts
-	                    ON calls_contacts.contact_id=contacts.id ";
-			}
-			if ( preg_match('/calls_users\.user_id/',$where))
-			{
-		$query .= "LEFT JOIN calls_users
-			ON calls.id=calls_users.call_id and calls_users.deleted=0 ";
-			}
-			$query .= "
-			LEFT JOIN users
-			ON calls.assigned_user_id=users.id ";
-        $query .= $custom_join['join'];
-			$where_auto = '1=1';
-       		 if($show_deleted == 0){
-            	$where_auto = " $this->table_name.deleted=0  ";
-			}else if($show_deleted == 1){
-				$where_auto = " $this->table_name.deleted=1 ";
-			}
-
-			//$where_auto .= " GROUP BY calls.id";
-
-		if($where != "")
-			$query .= "where $where AND ".$where_auto;
-		else
-			$query .= "where ".$where_auto;
-
-        $order_by = $this->process_order_by($order_by);
-        if (empty($order_by)) {
-            $order_by = 'calls.name';
-        }
-        $query .= ' ORDER BY ' . $order_by;
-
-		return $query;
-	}
-
-        function create_export_query(&$order_by, &$where, $relate_link_join='')
+        if(preg_match("/contacts/",$where))
         {
-            $custom_join = $this->getCustomJoin(true, true, $where);
-            $custom_join['join'] .= $relate_link_join;
-			$contact_required = stristr($where, "contacts");
-            if($contact_required)
-            {
-                    $query = "SELECT calls.*, contacts.first_name, contacts.last_name, users.user_name as assigned_user_name ";
-                    $query .= $custom_join['select'];
-                    $query .= " FROM contacts, calls, calls_contacts ";
-                    $where_auto = "calls_contacts.contact_id = contacts.id AND calls_contacts.call_id = calls.id AND calls.deleted=0 AND contacts.deleted=0";
-            }
-            else
-            {
-                    $query = 'SELECT calls.*, users.user_name as assigned_user_name ';
-                    $query .= $custom_join['select'];
-                    $query .= ' FROM calls ';
-                    $where_auto = "calls.deleted=0";
-            }
+            $query .= ", contacts.first_name, contacts.last_name";
+            $query .= ", contacts.assigned_user_id contact_name_owner";
+        }
+        $query .= " FROM calls ";
 
+        if(preg_match("/contacts/",$where))
+        {
+            $query .=  "LEFT JOIN calls_contacts
+                        ON calls.id=calls_contacts.call_id
+                        LEFT JOIN contacts
+                        ON calls_contacts.contact_id=contacts.id ";
+        }
+        if ( preg_match('/calls_users\.user_id/',$where))
+        {
+            $query .= "LEFT JOIN calls_users
+                ON calls.id=calls_users.call_id and calls_users.deleted=0 ";
+        }
+        $query .= "LEFT JOIN users
+                   ON calls.assigned_user_id=users.id ";
+        $query .= $custom_join['join'];
+        $where_auto = '1=1';
+        if($show_deleted == 0)
+        {
+            $where_auto = " $this->table_name.deleted=0  ";
+        }
+        else if($show_deleted == 1)
+        {
+            $where_auto = " $this->table_name.deleted=1 ";
+        }
 
-			$query .= "  LEFT JOIN users ON calls.assigned_user_id=users.id ";
+        //$where_auto .= " GROUP BY calls.id";
 
-            $query .= $custom_join['join'];
-
-			if($where != "")
-                    $query .= "where $where AND ".$where_auto;
-            else
-                    $query .= "where ".$where_auto;
+        if($where != "")
+            $query .= "WHERE $where AND ".$where_auto;
+        else
+            $query .= "WHERE ".$where_auto;
 
         $order_by = $this->process_order_by($order_by);
         if (empty($order_by)) {
@@ -333,8 +297,47 @@ class Call extends SugarBean {
         }
         $query .= ' ORDER BY ' . $order_by;
 
-            return $query;
+        return $query;
+    }
+
+    function create_export_query(&$order_by, &$where, $relate_link_join = '')
+    {
+        $custom_join = $this->getCustomJoin(true, true, $where);
+        $custom_join['join'] .= $relate_link_join;
+        $contact_required = stristr($where, "contacts");
+        if($contact_required)
+        {
+                $query = "SELECT calls.*, contacts.first_name, contacts.last_name, users.user_name as assigned_user_name ";
+                $query .= $custom_join['select'];
+                $query .= " FROM contacts, calls, calls_contacts ";
+                $where_auto = "calls_contacts.contact_id = contacts.id AND calls_contacts.call_id = calls.id AND calls.deleted=0 AND contacts.deleted=0";
         }
+        else
+        {
+                $query = 'SELECT calls.*, users.user_name as assigned_user_name ';
+                $query .= $custom_join['select'];
+                $query .= ' FROM calls ';
+                $where_auto = "calls.deleted=0";
+        }
+
+
+        $query .= "  LEFT JOIN users ON calls.assigned_user_id=users.id ";
+
+        $query .= $custom_join['join'];
+
+        if($where != "")
+                $query .= "where $where AND ".$where_auto;
+        else
+                $query .= "where ".$where_auto;
+
+        $order_by = $this->process_order_by($order_by);
+        if (empty($order_by)) {
+            $order_by = 'calls.name';
+        }
+        $query .= ' ORDER BY ' . $order_by;
+
+        return $query;
+    }
 
 
 
@@ -684,8 +687,8 @@ class Call extends SugarBean {
 		return $array_assign;
 	}
 
-	function save_relationship_changes($is_update) {
-		$exclude = array();
+	function save_relationship_changes($is_update, $exclude = array())
+    {
 		if(empty($this->in_workflow))
         {
             if(empty($this->in_import))
@@ -714,11 +717,15 @@ class Call extends SugarBean {
     public function getDefaultStatus()
     {
          $def = $this->field_defs['status'];
-         if (isset($def['default'])) {
+         if (isset($def['default']))
+         {
              return $def['default'];
-         } else {
+         }
+         else
+         {
             $app = return_app_list_strings_language($GLOBALS['current_language']);
-            if (isset($def['options']) && isset($app[$def['options']])) {
+            if (isset($def['options']) && isset($app[$def['options']]))
+            {
                 $keys = array_keys($app[$def['options']]);
                 return $keys[0];
             }
@@ -734,3 +741,5 @@ class Call extends SugarBean {
         parent::mark_deleted($id);
     }
 }
+
+// vim: ts=4 sw=4 et

@@ -35,7 +35,7 @@
  ********************************************************************************/
 
 
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 require_once('include/VarDefHandler/VarDefHandler.php');
 
 class LeadsVarDefHandler extends VarDefHandler

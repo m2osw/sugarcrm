@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -43,9 +43,9 @@ require_once('include/EditView/SugarVCR.php');
  */
 class ListViewData {
 
-	var $additionalDetails = true;
+    var $additionalDetails = true;
     var $listviewName = null;
-	var $additionalDetailsAllow = null;
+    var $additionalDetailsAllow = null;
     var $additionalDetailsAjax = true; // leave this true when using filter fields
     var $additionalDetailsFieldToAdd = 'NAME'; // where the span will be attached to
     var $base_url = null;
@@ -55,82 +55,82 @@ class ListViewData {
      */
     var $count_query = '';
 
-	/**
-	 * Constructor sets the limitName to look up the limit in $sugar_config
-	 *
-	 * @return ListViewData
-	 */
-	function ListViewData() {
-		$this->limitName = 'list_max_entries_per_page';
-		$this->db = &DBManagerFactory::getInstance('listviews');
-	}
+    /**
+     * Constructor sets the limitName to look up the limit in $sugar_config
+     *
+     * @return ListViewData
+     */
+    function ListViewData() {
+        $this->limitName = 'list_max_entries_per_page';
+        $this->db = DBManagerFactory::getInstance('listviews');
+    }
 
-	/**
-	 * checks the request for the order by and if that is not set then it checks the session for it
-	 *
-	 * @return array containing the keys orderBy => field being ordered off of and sortOrder => the sort order of that field
-	 */
-	function getOrderBy($orderBy = '', $direction = '') {
-		if (!empty($orderBy) || !empty($_REQUEST[$this->var_order_by])) {
+    /**
+     * checks the request for the order by and if that is not set then it checks the session for it
+     *
+     * @return array containing the keys orderBy => field being ordered off of and sortOrder => the sort order of that field
+     */
+    function getOrderBy($orderBy = '', $direction = '') {
+        if (!empty($orderBy) || !empty($_REQUEST[$this->var_order_by])) {
             if(!empty($_REQUEST[$this->var_order_by])) {
-    			$direction = 'ASC';
-    			$orderBy = $_REQUEST[$this->var_order_by];
-    			if(!empty($_REQUEST['lvso']) && (empty($_SESSION['lvd']['last_ob']) || strcmp($orderBy, $_SESSION['lvd']['last_ob']) == 0) ){
-    				$direction = $_REQUEST['lvso'];
-    			}
+                $direction = 'ASC';
+                $orderBy = $_REQUEST[$this->var_order_by];
+                if(!empty($_REQUEST['lvso']) && (empty($_SESSION['lvd']['last_ob']) || strcmp($orderBy, $_SESSION['lvd']['last_ob']) == 0) ){
+                    $direction = $_REQUEST['lvso'];
+                }
             }
             $_SESSION[$this->var_order_by] = array('orderBy'=>$orderBy, 'direction'=> $direction);
             $_SESSION['lvd']['last_ob'] = $orderBy;
         }
-		else {
+        else {
             $userPreferenceOrder = $GLOBALS['current_user']->getPreference('listviewOrder', $this->var_name);
-			if(!empty($_SESSION[$this->var_order_by])) {
-				$orderBy = $_SESSION[$this->var_order_by]['orderBy'];
-				$direction = $_SESSION[$this->var_order_by]['direction'];
+            if(!empty($_SESSION[$this->var_order_by])) {
+                $orderBy = $_SESSION[$this->var_order_by]['orderBy'];
+                $direction = $_SESSION[$this->var_order_by]['direction'];
             } elseif (!empty($userPreferenceOrder)) {
                 $orderBy = $userPreferenceOrder['orderBy'];
                 $direction = $userPreferenceOrder['sortOrder'];
             } else {
-				$orderBy = 'date_entered';
-				$direction = 'DESC';
-			}
-		}
-		if(!empty($direction)) {
-    		if(strtolower($direction) == "desc") {
-    		    $direction = 'DESC';
-    		} else {
-    		    $direction = 'ASC';
-    		}
-		}
-		return array('orderBy' => $orderBy, 'sortOrder' => $direction);
-	}
+                $orderBy = 'date_entered';
+                $direction = 'DESC';
+            }
+        }
+        if(!empty($direction)) {
+            if(strtolower($direction) == "desc") {
+                $direction = 'DESC';
+            } else {
+                $direction = 'ASC';
+            }
+        }
+        return array('orderBy' => $orderBy, 'sortOrder' => $direction);
+    }
 
-	/**
-	 * gets the reverse of the sort order for use on links to reverse a sort order from what is currently used
-	 *
-	 * @param STRING (ASC or DESC) $current_order
-	 * @return  STRING (ASC or DESC)
-	 */
-	function getReverseSortOrder($current_order){
-		return (strcmp(strtolower($current_order), 'asc') == 0)?'DESC':'ASC';
-	}
-	/**
-	 * gets the limit of how many rows to show per page
-	 *
-	 * @return INT (the limit)
-	 */
-	function getLimit() {
-		return $GLOBALS['sugar_config'][$this->limitName];
-	}
+    /**
+     * gets the reverse of the sort order for use on links to reverse a sort order from what is currently used
+     *
+     * @param STRING (ASC or DESC) $current_order
+     * @return  STRING (ASC or DESC)
+     */
+    function getReverseSortOrder($current_order){
+        return (strcmp(strtolower($current_order), 'asc') == 0)?'DESC':'ASC';
+    }
+    /**
+     * gets the limit of how many rows to show per page
+     *
+     * @return INT (the limit)
+     */
+    function getLimit() {
+        return $GLOBALS['sugar_config'][$this->limitName];
+    }
 
-	/**
-	 * returns the current offset
-	 *
-	 * @return INT (current offset)
-	 */
-	function getOffset() {
-		return (!empty($_REQUEST[$this->var_offset])) ? $_REQUEST[$this->var_offset] : 0;
-	}
+    /**
+     * returns the current offset
+     *
+     * @return INT (current offset)
+     */
+    function getOffset() {
+        return (!empty($_REQUEST[$this->var_offset])) ? $_REQUEST[$this->var_offset] : 0;
+    }
 
     /**
      * generates the base url without
@@ -156,18 +156,18 @@ class ListViewData {
         return $params;
     }
 
-	/**
-	 * based off of a base name it sets base, offset, and order by variable names to retrieve them from requests and sessions
-	 *
-	 * @param unknown_type $baseName
-	 */
-	function setVariableName($baseName, $where, $listviewName = null){
+    /**
+     * based off of a base name it sets base, offset, and order by variable names to retrieve them from requests and sessions
+     *
+     * @param unknown_type $baseName
+     */
+    function setVariableName($baseName, $where, $listviewName = null){
         global $timedate;
         $module = (!empty($listviewName)) ? $listviewName: $_REQUEST['module'];
         $this->var_name = $module .'2_'. strtoupper($baseName);
 
-		$this->var_order_by = $this->var_name .'_ORDER_BY';
-		$this->var_offset = $this->var_name . '_offset';
+        $this->var_order_by = $this->var_name .'_ORDER_BY';
+        $this->var_offset = $this->var_name . '_offset';
         $timestamp = sugar_microtime();
         $this->stamp = $timestamp;
 
@@ -175,58 +175,58 @@ class ListViewData {
 
         $_SESSION[strtoupper($baseName) . "_FROM_LIST_VIEW"] = $timestamp;
         $_SESSION[strtoupper($baseName) . "_DETAIL_NAV_HISTORY"] = false;
-	}
+    }
 
-	function getTotalCount($main_query){
-		if(!empty($this->count_query)){
-		    $count_query = $this->count_query;
-		}else{
-	        $count_query = SugarBean::create_list_count_query($main_query);
-	    }
-		$result = $this->db->query($count_query);
-		if($row = $this->db->fetchByAssoc($result)){
-			return $row['c'];
-		}
-		return 0;
-	}
+    function getTotalCount($main_query){
+        if(!empty($this->count_query)){
+            $count_query = $this->count_query;
+        }else{
+            $count_query = SugarBean::create_list_count_query($main_query);
+        }
+        $result = $this->db->query($count_query);
+        if($row = $this->db->fetchByAssoc($result)){
+            return $row['c'];
+        }
+        return 0;
+    }
 
-	/**
-	 * takes in a seed and creates the list view query based off of that seed
-	 * if the $limit value is set to -1 then it will use the default limit and offset values
-	 *
-	 * it will return an array with two key values
-	 * 	1. 'data'=> this is an array of row data
-	 *  2. 'pageData'=> this is an array containg three values
-	 * 			a.'ordering'=> array('orderBy'=> the field being ordered by , 'sortOrder'=> 'ASC' or 'DESC')
-	 * 			b.'urls'=>array('baseURL'=>url used to generate other urls ,
-	 * 							'orderBy'=> the base url for order by
-	 * 							//the following may not be set (so check empty to see if they are set)
-	 * 							'nextPage'=> the url for the next group of results,
-	 * 							'prevPage'=> the url for the prev group of results,
-	 * 							'startPage'=> the url for the start of the group,
-	 * 							'endPage'=> the url for the last set of results in the group
-	 * 			c.'offsets'=>array(
-	 * 								'current'=>current offset
-	 * 								'next'=> next group offset
-	 * 								'prev'=> prev group offset
-	 * 								'end'=> the offset of the last group
-	 * 								'total'=> the total count (only accurate if totalCounted = true otherwise it is either the total count if less than the limit or the total count + 1 )
-	 * 								'totalCounted'=> if a count query was used to get the total count
-	 *
-	 * @param SugarBean $seed
-	 * @param string $where
-	 * @param int:0 $offset
-	 * @param int:-1 $limit
-	 * @param string[]:array() $filter_fields
-	 * @param array:array() $params
-	 * 	Potential $params are
-		$params['distinct'] = use distinct key word
-		$params['include_custom_fields'] = (on by default)
+    /**
+     * takes in a seed and creates the list view query based off of that seed
+     * if the $limit value is set to -1 then it will use the default limit and offset values
+     *
+     * it will return an array with two key values
+     *     1. 'data'=> this is an array of row data
+     *  2. 'pageData'=> this is an array containg three values
+     *             a.'ordering'=> array('orderBy'=> the field being ordered by , 'sortOrder'=> 'ASC' or 'DESC')
+     *             b.'urls'=>array('baseURL'=>url used to generate other urls ,
+     *                             'orderBy'=> the base url for order by
+     *                             //the following may not be set (so check empty to see if they are set)
+     *                             'nextPage'=> the url for the next group of results,
+     *                             'prevPage'=> the url for the prev group of results,
+     *                             'startPage'=> the url for the start of the group,
+     *                             'endPage'=> the url for the last set of results in the group
+     *             c.'offsets'=>array(
+     *                                 'current'=>current offset
+     *                                 'next'=> next group offset
+     *                                 'prev'=> prev group offset
+     *                                 'end'=> the offset of the last group
+     *                                 'total'=> the total count (only accurate if totalCounted = true otherwise it is either the total count if less than the limit or the total count + 1 )
+     *                                 'totalCounted'=> if a count query was used to get the total count
+     *
+     * @param SugarBean $seed
+     * @param string $where
+     * @param int:0 $offset
+     * @param int:-1 $limit
+     * @param string[]:array() $filter_fields
+     * @param array:array() $params
+     *     Potential $params are
+        $params['distinct'] = use distinct key word
+        $params['include_custom_fields'] = (on by default)
         $params['custom_XXXX'] = append custom statements to query
-	 * @param string:'id' $id_field
-	 * @return array('data'=> row data, 'pageData' => page data information, 'query' => original query string)
-	 */
-	function getListViewData($seed, $where, $offset=-1, $limit = -1, $filter_fields=array(),$params=array(),$id_field = 'id',$singleSelect=true) {
+     * @param string:'id' $id_field
+     * @return array('data'=> row data, 'pageData' => page data information, 'query' => original query string)
+     */
+    function getListViewData($seed, $where, $offset=-1, $limit = -1, $filter_fields=array(),$params=array(),$id_field = 'id',$singleSelect=true) {
         global $current_user;
         SugarVCR::erase($seed->module_dir);
         $this->seed =& $seed;
@@ -238,7 +238,7 @@ class ListViewData {
 
         $this->setVariableName($seed->object_name, $where, $this->listviewName);
 
-		$this->seed->id = '[SELECT_ID_LIST]';
+        $this->seed->id = '[SELECT_ID_LIST]';
 
         // if $params tell us to override all ordering
         if(!empty($params['overrideOrder']) && !empty($params['orderBy'])) {
@@ -262,11 +262,11 @@ class ListViewData {
             $orderby = substr($order['orderBy'],strpos($order['orderBy'],'.')+1);
         }
         if ($orderby != 'date_entered' && !in_array($orderby, array_keys($filter_fields))) {
-        	$order['orderBy'] = '';
-        	$order['sortOrder'] = '';
+            $order['orderBy'] = '';
+            $order['sortOrder'] = '';
         }
 
-		if (empty($order['orderBy'])) {
+        if (empty($order['orderBy'])) {
             $orderBy = '';
         } else {
             $orderBy = $order['orderBy'] . ' ' . $order['sortOrder'];
@@ -279,40 +279,40 @@ class ListViewData {
             $current_user->setPreference('listviewOrder', $order, 0, $this->var_name); // save preference
         }
 
-		// If $params tells us to override for the special last_name, first_name sorting
-		if (!empty($params['overrideLastNameOrder']) && $order['orderBy'] == 'last_name') {
-			$orderBy = 'last_name '.$order['sortOrder'].', first_name '.$order['sortOrder'];
-		}
+        // If $params tells us to override for the special last_name, first_name sorting
+        if (!empty($params['overrideLastNameOrder']) && $order['orderBy'] == 'last_name') {
+            $orderBy = 'last_name '.$order['sortOrder'].', first_name '.$order['sortOrder'];
+        }
 
-		$ret_array = $seed->create_new_list_query($orderBy, $where, $filter_fields, $params, 0, '', true, $seed, $singleSelect);
+        $ret_array = $seed->create_new_list_query($orderBy, $where, $filter_fields, $params, 0, '', true, $seed, $singleSelect);
         $ret_array['inner_join'] = '';
         if (!empty($this->seed->listview_inner_join)) {
             $ret_array['inner_join'] = ' ' . implode(' ', $this->seed->listview_inner_join) . ' ';
         }
 
-		if(!is_array($params)) $params = array();
+        if(!is_array($params)) $params = array();
         if(!isset($params['custom_select'])) $params['custom_select'] = '';
         if(!isset($params['custom_from'])) $params['custom_from'] = '';
         if(!isset($params['custom_where'])) $params['custom_where'] = '';
         if(!isset($params['custom_order_by'])) $params['custom_order_by'] = '';
-		$main_query = $ret_array['select'] . $params['custom_select'] . $ret_array['from'] . $params['custom_from'] . $ret_array['inner_join']. $ret_array['where'] . $params['custom_where'] . $ret_array['order_by'] . $params['custom_order_by'];
-		//C.L. - Fix for 23461
-		if(empty($_REQUEST['action']) || $_REQUEST['action'] != 'Popup') {
-          	   $_SESSION['export_where'] = $ret_array['where'];
-		}
-   		if($limit < -1) {
-			$result = $this->db->query($main_query);
-		}
-		else {
-			if($limit == -1) {
-				$limit = $this->getLimit();
+        $main_query = $ret_array['select'] . $params['custom_select'] . $ret_array['from'] . $params['custom_from'] . $ret_array['inner_join']. $ret_array['where'] . $params['custom_where'] . $ret_array['order_by'] . $params['custom_order_by'];
+        //C.L. - Fix for 23461
+        if(empty($_REQUEST['action']) || $_REQUEST['action'] != 'Popup') {
+                 $_SESSION['export_where'] = $ret_array['where'];
+        }
+           if($limit < -1) {
+            $result = $this->db->query($main_query);
+        }
+        else {
+            if($limit == -1) {
+                $limit = $this->getLimit();
             }
-			$dyn_offset = $this->getOffset();
-			if($dyn_offset > 0 || !is_int($dyn_offset))$offset = $dyn_offset;
+            $dyn_offset = $this->getOffset();
+            if($dyn_offset > 0 || !is_int($dyn_offset))$offset = $dyn_offset;
 
             if(strcmp($offset, 'end') == 0){
-            	$totalCount = $this->getTotalCount($main_query);
-            	$offset = (floor(($totalCount -1) / $limit)) * $limit;
+                $totalCount = $this->getTotalCount($main_query);
+                $offset = (floor(($totalCount -1) / $limit)) * $limit;
             }
             if($this->seed->ACLAccess('ListView')) {
                 $result = $this->db->limitQuery($main_query, $offset, $limit + 1);
@@ -321,27 +321,27 @@ class ListViewData {
                 $result = array();
             }
 
-		}
+        }
 
-		$data = array();
+        $data = array();
 
-		$temp = clone $seed;
+        $temp = clone $seed;
 
-		$rows = array();
-		$count = 0;
+        $rows = array();
+        $count = 0;
         $idIndex = array();
         $id_list = '';
 
-   		while(($row = $this->db->fetchByAssoc($result)) != null)
+           while(($row = $this->db->fetchByAssoc($result)) != null)
         {
-   			if($count < $limit)
+               if($count < $limit)
             {
-   				$id_list .= ',\''.$row[$id_field].'\'';
-   				$idIndex[$row[$id_field]][] = count($rows);
-   				$rows[] = $seed->convertRow($row);
-   			}
-   			$count++;
-   		}
+                   $id_list .= ',\''.$row[$id_field].'\'';
+                   $idIndex[$row[$id_field]][] = count($rows);
+                   $rows[] = $seed->convertRow($row);
+               }
+               $count++;
+           }
 
         if (!empty($id_list))
         {
@@ -349,10 +349,10 @@ class ListViewData {
         }
 
         SugarVCR::store($this->seed->module_dir,  $main_query);
-		if($count != 0) {
-			//NOW HANDLE SECONDARY QUERIES
-			if(!empty($ret_array['secondary_select'])) {
-				$secondary_query = $ret_array['secondary_select'] . $ret_array['secondary_from'] . ' WHERE '.$this->seed->table_name.'.id IN ' .$id_list;
+        if($count != 0) {
+            //NOW HANDLE SECONDARY QUERIES
+            if(!empty($ret_array['secondary_select'])) {
+                $secondary_query = $ret_array['secondary_select'] . $ret_array['secondary_from'] . ' WHERE '.$this->seed->table_name.'.id IN ' .$id_list;
                 if(isset($ret_array['order_by']))
                 {
                     $secondary_query .= ' ' . $ret_array['order_by'];
@@ -361,23 +361,23 @@ class ListViewData {
                 $secondary_result = $this->db->query($secondary_query);
 
                 $ref_id_count = array();
-				while($row = $this->db->fetchByAssoc($secondary_result)) {
+                while($row = $this->db->fetchByAssoc($secondary_result)) {
 
                     $ref_id_count[$row['ref_id']][] = true;
-					foreach($row as $name=>$value) {
-						//add it to every row with the given id
-						foreach($idIndex[$row['ref_id']] as $index){
-						    $rows[$index][$name]=$value;
-						}
-					}
-				}
+                    foreach($row as $name=>$value) {
+                        //add it to every row with the given id
+                        foreach($idIndex[$row['ref_id']] as $index){
+                            $rows[$index][$name]=$value;
+                        }
+                    }
+                }
 
                 $rows_keys = array_keys($rows);
                 foreach($rows_keys as $key)
                 {
                     $rows[$key]['secondary_select_count'] = count($ref_id_count[$rows[$key]['ref_id']]);
                 }
-			}
+            }
 
             // retrieve parent names
             if(!empty($filter_fields['parent_name']) && !empty($filter_fields['parent_id']) && !empty($filter_fields['parent_type'])) {
@@ -391,32 +391,32 @@ class ListViewData {
                     $parent_fields = $seed->retrieve_parent_fields($post_retrieve);
                     foreach($parent_fields as $child_id => $parent_data) {
                         //add it to every row with the given id
-						foreach($idIndex[$child_id] as $index){
-						    $rows[$index]['parent_name']= $parent_data['parent_name'];
-						}
+                        foreach($idIndex[$child_id] as $index){
+                            $rows[$index]['parent_name']= $parent_data['parent_name'];
+                        }
                     }
                 }
             }
 
-			$pageData = array();
+            $pageData = array();
 
-			reset($rows);
-			while($row = current($rows)){
+            reset($rows);
+            while($row = current($rows)){
 
                 $temp = clone $seed;
-			    $dataIndex = count($data);
+                $dataIndex = count($data);
 
-			    $temp->setupCustomFields($temp->module_dir);
-				$temp->loadFromRow($row);
-				if (empty($this->seed->assigned_user_id) && !empty($temp->assigned_user_id)) {
-				    $this->seed->assigned_user_id = $temp->assigned_user_id;
-				}
-				if($idIndex[$row[$id_field]][0] == $dataIndex){
-				    $pageData['tag'][$dataIndex] = $temp->listviewACLHelper();
-				}else{
-				    $pageData['tag'][$dataIndex] = $pageData['tag'][$idIndex[$row[$id_field]][0]];
-				}
-				$data[$dataIndex] = $temp->get_list_view_data($filter_fields);
+                $temp->setupCustomFields($temp->module_dir);
+                $temp->loadFromRow($row);
+                if (empty($this->seed->assigned_user_id) && !empty($temp->assigned_user_id)) {
+                    $this->seed->assigned_user_id = $temp->assigned_user_id;
+                }
+                if($idIndex[$row[$id_field]][0] == $dataIndex){
+                    $pageData['tag'][$dataIndex] = $temp->listviewACLHelper();
+                }else{
+                    $pageData['tag'][$dataIndex] = $pageData['tag'][$idIndex[$row[$id_field]][0]];
+                }
+                $data[$dataIndex] = $temp->get_list_view_data($filter_fields);
                 $detailViewAccess = $temp->ACLAccess('DetailView');
                 $editViewAccess = $temp->ACLAccess('EditView');
                 $pageData['rowAccess'][$dataIndex] = array('view' => $detailViewAccess, 'edit' => $editViewAccess);
@@ -426,12 +426,12 @@ class ListViewData {
                 $additionalDetailsEdit = $editViewAccess;
                 if($additionalDetailsAllow) {
                     if($this->additionalDetailsAjax) {
-					   $ar = $this->getAdditionalDetailsAjax($data[$dataIndex]['ID']);
+                       $ar = $this->getAdditionalDetailsAjax($data[$dataIndex]['ID']);
                     }
                     else {
                         $additionalDetailsFile = 'modules/' . $this->seed->module_dir . '/metadata/additionalDetails.php';
                         if(file_exists('custom/modules/' . $this->seed->module_dir . '/metadata/additionalDetails.php')){
-                        	$additionalDetailsFile = 'custom/modules/' . $this->seed->module_dir . '/metadata/additionalDetails.php';
+                            $additionalDetailsFile = 'custom/modules/' . $this->seed->module_dir . '/metadata/additionalDetails.php';
                         }
                         require_once($additionalDetailsFile);
                         $ar = $this->getAdditionalDetails($data[$dataIndex],
@@ -440,42 +440,42 @@ class ListViewData {
                     }
                     $pageData['additionalDetails'][$dataIndex] = $ar['string'];
                     $pageData['additionalDetails']['fieldToAddTo'] = $ar['fieldToAddTo'];
-				}
-				next($rows);
-			}
-		}
-		$nextOffset = -1;
-		$prevOffset = -1;
-		$endOffset = -1;
-		if($count > $limit) {
-			$nextOffset = $offset + $limit;
-		}
+                }
+                next($rows);
+            }
+        }
+        $nextOffset = -1;
+        $prevOffset = -1;
+        $endOffset = -1;
+        if($count > $limit) {
+            $nextOffset = $offset + $limit;
+        }
 
-		if($offset > 0) {
-			$prevOffset = $offset - $limit;
-			if($prevOffset < 0)$prevOffset = 0;
-		}
-		$totalCount = $count + $offset;
+        if($offset > 0) {
+            $prevOffset = $offset - $limit;
+            if($prevOffset < 0)$prevOffset = 0;
+        }
+        $totalCount = $count + $offset;
 
-		if( $count >= $limit && $totalCounted){
-			$totalCount  = $this->getTotalCount($main_query);
-		}
-		SugarVCR::recordIDs($this->seed->module_dir, array_keys($idIndex), $offset, $totalCount);
+        if( $count >= $limit && $totalCounted){
+            $totalCount  = $this->getTotalCount($main_query);
+        }
+        SugarVCR::recordIDs($this->seed->module_dir, array_keys($idIndex), $offset, $totalCount);
         $module_names = array(
             'Prospects' => 'Targets'
         );
-		$endOffset = (floor(($totalCount - 1) / $limit)) * $limit;
-		$pageData['ordering'] = $order;
-		$pageData['ordering']['sortOrder'] = $this->getReverseSortOrder($pageData['ordering']['sortOrder']);
+        $endOffset = (floor(($totalCount - 1) / $limit)) * $limit;
+        $pageData['ordering'] = $order;
+        $pageData['ordering']['sortOrder'] = $this->getReverseSortOrder($pageData['ordering']['sortOrder']);
         //get url parameters as an array
         $pageData['queries'] = $this->generateQueries($pageData['ordering']['sortOrder'], $offset, $prevOffset, $nextOffset,  $endOffset, $totalCounted);
         //join url parameters from array to a string
         $pageData['urls'] = $this->generateURLS($pageData['queries']);
-		$pageData['offsets'] = array( 'current'=>$offset, 'next'=>$nextOffset, 'prev'=>$prevOffset, 'end'=>$endOffset, 'total'=>$totalCount, 'totalCounted'=>$totalCounted);
-		$pageData['bean'] = array('objectName' => $seed->object_name, 'moduleDir' => $seed->module_dir, 'moduleName' => strtr($seed->module_dir, $module_names));
+        $pageData['offsets'] = array( 'current'=>$offset, 'next'=>$nextOffset, 'prev'=>$prevOffset, 'end'=>$endOffset, 'total'=>$totalCount, 'totalCounted'=>$totalCounted);
+        $pageData['bean'] = array('objectName' => $seed->object_name, 'moduleDir' => $seed->module_dir, 'moduleName' => strtr($seed->module_dir, $module_names));
         $pageData['stamp'] = $this->stamp;
         $pageData['access'] = array('view' => $this->seed->ACLAccess('DetailView'), 'edit' => $this->seed->ACLAccess('EditView'));
-		$pageData['idIndex'] = $idIndex;
+        $pageData['idIndex'] = $idIndex;
         if(!$this->seed->ACLAccess('ListView')) {
             $pageData['error'] = 'ACL restricted access';
         }
@@ -483,8 +483,8 @@ class ListViewData {
         $queryString = '';
 
         if( isset($_REQUEST["searchFormTab"]) && $_REQUEST["searchFormTab"] == "advanced_search" ||
-        	isset($_REQUEST["type_basic"]) && (count($_REQUEST["type_basic"] > 1) || $_REQUEST["type_basic"][0] != "") ||
-        	isset($_REQUEST["module"]) && $_REQUEST["module"] == "MergeRecords")
+            isset($_REQUEST["type_basic"]) && (count($_REQUEST["type_basic"] > 1) || $_REQUEST["type_basic"][0] != "") ||
+            isset($_REQUEST["module"]) && $_REQUEST["module"] == "MergeRecords")
         {
             $queryString = "-advanced_search";
         }
@@ -511,8 +511,8 @@ class ListViewData {
             }
         }
 
-		return array('data'=>$data , 'pageData'=>$pageData, 'query' => $queryString);
-	}
+        return array('data'=>$data , 'pageData'=>$pageData, 'query' => $queryString);
+    }
 
 
     /**
@@ -579,13 +579,13 @@ class ListViewData {
         return $queries;
     }
 
-	/**
-	 * generates the additional details span to be retrieved via ajax
-	 *
-	 * @param GUID id id of the record
-	 * @return array string to attach to field
-	 */
-	function getAdditionalDetailsAjax($id)
+    /**
+     * generates the additional details span to be retrieved via ajax
+     *
+     * @param GUID id id of the record
+     * @return array string to attach to field
+     */
+    function getAdditionalDetailsAjax($id)
     {
         global $app_strings;
 
@@ -593,10 +593,10 @@ class ListViewData {
 
         $extra = "<span id='adspan_" . $id . "' "
                 . "onclick=\"lvg_dtails('$id')\" "
-				. " style='position: relative;'><!--not_in_theme!--><img vertical-align='middle' class='info' border='0' alt='".$app_strings['LBL_ADDITIONAL_DETAILS']."' src='$jscalendarImage'></span>";
+                . " style='position: relative;'><!--not_in_theme!--><img vertical-align='middle' class='info' border='0' alt='".$app_strings['LBL_ADDITIONAL_DETAILS']."' src='$jscalendarImage'></span>";
 
         return array('fieldToAddTo' => $this->additionalDetailsFieldToAdd, 'string' => $extra);
-	}
+    }
 
     /**
      * generates the additional details values
@@ -619,29 +619,32 @@ class ListViewData {
         {
             $results['string'] = $app_strings['LBL_NONE'];
         }
-         	$close = false;
-            $extra = "<img alt='{$app_strings['LBL_INFOINLINE']}' style='padding: 0px 5px 0px 2px' border='0' onclick=\"SUGAR.util.getStaticAdditionalDetails(this,'";
 
-            $extra .= str_replace(array("\rn", "\r", "\n"), array('','','<br />'), $results['string']) ;
-            $extra .= "','<div style=\'float:left\'>{$app_strings['LBL_ADDITIONAL_DETAILS']}</div><div style=\'float: right\'>";
+        $close = false;
+        $extra = "<img alt='{$app_strings['LBL_INFOINLINE']}' style='padding: 0px 5px 0px 2px' border='0' onclick=\"SUGAR.util.getStaticAdditionalDetails(this,'";
 
-	        if($editAccess && !empty($results['editLink']))
-	        {
-	            $extra .=  "<a title=\'{$app_strings['LBL_EDIT_BUTTON']}\' href={$results['editLink']}><img style=\'margin-left: 2px;\' border=\'0\' src=\'".SugarThemeRegistry::current()->getImageURL('edit_inline.png')."\'></a>";
-	            $close = true;
-	        }
-	        $close = (!empty($results['viewLink'])) ? true : $close;
-	        $extra .= (!empty($results['viewLink']) ? "<a title=\'{$app_strings['LBL_VIEW_BUTTON']}\' href={$results['viewLink']}><img style=\'margin-left: 2px;\' border=\'0\' src=".SugarThemeRegistry::current()->getImageURL('view_inline.png')."></a>" : '');
+        $extra .= str_replace(array("\rn", "\r", "\n"), array('','','<br />'), $results['string']) ;
+        $extra .= "','<div style=\'float:left\'>{$app_strings['LBL_ADDITIONAL_DETAILS']}</div><div style=\'float: right\'>";
 
-            if($close == true) {
-            	$closeVal = "true";
-            	$extra .=  "<a title=\'{$app_strings['LBL_ADDITIONAL_DETAILS_CLOSE_TITLE']}\' href=\'javascript: SUGAR.util.closeStaticAdditionalDetails();\'><img style=\'margin-left: 2px;\' border=\'0\' src=\'".SugarThemeRegistry::current()->getImageURL('close.png')."\'></a>";
-            } else {
-            	$closeVal = "false";
-            }
-            $extra .= "',".$closeVal.")\" src='".SugarThemeRegistry::current()->getImageURL('info_inline.png')."' class='info'>";
+        if($editAccess && !empty($results['editLink']))
+        {
+            $extra .=  "<a title=\'{$app_strings['LBL_EDIT_BUTTON']}\' href={$results['editLink']}><img style=\'margin-left: 2px;\' border=\'0\' src=\'".SugarThemeRegistry::current()->getImageURL('edit_inline.png')."\'></a>";
+            $close = true;
+        }
+        $close = (!empty($results['viewLink'])) ? true : $close;
+        $extra .= (!empty($results['viewLink']) ? "<a title=\'{$app_strings['LBL_VIEW_BUTTON']}\' href={$results['viewLink']}><img style=\'margin-left: 2px;\' border=\'0\' src=".SugarThemeRegistry::current()->getImageURL('view_inline.png')."></a>" : '');
+
+        if($close == true) {
+            $closeVal = "true";
+            $extra .=  "<a title=\'{$app_strings['LBL_ADDITIONAL_DETAILS_CLOSE_TITLE']}\' href=\'javascript: SUGAR.util.closeStaticAdditionalDetails();\'><img style=\'margin-left: 2px;\' border=\'0\' src=\'".SugarThemeRegistry::current()->getImageURL('close.png')."\'></a>";
+        } else {
+            $closeVal = "false";
+        }
+        $extra .= "',".$closeVal.")\" src='".SugarThemeRegistry::current()->getImageURL('info_inline.png')."' class='info'>";
 
         return array('fieldToAddTo' => $results['fieldToAddTo'], 'string' => $extra);
     }
 
 }
+
+// vim: ts=4 sw=4 et

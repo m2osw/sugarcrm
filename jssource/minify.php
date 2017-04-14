@@ -11,7 +11,7 @@ if(!defined('sugarEntry'))define('sugarEntry', true);
 //if we are coming from browser
 
 if(isset($_REQUEST['root_directory'])){
-	if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+	if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 
     require_once('include/utils/sugar_file_utils.php');
 

@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -38,7 +38,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 require_once('include/SugarObjects/templates/person/Person.php');
 
 // User is used to store customer information.
-class User extends Person {
+class User extends Person
+{
 	// Stored fields
 	var $name = '';
 	var $full_name;
@@ -597,10 +598,13 @@ class User extends Person {
      * @return object User bean
      * @return null null if no User found
      */
-	function retrieve($id, $encode = true, $deleted = true) {
+	function retrieve($id = -1, $encode = true, $deleted = true)
+	{
 		$ret = parent::retrieve($id, $encode, $deleted);
-		if ($ret) {
-			if (isset ($_SESSION)) {
+		if($ret)
+		{
+			if(isset($_SESSION))
+			{
 				$this->loadPreferences();
 			}
 		}
@@ -967,7 +971,8 @@ EOQ;
 		return $user_fields;
 	}
 
-	function list_view_parse_additional_sections(& $list_form, $xTemplateSection) {
+	function list_view_parse_additional_sections(&$list_form)
+	{
 		return $list_form;
 	}
 
@@ -1006,11 +1011,13 @@ EOQ;
 
 
 
-	function create_export_query($order_by, $where) {
+	function create_export_query(&$order_by, &$where, $relate_link_join = '')
+	{
 		include('modules/Users/field_arrays.php');
 
 		$cols = '';
-		foreach($fields_array['User']['export_fields'] as $field) {
+		foreach($fields_array['User']['export_fields'] as $field)
+		{
 			$cols .= (empty($cols)) ? '' : ', ';
 			$cols .= $field;
 		}
@@ -1020,13 +1027,18 @@ EOQ;
 		$where_auto = " users.deleted = 0";
 
 		if ($where != "")
+		{
 			$query .= " WHERE $where AND ".$where_auto;
+		}
 		else
+		{
 			$query .= " WHERE ".$where_auto;
+		}
 
 		// admin for module user is not be able to export a super-admin
 		global $current_user;
-		if(!$current_user->is_admin){
+		if(!$current_user->is_admin)
+		{
 			$query .= " AND users.is_admin=0";
 		}
 
@@ -1582,51 +1594,61 @@ EOQ;
         }
 	}
 
-   function create_new_list_query($order_by, $where,$filter=array(),$params=array(), $show_deleted = 0,$join_type='', $return_array = false,$parentbean=null, $singleSelect = false)
-   {	//call parent method, specifying for array to be returned
-   	$ret_array = parent::create_new_list_query($order_by, $where,$filter,$params, $show_deleted,$join_type, true,$parentbean, $singleSelect);
+	function create_new_list_query(
+				$order_by,
+				$where,
+				$filter = array(),
+				$params = array(),
+				$show_deleted = 0,
+				$join_type = '',
+				$return_array = false,
+				$parentbean = null,
+				$singleSelect = false,
+				$ifListForExport = false)
+    {	//call parent method, specifying for array to be returned
+		$ret_array = parent::create_new_list_query($order_by, $where, $filter, $params, $show_deleted, $join_type, true, $parentbean, $singleSelect, $ifListForExport);
 
-   	//if this is being called from webservices, then run additional code
-   	if(!empty($GLOBALS['soap_server_object'])){
+		//if this is being called from webservices, then run additional code
+		if(!empty($GLOBALS['soap_server_object'])){
 
-		//if this is a single select, then secondary queries are being run that may result in duplicate rows being returned through the
-		//left joins with meetings/tasks/call.  We need to change the left joins to include a null check (bug 40250)
-	   	if($singleSelect)
-	    	{
-			//retrieve the 'from' string and make lowercase for easier manipulation
-		        $left_str = strtolower($ret_array['from']);
-		        $lefts = explode('left join', $left_str);
-		        $new_left_str = '';
+			//if this is a single select, then secondary queries are being run that may result in duplicate rows being returned through the
+			//left joins with meetings/tasks/call.  We need to change the left joins to include a null check (bug 40250)
+			if($singleSelect)
+				{
+				//retrieve the 'from' string and make lowercase for easier manipulation
+					$left_str = strtolower($ret_array['from']);
+					$lefts = explode('left join', $left_str);
+					$new_left_str = '';
 
-        		//explode on the left joins and process each one
-		        foreach($lefts as $ljVal){
-		        	//grab the join alias
-	        	        $onPos = strpos( $ljVal, ' on');
-	                	if($onPos === false){
-		                	$new_left_str .=' '.$ljVal.' ';
-		                        continue;
-		                }
-		                $spacePos = strrpos(substr($ljVal, 0, $onPos),' ');
-		                $alias = substr($ljVal,$spacePos,$onPos-$spacePos);
+					//explode on the left joins and process each one
+					foreach($lefts as $ljVal){
+						//grab the join alias
+							$onPos = strpos( $ljVal, ' on');
+							if($onPos === false){
+								$new_left_str .=' '.$ljVal.' ';
+									continue;
+							}
+							$spacePos = strrpos(substr($ljVal, 0, $onPos),' ');
+							$alias = substr($ljVal,$spacePos,$onPos-$spacePos);
 
-		                //add null check to end of the Join statement
-                        // Bug #46390 to use id_c field instead of id field for custom tables
-                        if(substr($alias, -5) != '_cstm')
-                        {
-                            $ljVal ='  LEFT JOIN '.$ljVal.' and '.$alias.'.id is null ';
-                        }
-                        else
-                        {
-                            $ljVal ='  LEFT JOIN '.$ljVal.' and '.$alias.'.id_c is null ';
-                        }
+							//add null check to end of the Join statement
+							// Bug #46390 to use id_c field instead of id field for custom tables
+							if(substr($alias, -5) != '_cstm')
+							{
+								$ljVal ='  LEFT JOIN '.$ljVal.' and '.$alias.'.id is null ';
+							}
+							else
+							{
+								$ljVal ='  LEFT JOIN '.$ljVal.' and '.$alias.'.id_c is null ';
+							}
 
-		                //add statement into new string
-		                $new_left_str .= $ljVal;
-		         }
-	        	 //replace the old string with the new one
-        		 $ret_array['from'] = $new_left_str;
-	    	}
-   	}
+							//add statement into new string
+							$new_left_str .= $ljVal;
+					 }
+					 //replace the old string with the new one
+					 $ret_array['from'] = $new_left_str;
+				}
+		}
 
    		//return array or query string
    		if($return_array)
@@ -1635,9 +1657,6 @@ EOQ;
     	}
 
     	return  $ret_array['select'] . $ret_array['from'] . $ret_array['where']. $ret_array['order_by'];
-
-
-
    }
 
     /**
@@ -1855,3 +1874,5 @@ EOQ;
         }
     }
 }
+
+// vim: ts=4 sw=4

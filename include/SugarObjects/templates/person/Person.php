@@ -1,4 +1,5 @@
 <?php
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -50,41 +51,41 @@ class Person extends Basic
      */
     public $email_addresses;
 
-	public function Person()
-	{
-		parent::Basic();
-		$this->emailAddress = new SugarEmailAddress();
-	}
+    public function Person()
+    {
+        parent::Basic();
+        $this->emailAddress = new SugarEmailAddress();
+    }
 
-	/**
-	 * need to override to have a name field created for this class
-	 *
- 	 * @see parent::retrieve()
- 	 */
+    /**
+     * need to override to have a name field created for this class
+     *
+     * @see parent::retrieve()
+     */
     public function retrieve($id = -1, $encode=true, $deleted=true) {
-		$ret_val = parent::retrieve($id, $encode, $deleted);
-		$this->_create_proper_name_field();
-		return $ret_val;
-	}
+        $ret_val = parent::retrieve($id, $encode, $deleted);
+        $this->_create_proper_name_field();
+        return $ret_val;
+    }
 
-	/**
- 	 * Populate email address fields here instead of retrieve() so that they are properly available for logic hooks
- 	 *
- 	 * @see parent::fill_in_relationship_fields()
- 	 */
-	public function fill_in_relationship_fields()
-	{
-	    parent::fill_in_relationship_fields();
-	    $this->emailAddress->handleLegacyRetrieve($this);
-	}
+    /**
+     * Populate email address fields here instead of retrieve() so that they are properly available for logic hooks
+     *
+     * @see parent::fill_in_relationship_fields()
+     */
+    public function fill_in_relationship_fields()
+    {
+        parent::fill_in_relationship_fields();
+        $this->emailAddress->handleLegacyRetrieve($this);
+    }
 
-	/**
+    /**
      * This function helps generate the name and full_name member field variables from the salutation, title, first_name and last_name fields.
      * It takes into account the locale format settings as well as ACL settings if supported.
-	 */
-	public function _create_proper_name_field()
-	{
-		global $locale, $app_list_strings;
+     */
+    public function _create_proper_name_field()
+    {
+        global $locale, $app_list_strings;
 
         // Bug# 46125 - make first name, last name, salutation and title of Contacts respect field level ACLs
         $first_name = ""; $last_name = ""; $salutation = ""; $title = "";
@@ -98,11 +99,11 @@ class Person extends Basic
 
             // salutation has at least read access
             if(isset($this->field_defs['salutation']['options'])
-			  && isset($app_list_strings[$this->field_defs['salutation']['options']])
-			  && isset($app_list_strings[$this->field_defs['salutation']['options']][$this->salutation]) ) {
+              && isset($app_list_strings[$this->field_defs['salutation']['options']])
+              && isset($app_list_strings[$this->field_defs['salutation']['options']][$this->salutation]) ) {
 
-			        $salutation = $app_list_strings[$this->field_defs['salutation']['options']][$this->salutation];
-			} // if
+                    $salutation = $app_list_strings[$this->field_defs['salutation']['options']][$this->salutation];
+            } // if
 
             // last name has at least read access
             $title = $this->title;
@@ -114,24 +115,24 @@ class Person extends Basic
         if (empty($first_name) && empty($last_name)) {
             $full_name = $locale->getLocaleFormattedName("", $last_name, $salutation, $title);
         } else {
-			if($this->createLocaleFormattedName) {
-				$full_name = $locale->getLocaleFormattedName($first_name, $last_name, $salutation, $title);
-			} else {
-				$full_name = $locale->getLocaleFormattedName($first_name, $last_name);
-			}
-		}
+            if($this->createLocaleFormattedName) {
+                $full_name = $locale->getLocaleFormattedName($first_name, $last_name, $salutation, $title);
+            } else {
+                $full_name = $locale->getLocaleFormattedName($first_name, $last_name);
+            }
+        }
 
-		$this->name = $full_name;
-		$this->full_name = $full_name; //used by campaigns
-	}
-	
+        $this->name = $full_name;
+        $this->full_name = $full_name; //used by campaigns
+    }
+    
 
-	/**
- 	 * @see parent::save()
- 	 */
-	public function save($check_notify=false) 
-	{
-		//If we are saving due to relationship changes, don't bother trying to update the emails
+    /**
+     * @see parent::save()
+     */
+    public function save($check_notify=false) 
+    {
+        //If we are saving due to relationship changes, don't bother trying to update the emails
         if(!empty($GLOBALS['resavingRelatedBeans']))
         {
             parent::save($check_notify);
@@ -159,28 +160,28 @@ class Person extends Basic
             $this->emailAddress->save($this->id, $this->module_dir, $override_email,'','','','',$this->in_workflow);
             // $this->emailAddress->applyWorkflowChanges($this->id, $this->module_dir);
         }
-		return $this->id;
-	}
+        return $this->id;
+    }
 
-	/**
- 	 * @see parent::get_summary_text()
- 	 */
-	public function get_summary_text() 
-	{
-		$this->_create_proper_name_field();
+    /**
+     * @see parent::get_summary_text()
+     */
+    public function get_summary_text() 
+    {
+        $this->_create_proper_name_field();
         return $this->name;
-	}
+    }
 
-	/**
- 	 * @see parent::get_list_view_data()
- 	 */
-	public function get_list_view_data() 
-	{
-		global $system_config;
-		global $current_user;
+    /**
+     * @see parent::get_list_view_data()
+     */
+    public function get_list_view_data() 
+    {
+        global $system_config;
+        global $current_user;
 
-		$this->_create_proper_name_field();
-		$temp_array = $this->get_list_view_array();
+        $this->_create_proper_name_field();
+        $temp_array = $this->get_list_view_array();
 
         $temp_array['NAME'] = $this->name;
         $temp_array["ENCODED_NAME"] = $this->full_name;
@@ -191,12 +192,12 @@ class Person extends Basic
             $this->email1 = $temp_array['EMAIL1'];
         $temp_array['EMAIL1_LINK'] = $current_user->getEmailLink('email1', $this, '', '', 'ListView');
 
-		return $temp_array;
-	}
+        return $temp_array;
+    }
 
     /**
      * @see SugarBean::populateRelatedBean()
- 	 */
+     */
     public function populateRelatedBean(
         SugarBean $newbean
         )
@@ -241,10 +242,10 @@ class Person extends Basic
             $custom_join['join'] .= $relate_link_join;
         }
         $query = "SELECT
-					$table.*,
-					email_addresses.email_address email_address,
-					'' email_addresses_non_primary, " . // email_addresses_non_primary needed for get_field_order_mapping()
-					"users.user_name as assigned_user_name ";
+                    $table.*,
+                    email_addresses.email_address email_address,
+                    '' email_addresses_non_primary, " . // email_addresses_non_primary needed for get_field_order_mapping()
+                    "users.user_name as assigned_user_name ";
         if($custom_join)
         {
             $query .= $custom_join['select'];
@@ -254,7 +255,7 @@ class Person extends Basic
 
 
         $query .= "LEFT JOIN users
-					ON $table.assigned_user_id=users.id ";
+                    ON $table.assigned_user_id=users.id ";
 
 
         //Join email address table too.
@@ -284,5 +285,6 @@ class Person extends Basic
 
         return $query;
     }
-
 }
+
+// vim: ts=4 sw=4 et

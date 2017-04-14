@@ -1,6 +1,6 @@
 <?php
 if(!defined('sugarEntry') || !sugarEntry)
-	die('Not A Valid Entry Point');
+	die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -287,11 +287,12 @@ class Document extends SugarBean {
         }
 	}
 
-	function list_view_parse_additional_sections(& $list_form, $xTemplateSection) {
+	function list_view_parse_additional_sections(&$list_form)
+	{
 		return $list_form;
 	}
 
-    function create_export_query(&$order_by, &$where, $relate_link_join='')
+    function create_export_query(&$order_by, &$where, $relate_link_join = '')
     {
         $custom_join = $this->getCustomJoin(true, true, $where);
         $custom_join['join'] .= $relate_link_join;
@@ -388,3 +389,4 @@ class Document extends SugarBean {
 
 require_once('modules/Documents/DocumentExternalApiDropDown.php');
 
+// vim: ts=4 sw=4

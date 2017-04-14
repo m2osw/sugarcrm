@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -37,7 +37,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 
 require_once 'modules/SchedulersJobs/SchedulersJob.php';
 
-class Scheduler extends SugarBean {
+class Scheduler extends SugarBean
+{
 	// table columns
 	var $id;
 	var $deleted;
@@ -943,8 +944,9 @@ class Scheduler extends SugarBean {
 	/**
 	 * function overrides the one in SugarBean.php
 	 */
-	function create_export_query($order_by, $where, $show_deleted = 0) {
-		return $this->create_new_list_query($order_by, $where,array(),array(), $show_deleted = 0);
+	function create_export_query(&$order_by, &$where, $relate_link_join = '')
+    {
+		return $this->create_new_list_query($order_by, $where, array(), array(), $relate_link_join);
 	}
 
 	/**
@@ -1008,3 +1010,5 @@ class Scheduler extends SugarBean {
 		return self::$job_strings;
 	}
 } // end class definition
+
+// vim: ts=4 sw=4 et

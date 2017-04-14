@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -36,7 +36,9 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
  ********************************************************************************/
 
 require_once('modules/ACLActions/actiondefs.php');
-class ACLAction  extends SugarBean{
+
+class ACLAction  extends SugarBean
+{
     var $module_dir = 'ACLActions';
     var $object_name = 'ACLAction';
     var $table_name = 'acl_actions';
@@ -478,7 +480,8 @@ class ACLAction  extends SugarBean{
     *
     * @return array of fields with id, name, access and category
     */
-    function toArray(){
+    function toArray($dbOnly = false, $stringOnly = false, $upperKeys = false)
+    {
         $array_fields = array('id', 'aclaccess');
         $arr = array();
         foreach($array_fields as $field){
@@ -507,17 +510,6 @@ class ACLAction  extends SugarBean{
     function clearSessionCache(){
         unset($_SESSION['ACL']);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
+
+// vim: ts=4 sw=4

@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -179,12 +179,21 @@ class Contact extends Person {
 		return $array_assign;
 	}
 
-	function create_new_list_query($order_by, $where,$filter=array(),$params=array(), $show_deleted = 0,$join_type='', $return_array = false,$parentbean=null, $singleSelect = false)
+	function create_new_list_query(
+				$order_by,
+				$where,
+				$filter = array(),
+				$params = array(),
+				$show_deleted = 0,
+				$join_type = '',
+				$return_array = false,
+				$parentbean = null,
+				$singleSelect = false,
+				$ifListForExport = false)
 	{
 		//if this is from "contact address popup" action, then process popup list query
 		if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'ContactAddressPopup'){
-			return $this->address_popup_create_new_list_query($order_by, $where, $filter, $params, $show_deleted, $join_type, $return_array, $parentbean, $singleSelect);
-
+			return $this->address_popup_create_new_list_query($order_by, $where, $filter, $params, $show_deleted, $join_type, $return_array, $parentbean, $singleSelect, $ifListForExport);
 		}else{
 			//any other action goes to parent function in sugarbean
 			if(strpos($order_by,'sync_contact') !== false){
@@ -192,19 +201,17 @@ class Contact extends Person {
 				//and perhaps a performance issue, so just remove it
 				$order_by = '';
 			}
-			return parent::create_new_list_query($order_by, $where, $filter, $params, $show_deleted, $join_type, $return_array, $parentbean, $singleSelect);
+			return parent::create_new_list_query($order_by, $where, $filter, $params, $show_deleted, $join_type, $return_array, $parentbean, $singleSelect, $ifListForExport);
 		}
-
-
 	}
 
 
 
-	function address_popup_create_new_list_query($order_by, $where,$filter=array(),$params=array(), $show_deleted = 0,$join_type='', $return_array = false,$parentbean=null, $singleSelect = false)
+	function address_popup_create_new_list_query($order_by, $where,$filter=array(),$params=array(), $show_deleted = 0,$join_type='', $return_array = false,$parentbean=null, $singleSelect = false, $ifListForExport = false)
 	{
 		//if this is any action that is not the contact address popup, then go to parent function in sugarbean
 		if(isset($_REQUEST['action']) && $_REQUEST['action'] !== 'ContactAddressPopup'){
-			return parent::create_new_list_query($order_by, $where, $filter, $params, $show_deleted, $join_type, $return_array, $parentbean, $singleSelect);
+			return parent::create_new_list_query($order_by, $where, $filter, $params, $show_deleted, $join_type, $return_array, $parentbean, $singleSelect, $ifListForExport);
 		}
 
         $custom_join = $this->getCustomJoin();
@@ -266,54 +273,54 @@ class Contact extends Person {
     	}
 
 	    return $ret_array['select'] . $ret_array['from'] . $ret_array['where']. $ret_array['order_by'];
-
 	}
 
 
 
 
-        function create_export_query(&$order_by, &$where, $relate_link_join='')
-        {
-            $custom_join = $this->getCustomJoin(true, true, $where);
-            $custom_join['join'] .= $relate_link_join;
-                         $query = "SELECT
-                                contacts.*,
-                                email_addresses.email_address email_address,
-                                '' email_addresses_non_primary, " . // email_addresses_non_primary needed for get_field_order_mapping()
-                                "accounts.name as account_name,
-                                users.user_name as assigned_user_name ";
-            $query .= $custom_join['select'];
-						 $query .= " FROM contacts ";
-                         $query .= "LEFT JOIN users
-	                                ON contacts.assigned_user_id=users.id ";
-	                     $query .= "LEFT JOIN accounts_contacts
-	                                ON ( contacts.id=accounts_contacts.contact_id and (accounts_contacts.deleted is null or accounts_contacts.deleted = 0))
-	                                LEFT JOIN accounts
-	                                ON accounts_contacts.account_id=accounts.id ";
+	function create_export_query(&$order_by, &$where, $relate_link_join='')
+	{
+		$custom_join = $this->getCustomJoin(true, true, $where);
+		$custom_join['join'] .= $relate_link_join;
+					 $query = "SELECT
+							contacts.*,
+							email_addresses.email_address email_address,
+							'' email_addresses_non_primary, " . // email_addresses_non_primary needed for get_field_order_mapping()
+							"accounts.name as account_name,
+							users.user_name as assigned_user_name ";
+		$query .= $custom_join['select'];
+					 $query .= " FROM contacts ";
+					 $query .= "LEFT JOIN users
+								ON contacts.assigned_user_id=users.id ";
+					 $query .= "LEFT JOIN accounts_contacts
+								ON ( contacts.id=accounts_contacts.contact_id and (accounts_contacts.deleted is null or accounts_contacts.deleted = 0))
+								LEFT JOIN accounts
+								ON accounts_contacts.account_id=accounts.id ";
 
-						//join email address table too.
-						$query .=  ' LEFT JOIN  email_addr_bean_rel on contacts.id = email_addr_bean_rel.bean_id and email_addr_bean_rel.bean_module=\'Contacts\' and email_addr_bean_rel.deleted=0 and email_addr_bean_rel.primary_address=1 ';
-						$query .=  ' LEFT JOIN email_addresses on email_addresses.id = email_addr_bean_rel.email_address_id ' ;
+					//join email address table too.
+					$query .=  ' LEFT JOIN  email_addr_bean_rel on contacts.id = email_addr_bean_rel.bean_id and email_addr_bean_rel.bean_module=\'Contacts\' and email_addr_bean_rel.deleted=0 and email_addr_bean_rel.primary_address=1 ';
+					$query .=  ' LEFT JOIN email_addresses on email_addresses.id = email_addr_bean_rel.email_address_id ' ;
 
-            $query .= $custom_join['join'];
+		$query .= $custom_join['join'];
 
 		$where_auto = "( accounts.deleted IS NULL OR accounts.deleted=0 )
-                      AND contacts.deleted=0 ";
+				  AND contacts.deleted=0 ";
 
-                if($where != "")
-                        $query .= "where ($where) AND ".$where_auto;
-                else
-                        $query .= "where ".$where_auto;
+		if($where != "")
+			$query .= "where ($where) AND ".$where_auto;
+		else
+			$query .= "where ".$where_auto;
 
-        $order_by = $this->process_order_by($order_by);
-        if (!empty($order_by)) {
-            $query .= ' ORDER BY ' . $order_by;
-        }
+		$order_by = $this->process_order_by($order_by);
+		if (!empty($order_by)) {
+			$query .= ' ORDER BY ' . $order_by;
+		}
 
-                return $query;
-        }
+		return $query;
+	}
 
-	function fill_in_additional_list_fields() {
+	function fill_in_additional_list_fields()
+	{
 		parent::fill_in_additional_list_fields();
 		$this->_create_proper_name_field();
 		// cn: bug 8586 - l10n names for Contacts in Email TO: field
@@ -558,3 +565,5 @@ class Contact extends Person {
 		}
 	}
 }
+
+// vim: ts=4 sw=4

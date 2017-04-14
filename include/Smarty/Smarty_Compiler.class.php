@@ -30,8 +30,8 @@
  * Template compiling class
  * @package Smarty
  */
-class Smarty_Compiler extends Smarty {
-
+class Smarty_Compiler extends Smarty
+{
     // internal vars
     /**#@+
      * @access private
@@ -260,12 +260,21 @@ class Smarty_Compiler extends Smarty {
         reset($this->_folded_blocks);
 
         /* replace special blocks by "{php}" */
-        $source_content = preg_replace($search.'e', "'"
-                                       . $this->_quote_replace($this->left_delimiter) . 'php'
-                                       . "' . str_repeat(\"\n\", substr_count('\\0', \"\n\")) .'"
-                                       . $this->_quote_replace($this->right_delimiter)
-                                       . "'"
-                                       , $source_content);
+        //$source_content = preg_replace($search.'e', "'"
+        //                               . $this->_quote_replace($this->left_delimiter) . 'php'
+        //                               . "' . str_repeat(\"\n\", substr_count('\\0', \"\n\")) .'"
+        //                               . $this->_quote_replace($this->right_delimiter)
+        //                               . "'"
+        //                               , $source_content);
+        $source_content = preg_replace_callback(
+                        $search,
+                        function($m)
+                        {
+                            return $this->_quote_replace($this->left_delimiter) . 'php'
+                                       . str_repeat("\n", substr_count($m[0], "\n"))
+                                 . $this->_quote_replace($this->right_delimiter);
+                        },
+                        $source_content);
 
         /* Gather all template tags. */
         preg_match_all("~{$ldq}\s*(.*?)\s*{$rdq}~s", $source_content, $_match);
@@ -427,10 +436,11 @@ class Smarty_Compiler extends Smarty {
             return '';
 
         /* Split tag into two three parts: command, command modifiers and the arguments. */
-        if(! preg_match('~^(?:(' . $this->_num_const_regexp . '|' . $this->_obj_call_regexp . '|' . $this->_var_regexp
+        if(!preg_match('~^(?:(' . $this->_num_const_regexp . '|' . $this->_obj_call_regexp . '|' . $this->_var_regexp
                 . '|\/?' . $this->_reg_obj_regexp . '|\/?' . $this->_func_regexp . ')(' . $this->_mod_regexp . '*))
                       (?:\s+(.*))?$
-                    ~xs', $template_tag, $match)) {
+                    ~xs', $template_tag, $match))
+        {
             $this->_syntax_error("unrecognized tag: $template_tag", E_USER_ERROR, __FILE__, __LINE__);
         }
 
@@ -2312,6 +2322,4 @@ function _smarty_sort_length($a, $b)
 }
 
 
-/* vim: set et: */
-
-?>
+// vim: ts=4 sw=4 et

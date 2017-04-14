@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -49,7 +49,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 
 
 // EmailTemplate is used to store email email_template information.
-class EmailTemplate extends SugarBean {
+class EmailTemplate extends SugarBean
+{
 	var $field_name_map = array();
 	// Stored fields
 	var $id;
@@ -200,7 +201,8 @@ class EmailTemplate extends SugarBean {
 		return "$this->name";
 	}
 
-	function create_export_query(&$order_by, &$where) {
+	function create_export_query(&$order_by, &$where, $relate_link_join = '')
+	{
 		return $this->create_new_list_query($order_by, $where);
 	}
 
@@ -739,4 +741,5 @@ class EmailTemplate extends SugarBean {
         return $this->storedVariables[$text[0]];
     }
 }
-?>
+
+// vim: ts=4 sw=4

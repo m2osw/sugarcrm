@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -49,20 +49,24 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
  */
 class EmailAddress extends SugarEmailAddress 
 {
-	var $disable_row_level_security = true;
+    var $disable_row_level_security = true;
 
-	function EmailAddress() 
-	{
-		parent::SugarEmailAddress();	
-	}
-	
-	function save($id = '', $module = '', $new_addrs=array(), $primary='', $replyTo='', $invalid='', $optOut='', $in_workflow=false) 
-	{
-		if ( func_num_args() > 1 ) {
-		    parent::save($id, $module, $new_addrs, $primary, $replyTo, $invalid, $optOut, $in_workflow);
-		}
-		else {
-		    SugarBean::save($id);
-		}
-	}
+    function EmailAddress() 
+    {
+        parent::SugarEmailAddress();
+    }
+
+    function save_email_addresses($id, $module, $new_addrs=array(), $primary='', $replyTo='', $invalid='', $optOut='', $in_workflow=false) 
+    {
+        if(func_num_args() > 1)
+        {
+            parent::save($id, $module, $new_addrs, $primary, $replyTo, $invalid, $optOut, $in_workflow);
+        }
+        else
+        {
+            SugarBean::save($id);
+        }
+    }
 }
+
+// vim: ts=4 sw=4 et

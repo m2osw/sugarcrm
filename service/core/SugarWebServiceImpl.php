@@ -1108,60 +1108,65 @@ function set_campaign_merge($session,$targets, $campaign_id){
 * @return Array  result_count - integer - Total number of records for a given module and query
 * @exception 'SoapFault' -- The SOAP error, if any
 */
-function get_entries_count($session, $module_name, $query, $deleted) {
-	$GLOBALS['log']->info('Begin: SugarWebServiceImpl->get_entries_count');
+function get_entries_count($session, $module_name, $query, $deleted)
+{
+    $GLOBALS['log']->info('Begin: SugarWebServiceImpl->get_entries_count');
 
-	$error = new SoapError();
-	if (!self::$helperObject->checkSessionAndModuleAccess($session, 'invalid_session', $module_name, 'list', 'no_access', $error)) {
-		$GLOBALS['log']->info('End: SugarWebServiceImpl->get_entries_count');
-		return;
-	} // if
-
-	global $beanList, $beanFiles, $current_user;
-
-	$class_name = $beanList[$module_name];
-	require_once($beanFiles[$class_name]);
-	$seed = new $class_name();
-
-    if (!self::$helperObject->checkQuery($error, $query)) {
-		$GLOBALS['log']->info('End: SugarWebServiceImpl->get_entries_count');
-    	return;
+    $error = new SoapError();
+    if (!self::$helperObject->checkSessionAndModuleAccess($session, 'invalid_session', $module_name, 'list', 'no_access', $error))
+    {
+        $GLOBALS['log']->info('End: SugarWebServiceImpl->get_entries_count');
+        return;
     } // if
 
-    if (!self::$helperObject->checkACLAccess($seed, 'ListView', $error, 'no_access')) {
-    	return;
+    global $beanList, $beanFiles, $current_user;
+
+    $class_name = $beanList[$module_name];
+    require_once($beanFiles[$class_name]);
+    $seed = new $class_name();
+
+    if (!self::$helperObject->checkQuery($error, $query))
+    {
+        $GLOBALS['log']->info('End: SugarWebServiceImpl->get_entries_count');
+        return;
+    } // if
+
+    if (!self::$helperObject->checkACLAccess($seed, 'ListView', $error, 'no_access'))
+    {
+        return;
     }
 
-	$sql = 'SELECT COUNT(*) result_count FROM ' . $seed->table_name . ' ';
+    $sql = 'SELECT COUNT(*) result_count FROM ' . $seed->table_name . ' ';
 
 
     $customJoin = $seed->getCustomJoin();
     $sql .= $customJoin['join'];
 
-	// build WHERE clauses, if any
-	$where_clauses = array();
-	if (!empty($query)) {
-	    $where_clauses[] = $query;
-	}
-	if ($deleted == 0) {
-		$where_clauses[] = $seed->table_name . '.deleted = 0';
-	}
+    // build WHERE clauses, if any
+    $where_clauses = array();
+    if (!empty($query)) {
+        $where_clauses[] = $query;
+    }
+    if ($deleted == 0) {
+        $where_clauses[] = $seed->table_name . '.deleted = 0';
+    }
 
-	// if WHERE clauses exist, add them to query
-	if (!empty($where_clauses)) {
-		$sql .= ' WHERE ' . implode(' AND ', $where_clauses);
-	}
+    // if WHERE clauses exist, add them to query
+    if (!empty($where_clauses)) {
+        $sql .= ' WHERE ' . implode(' AND ', $where_clauses);
+    }
 
-	$res = $GLOBALS['db']->query($sql);
-	$row = $GLOBALS['db']->fetchByAssoc($res);
+    $res = $GLOBALS['db']->query($sql);
+    $row = $GLOBALS['db']->fetchByAssoc($res);
 
-	$GLOBALS['log']->info('End: SugarWebServiceImpl->get_entries_count');
-	return array(
-		'result_count' => $row['result_count'],
-	);
+    $GLOBALS['log']->info('End: SugarWebServiceImpl->get_entries_count');
+    return array(
+            'result_count' => $row['result_count'],
+            );
 }
 
 
 
 } // clazz
 
+// vim: ts=4 sw=4 et

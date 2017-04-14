@@ -41,7 +41,7 @@
 
 <body style="margin: 0px;">
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 global $theme;
 
 insert_popup_header($theme);

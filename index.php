@@ -45,4 +45,4 @@ $app = new SugarApplication();
 $app->startSession();
 $app->execute();
 
-?>
+// vim: ts=4 sw=4

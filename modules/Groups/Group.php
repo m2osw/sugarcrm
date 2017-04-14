@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -38,7 +38,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 
 
 
-class Group extends User {
+class Group extends User
+{
 	// User attribute overrides
 	var $status			= 'Group';
 	var $password		= ''; // to disallow logins
@@ -46,33 +47,35 @@ class Group extends User {
 	var $importable = false;
 
     
-	function Group() {
+	function Group()
+	{
 		parent::User();
 	}
 
 	/** 
 	 * overrides SugarBean method
 	 */
-	function mark_deleted($id) {
+	function mark_deleted($id)
+	{
 		SugarBean::mark_deleted($id);
 	}
 
-	function create_export_query($order_by, $where)
+	function create_export_query(&$order_by, &$where, $relate_link_join = '')
 	{
 		$query = "SELECT users.*";
 		$query .= " FROM users ";
-		$where_auto = " users.deleted = 0";
+		$where_auto = "users.deleted = 0";
 		if($where != "")
-			$query .= " WHERE $where AND " . $where_auto;
+			$query .= " WHERE $where AND $where_auto";
 		else
-			$query .= " WHERE " . $where_auto;
+			$query .= " WHERE $where_auto";
 		if($order_by != "")
 			$query .= " ORDER BY $order_by";
 		else
 			$query .= " ORDER BY users.user_name";
 		return $query;
 	}
-	
+
 } // end class def 
 
-?>
+// vim: ts=4 sw=4

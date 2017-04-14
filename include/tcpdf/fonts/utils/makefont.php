@@ -1,4 +1,5 @@
 <?php
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 
 /*
 
@@ -22,9 +23,6 @@ r47930 - 2009-06-02 16:21:39 -0700 (Tue, 02 Jun 2009) - jenny - Updating with ch
 */
 
 
-// BEGIN SUGARCRM SPECIFIC
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
-// END SUGARCRM SPECIFIC
 
 //============================================================+
 // File name   : makefont.php

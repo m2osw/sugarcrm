@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -183,8 +183,10 @@ class Currency extends SugarBean
 	 	return '';
 	}
 	
-    function retrieve($id, $encode = true, $deleted = true){
-     	if($id == '-99'){
+    function retrieve($id = -1, $encode = true, $deleted = true)
+    {
+     	if($id == '-99')
+	{
      		$this->name = 	$this->getDefaultCurrencyName();
      		$this->symbol = $this->getDefaultCurrencySymbol();
      		$this->id = '-99';
@@ -641,4 +643,4 @@ function getCurrencySymbolDropDown($focus, $field='currency_name', $value='', $v
 	}
 }
 
-?>
+// vim: ts=4 sw=4

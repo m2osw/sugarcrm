@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -74,6 +74,7 @@ function checkDBSettings($silent=false) {
         //check to see that password and retype are same, if needed
         if(!empty($_SESSION['dbUSRData']) && ($_SESSION['dbUSRData']=='create' || $_SESSION['dbUSRData']=='provide'))
         {
+$_SESSION['setup_db_sugarsales_password'] = 'sugarcrm';  // TODO: find out why $_SESSION['setup_db_sugarsales_password'] remains empty ("")
             if( $_SESSION['setup_db_sugarsales_password'] != $_SESSION['setup_db_sugarsales_password_retype'] ){
                 $errors['ERR_DBCONF_PASSWORD_MISMATCH'] = $mod_strings['ERR_DBCONF_PASSWORD_MISMATCH'];
                 installLog("ERROR::  {$errors['ERR_DBCONF_PASSWORD_MISMATCH']}");

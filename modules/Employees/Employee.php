@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -47,7 +47,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 require_once('include/SugarObjects/templates/person/Person.php');
 
 // Employee is used to store customer information.
-class Employee extends Person {
+class Employee extends Person
+{
 	// Stored fields
 	var $name = '';
 	var $id;
@@ -173,12 +174,14 @@ class Employee extends Person {
         return $user_fields;
 	}
 
-	function list_view_parse_additional_sections(&$list_form, $xTemplateSection){
+	function list_view_parse_additional_sections(&$list_form)
+	{
 		return $list_form;
 	}
 
 
-	function create_export_query($order_by, $where) {
+	function create_export_query(&$order_by, &$where, $relate_link_join = '')
+	{
 		include('modules/Employees/field_arrays.php');
 
 		$cols = '';
@@ -241,17 +244,30 @@ class Employee extends Person {
      * @param boolean $singleSelect Optional, default false.
      * @return String select query string, optionally an array value will be returned if $return_array= true.
      */
-    function create_new_list_query($order_by, $where, $filter=array(), $params=array(), $show_deleted=0, $join_type='', $return_array=false, $parentbean=null, $singleSelect=false)
+    function create_new_list_query(
+				$order_by,
+				$where,
+				$filter = array(),
+				$params = array(),
+				$show_deleted = 0,
+				$join_type = '',
+				$return_array = false,
+				$parentbean = null,
+				$singleSelect = false,
+				$ifListForExport = false)
     {
         //create the filter for portal only users, as they should not be showing up in query results
-        if(empty($where)){
+        if(empty($where))
+		{
             $where = ' users.portal_only = 0 ';
-        }else{
+        }
+		else
+		{
             $where .= ' and users.portal_only = 0 ';
         }
 
         //return parent method, specifying for array to be returned
-        return parent::create_new_list_query($order_by, $where, $filter,$params, $show_deleted, $join_type, $return_array, $parentbean, $singleSelect);
+        return parent::create_new_list_query($order_by, $where, $filter,$params, $show_deleted, $join_type, $return_array, $parentbean, $singleSelect, $ifListForExport);
     }
 
     /*
@@ -279,4 +295,4 @@ class Employee extends Person {
     }
 }
 
-?>
+// vim: ts=4 sw=4

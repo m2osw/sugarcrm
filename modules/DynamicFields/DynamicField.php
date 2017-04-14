@@ -1,6 +1,6 @@
 <?php
 if (! defined ( 'sugarEntry' ) || ! sugarEntry)
-    die ( 'Not A Valid Entry Point' ) ;
+    die ( 'Not A Valid Entry Point'.__FILE__ ) ;
 
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
@@ -38,8 +38,8 @@ if (! defined ( 'sugarEntry' ) || ! sugarEntry)
  ********************************************************************************/
 
 
-class DynamicField {
-
+class DynamicField
+{
     var $use_existing_labels = false; // this value is set to true by install_custom_fields() in ModuleInstaller.php; everything else expects it to be false
     var $base_path = "";
 
@@ -1005,4 +1005,4 @@ class DynamicField {
     ////////////////////////////END BACKWARDS COMPATABILITY MODE FOR PRE 5.0 MODULES\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 }
 
-?>
+// vim: ts=4 sw=4

@@ -1,4 +1,5 @@
 <?php
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -4430,7 +4431,8 @@ function encodeMultienumValue($arr) {
  * @return $ret_array['where']: corrected where clause
  * @return $ret_array['join']: extra join condition
  */
-function create_export_query_relate_link_patch($module, $searchFields, $where){
+function create_export_query_relate_link_patch($module, $searchFields, $where)
+{
 	if(file_exists('modules/'.$module.'/SearchForm.html')){
 		$ret_array['where'] = $where;
 		return $ret_array;
@@ -5046,3 +5048,5 @@ function sugar_unserialize($value)
 
     return unserialize($value);
 }
+
+// vim: ts=4 sw=4 et

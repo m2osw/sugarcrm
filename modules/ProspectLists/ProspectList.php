@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -36,17 +36,12 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
  ********************************************************************************/
 
 /*********************************************************************************
-
  * Description:
  ********************************************************************************/
 
 
-
-
-
-
-
-class ProspectList extends SugarBean {
+class ProspectList extends SugarBean
+{
 	var $field_name_map;
 	
 	// Stored fields
@@ -137,22 +132,20 @@ class ProspectList extends SugarBean {
 	}
 
 
-	function create_export_query($order_by, $where)
+	function create_export_query(&$order_by, &$where, $relate_link_join = '')
 	{
+		$query = "SELECT prospect_lists.*,
+                         users.user_name as assigned_user_name ";
+	    $query .= "FROM prospect_lists ";
+		$query .= "LEFT JOIN users
+                   ON prospect_lists.assigned_user_id=users.id ";
 
-                                $query = "SELECT
-                                prospect_lists.*,
-                                users.user_name as assigned_user_name ";
-	                            $query .= "FROM prospect_lists ";
-		$query .= 				"LEFT JOIN users
-                                ON prospect_lists.assigned_user_id=users.id ";
-
-		$where_auto = " prospect_lists.deleted=0";
+		$where_auto = "prospect_lists.deleted=0";
 
         if($where != "")
-                $query .= " WHERE $where AND ".$where_auto;
+                $query .= " WHERE $where AND $where_auto";
         else
-                $query .= " WHERE ".$where_auto;
+                $query .= " WHERE $where_auto";
 
         if($order_by != "")
                 $query .= " ORDER BY $order_by";
@@ -352,8 +345,4 @@ FROM prospect_lists_prospects plp
 
 }
 
-
-
-
-
-?>
+// vim: ts=4 sw=4

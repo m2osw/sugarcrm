@@ -1,0 +1,48 @@
+
+SugarOS 6.5.x is for PHP 5.2/5.3 by default.
+Here is my changelog to make it generally work with PHP 7.
+
+The changes are so extensive that there is no way I can just write a small
+ledger about them.
+
+The main change was the 'e' flag on a preg_replace() call which is not
+supported at all in PHP 7. We have to use a preg_replace_callback() instead.
+This completely prevented any valid rendering from happening.
+
+Otherwise I fixed many small bugs here and there. There are a few:
+
+  . dynamic reference ($a->$b[$c]) now require the {} ($a->{$b[$c]})
+  . missing "&" in various function declarations
+  . use of & on functions returning an object
+  . added __FILE__ to the "Not a Valid Entry Point" so I know which file
+    causes the problem
+  . quite a bit of reformatting, adding { and } for if/else blocks, etc.
+
+
+
+. Files that SugarCRM adds on install:
+
+Only in ./cache: htmlclean
+Only in ./cache: modules
+Only in ./cache: smarty
+Only in ./cache: sprites
+Only in ./cache: themes
+Only in ./cache: upgrades
+Only in ./custom: application
+Only in ./custom: Extension
+Only in ./custom: modules
+Only in .: install.log
+Only in ./upload: 19fc923c-dae7-4535-ede6-58efcf9c3f30
+Only in ./upload: 36f5a312-030f-776e-63ff-58efc42a696c
+
+Only in /home/alexis/m2osw/sugarcrm: changes.txt
+Only in /home/alexis/m2osw/sugarcrm: .git
+
+
+. Files that are modified when SugarCRM gets installed
+
+./config.php
+./.htaccess
+./sugarcrm.log    (actually getting used)
+
+

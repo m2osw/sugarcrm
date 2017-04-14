@@ -117,21 +117,36 @@ class EAPM extends Basic {
        return $eapmBean;
     }
 
-    function create_new_list_query($order_by, $where,$filter=array(),$params=array(), $show_deleted = 0,$join_type='', $return_array = false,$parentbean=null, $singleSelect = false) {
+    function create_new_list_query(
+				$order_by,
+				$where,
+				$filter = array(),
+				$params = array(),
+				$show_deleted = 0,
+				$join_type = '',
+				$return_array = false,
+				$parentbean = null,
+				$singleSelect = false,
+				$ifListForExport = false)
+	{
         global $current_user;
 
-        if ( !is_admin($GLOBALS['current_user']) ) {
+        if(!is_admin($GLOBALS['current_user']))
+		{
             // Restrict this so only admins can see other people's records
             $owner_where = $this->getOwnerWhere($current_user->id);
             
-            if(empty($where)) {
+            if(empty($where))
+			{
                 $where = $owner_where;
-            } else {
+            }
+			else
+			{
                 $where .= ' AND '.  $owner_where;
             }
         }
         
-        return parent::create_new_list_query($order_by, $where, $filter, $params, $show_deleted,$join_type, $return_array, $parentbean, $singleSelect);
+        return parent::create_new_list_query($order_by, $where, $filter, $params, $show_deleted,$join_type, $return_array, $parentbean, $singleSelect, $ifListForExport);
     }
 
    function save($check_notify = FALSE ) {
@@ -232,3 +247,5 @@ function getEAPMExternalApiDropDown() {
     return $apiList;
 
 }
+
+// vim: ts=4 sw=4

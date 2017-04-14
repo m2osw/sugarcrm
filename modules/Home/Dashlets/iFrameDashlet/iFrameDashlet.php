@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -39,42 +39,58 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 require_once('include/Dashlets/Dashlet.php');
 
 
-class iFrameDashlet extends Dashlet {
+class iFrameDashlet extends Dashlet
+{
     var $displayTpl = 'modules/Home/Dashlets/iFrameDashlet/display.tpl';
     var $configureTpl = 'modules/Home/Dashlets/iFrameDashlet/configure.tpl';
     var $defaultURL = 'http://apps.sugarcrm.com/dashlet/sugarcrm-news-dashlet.html?lang=@@LANG@@&edition=@@EDITION@@&ver=@@VER@@';
     var $url;
     protected $allowed_schemes = array("http", "https");
 
-    function iFrameDashlet($id, $options = null) {
+    function iFrameDashlet($id, $options = null)
+    {
         parent::Dashlet($id);
         $this->isConfigurable = true;
 
-        if (empty($this->title)) {
+        if(empty($this->title))
+        {
             $this->title = translate('LBL_DASHLET_TITLE', 'Home');
             $this->title = translate('LBL_DASHLET_DISCOVER_SUGAR_PRO', 'Home');
         }
 
-        if (!empty($options['titleLabel'])) {
+        if(!empty($options['titleLabel']))
+        {
             $this->title = translate($options['titleLabel'], 'Home');
-        } elseif (!empty($options['title'])) {
+        }
+        elseif(!empty($options['title']))
+        {
             $this->title = $options['title'];
         }
 
-        if(empty($options['url'])) {
+        if(empty($options['url']))
+        {
             $this->url = $this->defaultURL;
             $this->url = 'http://apps.sugarcrm.com/dashlet/go-pro.html?lang=@@LANG@@&edition=@@EDITION@@&ver=@@VER@@';
-        } else {
+        }
+        else
+        {
             $this->url = $options['url'];
         }
 
-        if(empty($options['height']) || (int)$options['height'] < 1 ) {
+        if(empty($options['height'])
+        || (int)$options['height'] < 1)
+        {
             $this->height = 315;
-        } else {
+        }
+        else
+        {
             $this->height = (int)$options['height'];
         }
 
-        if(isset($options['autoRefresh'])) $this->autoRefresh = $options['autoRefresh'];
+        if(isset($options['autoRefresh']))
+        {
+            $this->autoRefresh = $options['autoRefresh'];
+        }
     }
 
     protected function checkURL()
@@ -87,12 +103,13 @@ class iFrameDashlet extends Dashlet {
         return true;
     }
 
-    function displayOptions() {
+    function displayOptions()
+    {
         global $app_strings;
         $ss = new Sugar_Smarty();
         $ss->assign('titleLBL', translate('LBL_DASHLET_OPT_TITLE', 'Home'));
-		$ss->assign('urlLBL', translate('LBL_DASHLET_OPT_URL', 'Home'));
-		$ss->assign('heightLBL', translate('LBL_DASHLET_OPT_HEIGHT', 'Home'));
+        $ss->assign('urlLBL', translate('LBL_DASHLET_OPT_URL', 'Home'));
+        $ss->assign('heightLBL', translate('LBL_DASHLET_OPT_HEIGHT', 'Home'));
         $ss->assign('title', $this->title);
         $ss->assign('url', $this->url);
         $ss->assign('id', $this->id);
@@ -100,16 +117,17 @@ class iFrameDashlet extends Dashlet {
         $ss->assign('saveLBL', $app_strings['LBL_SAVE_BUTTON_LABEL']);
         $ss->assign('clearLBL', $app_strings['LBL_CLEAR_BUTTON_LABEL']);
         if($this->isAutoRefreshable()) {
-       		$ss->assign('isRefreshable', true);
-			$ss->assign('autoRefresh', $GLOBALS['app_strings']['LBL_DASHLET_CONFIGURE_AUTOREFRESH']);
-			$ss->assign('autoRefreshOptions', $this->getAutoRefreshOptions());
-			$ss->assign('autoRefreshSelect', $this->autoRefresh);
-		}
+            $ss->assign('isRefreshable', true);
+            $ss->assign('autoRefresh', $GLOBALS['app_strings']['LBL_DASHLET_CONFIGURE_AUTOREFRESH']);
+            $ss->assign('autoRefreshOptions', $this->getAutoRefreshOptions());
+            $ss->assign('autoRefreshSelect', $this->autoRefresh);
+        }
 
         return  $ss->fetch($this->configureTpl);
     }
 
-    function saveOptions($req) {
+    function saveOptions($req)
+    {
         $options = array();
 
         if ( isset($req['title']) ) {
@@ -126,26 +144,34 @@ class iFrameDashlet extends Dashlet {
         return $options;
     }
 
-    function display(){
-
+    function display($text = '')
+    {
         $sugar_edition = 'COM';
 
-
         $out_url = str_replace(
-            array('@@LANG@@','@@VER@@','@@EDITION@@'),
-            array($GLOBALS['current_language'],$GLOBALS['sugar_config']['sugar_version'],$sugar_edition),
-            $this->url);
+                array('@@LANG@@','@@VER@@','@@EDITION@@'),
+                array($GLOBALS['current_language'],$GLOBALS['sugar_config']['sugar_version'],$sugar_edition),
+                $this->url);
         $title = $this->title;
-        if(empty($title)){
+        if(empty($title))
+        {
             $title = 'empty';
         }
 
-        $result = parent::display();
-        if ($this->checkURL()) {
+        $result = parent::display($text);
+        if($this->checkURL())
+        {
             $result .= "<iframe class='teamNoticeBox' title='{$title}' src='{$out_url}' height='{$this->height}px'></iframe>";
-        } else {
-            $result .= '<table cellpadding="0" cellspacing="0" width="100%" border="0" class="list view"><tr height="20"><td colspan="11"><em>' . translate('LBL_DASHLET_INCORRECT_URL', 'Home') . '</em></td></tr></table>';
         }
+        else
+        {
+            $result .= '<table cellpadding="0" cellspacing="0" width="100%" border="0" class="list view"><tr height="20"><td colspan="11"><em>'
+                    . translate('LBL_DASHLET_INCORRECT_URL', 'Home')
+                    . '</em></td></tr></table>';
+        }
+
         return $result;
     }
 }
+
+// vim: ts=4 sw=4 et

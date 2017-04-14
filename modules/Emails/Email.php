@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -1220,7 +1220,7 @@ class Email extends SugarBean {
 
 	///////////////////////////////////////////////////////////////////////////
 	////	RETRIEVERS
-	function retrieve($id, $encoded=true, $deleted=true) {
+	function retrieve($id = -1, $encoded=true, $deleted=true) {
 		// cn: bug 11915, return SugarBean's retrieve() call bean instead of $this
 		$ret = parent::retrieve($id, $encoded, $deleted);
 
@@ -2241,10 +2241,21 @@ class Email extends SugarBean {
 	}
 
 
-    function create_new_list_query($order_by, $where,$filter=array(),$params=array(), $show_deleted = 0,$join_type='', $return_array = false,$parentbean=null, $singleSelect = false) {
-
-		if ($return_array) {
-			return parent::create_new_list_query($order_by, $where,$filter,$params, $show_deleted,$join_type, $return_array,$parentbean, $singleSelect);
+    function create_new_list_query(
+				$order_by,
+				$where,
+				$filter = array(),
+				$params = array(),
+				$show_deleted = 0,
+				$join_type = '',
+				$return_array = false,
+				$parentbean = null,
+				$singleSelect = false,
+				$ifListForExport = false)
+	{
+		if($return_array)
+		{
+			return parent::create_new_list_query($order_by, $where,$filter,$params, $show_deleted,$join_type, $return_array,$parentbean, $singleSelect, $ifListForExport);
 		}
         $custom_join = $this->getCustomJoin();
 
@@ -2252,7 +2263,8 @@ class Email extends SugarBean {
 
         $query .= $custom_join['select'];
     	$query .= " FROM emails\n";
-    	if ($where != "" && (strpos($where, "contacts.first_name") > 0))  {
+    	if($where != "" && (strpos($where, "contacts.first_name") > 0))
+		{
 			$query .= " LEFT JOIN emails_beans ON emails.id = emails_beans.email_id\n";
     	}
 
@@ -2392,7 +2404,7 @@ class Email extends SugarBean {
 
 
 
-	function create_export_query(&$order_by, &$where)
+	function create_export_query(&$order_by, &$where, $relate_link_join = '')
     {
 		$contact_required = stristr($where, "contacts");
 		$custom_join = $this->getCustomJoin(true, true, $where);
@@ -3121,3 +3133,5 @@ eoq;
             }
     	}
 } // end class def
+
+// vim: ts=4 sw=4

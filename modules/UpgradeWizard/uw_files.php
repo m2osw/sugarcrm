@@ -39,7 +39,7 @@
 
 global $sugar_version;
 if(!defined('sugarEntry') || !sugarEntry) {
-    die('Not A Valid Entry Point');
+    die('Not A Valid Entry Point'.__FILE__);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

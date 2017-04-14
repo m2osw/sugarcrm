@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -68,12 +68,10 @@ class EmailMarketing extends SugarBean
 	function EmailMarketing()
 	{
 		parent::SugarBean();
-
-
-
 	}
 
-	function retrieve($id, $encode=true, $deleted=true) {
+	function retrieve($id = -1, $encode = true, $deleted = true)
+	{
 	    parent::retrieve($id,$encode,$deleted);
 
         global $timedate;
@@ -90,7 +88,7 @@ class EmailMarketing extends SugarBean
 		return $this->name;
 	}
 
-	function create_export_query($order_by, $where)
+	function create_export_query(&$order_by, &$where, $relate_link_join = '')
 	{
 		return $this->create_new_list_query($order_by, $where);
 	}
@@ -159,4 +157,5 @@ class EmailMarketing extends SugarBean
 		return $query;
 	}
 }
-?>
+
+// vim: ts=4 sw=4

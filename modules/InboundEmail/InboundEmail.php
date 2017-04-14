@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -189,7 +189,8 @@ class InboundEmail extends SugarBean {
 	 * @param string id
 	 * @return object Bean
 	 */
-	function retrieve($id, $encode=true, $deleted=true) {
+	function retrieve($id = -1, $encode=true, $deleted=true)
+	{
 		$ret = parent::retrieve($id,$encode,$deleted);
 		// if I-E bean exist
 		if (!is_null($ret)) {
@@ -4946,8 +4947,9 @@ eoq;
 	/**
 	 * Override's SugarBean's
 	 */
-	function create_export_query($order_by, $where, $show_deleted = 0) {
-		return $this->create_new_list_query($order_by, $where, $show_deleted = 0);
+	function create_export_query(&$order_by, &$where, $relate_link_join = '')
+	{
+		return $this->create_new_list_query($order_by, $where, $relate_link_join);
 	}
 
 	/**
@@ -4957,7 +4959,8 @@ eoq;
 	/**
 	 * Override's SugarBean's
 	 */
-	function get_list_view_data(){
+	function get_list_view_data()
+	{
 		global $mod_strings;
 		global $app_list_strings;
 		$temp_array = $this->get_list_view_array();
@@ -6623,3 +6626,5 @@ class Overview {
 		$this->indices = $dictionary['email_cache']['indices'];
 	}
 }
+
+// vim: ts=4 sw=4
