@@ -34,6 +34,9 @@ Will be working on the other pages, adding contacts, managing contacts,
 calendar, etc. It's a huge project so it make take some time before we
 have a version that is seemless.
 
+Note that at this point, if you are not a programmer, you may still find
+it rather difficult to install and use.
+
 # Help Wanted
 
 If you are a programmer and want to help, I'll be happy to give you access.
