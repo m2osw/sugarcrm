@@ -92,5 +92,4 @@ EOQ;
 	echo 'No Module Selected';
 }	
 
-
-?>
+// vim: ts=4 sw=4 et

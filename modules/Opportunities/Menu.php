@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -43,16 +43,22 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * Contributor(s): ______________________________________..
  ********************************************************************************/
 
+require_once "modules/ACL/ACLController.php";
+
+
 global $mod_strings, $app_strings, $sugar_config;
 $module_menu = Array();
-if(ACLController::checkAccess('Opportunities','edit',true)){
+if(ACLController::checkAccess('Opportunities','edit',true))
+{
 	$module_menu[]=	Array("index.php?module=Opportunities&action=EditView&return_module=Opportunities&return_action=DetailView", $mod_strings['LNK_NEW_OPPORTUNITY'],"CreateOpportunities");
 }
-if(ACLController::checkAccess('Opportunities','list',true)){
+if(ACLController::checkAccess('Opportunities','list',true))
+{
 	$module_menu[]=	Array("index.php?module=Opportunities&action=index&return_module=Opportunities&return_action=DetailView", $mod_strings['LNK_OPPORTUNITY_LIST'],"Opportunities");
 }
-if(ACLController::checkAccess('Opportunities','import',true)){
+if(ACLController::checkAccess('Opportunities','import',true))
+{
 	$module_menu[]=  Array("index.php?module=Import&action=Step1&import_module=Opportunities&return_module=Opportunities&return_action=index", $mod_strings['LNK_IMPORT_OPPORTUNITIES'],"Import");
 }
 
-?>
+// vim: ts=4 sw=4 et

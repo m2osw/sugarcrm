@@ -45,7 +45,7 @@ global $app_strings; // coming from an include in a method call
 global $current_user;
 
 
-require_once("include/SugarRouting/SugarRouting.php");
+require_once("include/SugarRouting/SugarRouting.php");   // <-- this file is "missing"
 
 $ie = new InboundEmail();
 $rules = new SugarRouting($ie, $current_user);

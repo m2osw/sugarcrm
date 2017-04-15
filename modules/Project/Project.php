@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,98 +35,101 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-
-class Project extends SugarBean {
-	// database table columns
-	var $id;
-	var $date_entered;
-	var $date_modified;
-	var $assigned_user_id;
-	var $modified_user_id;
-	var $created_by;
-	var $name;
-	var $description;
-	var $deleted;
+require_once "data/SugarBean.php";
 
 
-	// related information
-	var $assigned_user_name;
-	var $modified_by_name;
-	var $created_by_name;
+class Project extends SugarBean
+{
+    // database table columns
+    var $id;
+    var $date_entered;
+    var $date_modified;
+    var $assigned_user_id;
+    var $modified_user_id;
+    var $created_by;
+    var $name;
+    var $description;
+    var $deleted;
 
-	var $account_id;
-	var $contact_id;
-	var $opportunity_id;
-	var $email_id;
+
+    // related information
+    var $assigned_user_name;
+    var $modified_by_name;
+    var $created_by_name;
+
+    var $account_id;
+    var $contact_id;
+    var $opportunity_id;
+    var $email_id;
     var $estimated_start_date;
 
-	// calculated information
-	var $total_estimated_effort;
-	var $total_actual_effort;
+    // calculated information
+    var $total_estimated_effort;
+    var $total_actual_effort;
 
-	var $object_name = 'Project';
-	var $module_dir = 'Project';
-	var $new_schema = true;
-	var $table_name = 'project';
+    var $object_name = 'Project';
+    var $module_dir = 'Project';
+    var $new_schema = true;
+    var $table_name = 'project';
 
-	// This is used to retrieve related fields from form posts.
-	var $additional_column_fields = array(
-		'account_id',
-		'contact_id',
-		'opportunity_id',
-	);
+    // This is used to retrieve related fields from form posts.
+    var $additional_column_fields = array(
+            'account_id',
+            'contact_id',
+            'opportunity_id',
+            );
 
-	var $relationship_fields = array(
-		'account_id' => 'accounts',
-		'contact_id'=>'contacts',
-		'opportunity_id'=>'opportunities',
-		'email_id' => 'emails',
-	);
+    var $relationship_fields = array(
+            'account_id' => 'accounts',
+            'contact_id'=>'contacts',
+            'opportunity_id'=>'opportunities',
+            'email_id' => 'emails',
+            );
 
-	//////////////////////////////////////////////////////////////////
-	// METHODS
-	//////////////////////////////////////////////////////////////////
-
-	/**
-	 *
-	 */
-	function Project()
-	{
-		parent::SugarBean();
-	}
-
-	/**
-	 * overriding the base class function to do a join with users table
-	 */
-
-	/**
-	 *
-	 */
-	function fill_in_additional_detail_fields()
-	{
-	    parent::fill_in_additional_detail_fields();
-
-		$this->assigned_user_name = get_assigned_user_name($this->assigned_user_id);
-		//$this->total_estimated_effort = $this->_get_total_estimated_effort($this->id);
-		//$this->total_actual_effort = $this->_get_total_actual_effort($this->id);
-	}
-
-	/**
-	 *
-	 */
-	function fill_in_additional_list_fields()
-	{
-	    parent::fill_in_additional_list_fields();
-		$this->assigned_user_name = get_assigned_user_name($this->assigned_user_id);
-		//$this->total_estimated_effort = $this->_get_total_estimated_effort($this->id);
-		//$this->total_actual_effort = $this->_get_total_actual_effort($this->id);
-	}
+    //////////////////////////////////////////////////////////////////
+    // METHODS
+    //////////////////////////////////////////////////////////////////
 
     /**
-    * Save changes that have been made to a relationship.
-    *
-    * @param $is_update true if this save is an update.
-    */
+     *
+     */
+    function Project()
+    {
+        parent::SugarBean();
+    }
+
+    /**
+     * overriding the base class function to do a join with users table
+     */
+
+    /**
+     *
+     */
+    function fill_in_additional_detail_fields()
+    {
+        parent::fill_in_additional_detail_fields();
+
+        $this->assigned_user_name = get_assigned_user_name($this->assigned_user_id);
+        //$this->total_estimated_effort = $this->_get_total_estimated_effort($this->id);
+        //$this->total_actual_effort = $this->_get_total_actual_effort($this->id);
+    }
+
+    /**
+     *
+     */
+    function fill_in_additional_list_fields()
+    {
+        parent::fill_in_additional_list_fields();
+        $this->assigned_user_name = get_assigned_user_name($this->assigned_user_id);
+        //$this->total_estimated_effort = $this->_get_total_estimated_effort($this->id);
+        //$this->total_actual_effort = $this->_get_total_actual_effort($this->id);
+    }
+
+    /**
+     * Save changes that have been made to a relationship.
+     *
+     * @param $is_update true if this save is an update.
+     */
     function save_relationship_changes($is_update, $exclude=array())
     {
         parent::save_relationship_changes($is_update, $exclude);
@@ -144,7 +147,7 @@ class Project extends SugarBean {
             //Try to find the link in this bean based on the relationship
             foreach ( $this->field_defs as $key => $def ) {
                 if (isset($def['type']) && $def['type'] == 'link'
-                && isset($def['relationship']) && $def['relationship'] == $new_rel_relname) {
+                        && isset($def['relationship']) && $def['relationship'] == $new_rel_relname) {
                     $new_rel_link = $key;
                 }
             }
@@ -158,142 +161,142 @@ class Project extends SugarBean {
             }
         }
     }
-	/**
-	 *
-	 */
-	function _get_total_estimated_effort($project_id)
-	{
-		$return_value = '';
+    /**
+     *
+     */
+    function _get_total_estimated_effort($project_id)
+    {
+        $return_value = '';
 
-		$query = 'SELECT SUM('.$this->db->convert('estimated_effort', "IFNULL", 0).') total_estimated_effort';
-		$query.= ' FROM project_task';
-		$query.= " WHERE parent_id='{$project_id}' AND deleted=0";
+        $query = 'SELECT SUM('.$this->db->convert('estimated_effort', "IFNULL", 0).') total_estimated_effort';
+        $query.= ' FROM project_task';
+        $query.= " WHERE parent_id='{$project_id}' AND deleted=0";
 
-		$result = $this->db->query($query,true," Error filling in additional detail fields: ");
-		$row = $this->db->fetchByAssoc($result);
-		if($row != null)
-		{
-			$return_value = $row['total_estimated_effort'];
-		}
+        $result = $this->db->query($query,true," Error filling in additional detail fields: ");
+        $row = $this->db->fetchByAssoc($result);
+        if($row != null)
+        {
+            $return_value = $row['total_estimated_effort'];
+        }
 
-		return $return_value;
-	}
+        return $return_value;
+    }
 
-	/**
-	 *
-	 */
-	function _get_total_actual_effort($project_id)
-	{
-		$return_value = '';
+    /**
+     *
+     */
+    function _get_total_actual_effort($project_id)
+    {
+        $return_value = '';
 
-		$query = 'SELECT SUM('.$this->db->convert('actual_effort', "IFNULL", 0).') total_actual_effort';
-		$query.=  ' FROM project_task';
-		$query.=  " WHERE parent_id='{$project_id}' AND deleted=0";
+        $query = 'SELECT SUM('.$this->db->convert('actual_effort', "IFNULL", 0).') total_actual_effort';
+        $query.=  ' FROM project_task';
+        $query.=  " WHERE parent_id='{$project_id}' AND deleted=0";
 
-		$result = $this->db->query($query,true," Error filling in additional detail fields: ");
-		$row = $this->db->fetchByAssoc($result);
-		if($row != null)
-		{
-			$return_value = $row['total_actual_effort'];
-		}
+        $result = $this->db->query($query,true," Error filling in additional detail fields: ");
+        $row = $this->db->fetchByAssoc($result);
+        if($row != null)
+        {
+            $return_value = $row['total_actual_effort'];
+        }
 
-		return $return_value;
-	}
+        return $return_value;
+    }
 
-	/**
-	 *
-	 */
-	function get_summary_text()
-	{
-		return $this->name;
-	}
+    /**
+     *
+     */
+    function get_summary_text()
+    {
+        return $this->name;
+    }
 
-	/**
-	 *
-	 */
-	function build_generic_where_clause ($the_query_string)
-	{
-		$where_clauses = array();
-		$the_query_string = $GLOBALS['db']->quote($the_query_string);
-		array_push($where_clauses, "project.name LIKE '%$the_query_string%'");
+    /**
+     *
+     */
+    function build_generic_where_clause ($the_query_string)
+    {
+        $where_clauses = array();
+        $the_query_string = $GLOBALS['db']->quote($the_query_string);
+        array_push($where_clauses, "project.name LIKE '%$the_query_string%'");
 
-		$the_where = '';
-		foreach($where_clauses as $clause)
-		{
-			if($the_where != '') $the_where .= " OR ";
-			$the_where .= $clause;
-		}
+        $the_where = '';
+        foreach($where_clauses as $clause)
+        {
+            if($the_where != '') $the_where .= " OR ";
+            $the_where .= $clause;
+        }
 
-		return $the_where;
-	}
+        return $the_where;
+    }
 
-	function get_list_view_data()
-	{
-		$field_list = $this->get_list_view_array();
-		$field_list['USER_NAME'] = empty($this->user_name) ? '' : $this->user_name;
-		$field_list['ASSIGNED_USER_NAME'] = $this->assigned_user_name;
-		return $field_list;
-	}
-	  function bean_implements($interface){
-		switch($interface){
-			case 'ACL':return true;
-		}
-		return false;
-	}
+    function get_list_view_data()
+    {
+        $field_list = $this->get_list_view_array();
+        $field_list['USER_NAME'] = empty($this->user_name) ? '' : $this->user_name;
+        $field_list['ASSIGNED_USER_NAME'] = $this->assigned_user_name;
+        return $field_list;
+    }
+    function bean_implements($interface){
+        switch($interface){
+            case 'ACL':return true;
+        }
+        return false;
+    }
 
     function create_export_query(&$order_by, &$where, $relate_link_join='')
     {
         $custom_join = $this->getCustomJoin(true, true, $where);
         $custom_join['join'] .= $relate_link_join;
-		$query = "SELECT
-				project.*,
-                users.user_name as assigned_user_name ";
+        $query = "SELECT
+            project.*,
+            users.user_name as assigned_user_name ";
         $query .=  $custom_join['select'];
         $query .= " FROM project ";
 
         $query .=  $custom_join['join'];
         $query .= " LEFT JOIN users
-                   	ON project.assigned_user_id=users.id ";
+            ON project.assigned_user_id=users.id ";
 
         $where_auto = " project.deleted=0 ";
 
         if($where != "")
-        	$query .= "where ($where) AND ".$where_auto;
+            $query .= "where ($where) AND ".$where_auto;
         else
             $query .= "where ".$where_auto;
 
         if(!empty($order_by)){
-           	//check to see if order by variable already has table name by looking for dot "."
-           	$table_defined_already = strpos($order_by, ".");
+            //check to see if order by variable already has table name by looking for dot "."
+            $table_defined_already = strpos($order_by, ".");
 
-	        if($table_defined_already === false){
-	        	//table not defined yet, define accounts to avoid "ambigous column" SQL error
-	        	$query .= " ORDER BY $order_by";
-	        }else{
-	        	//table already defined, just add it to end of query
-	            $query .= " ORDER BY $order_by";
-	        }
+            if($table_defined_already === false){
+                //table not defined yet, define accounts to avoid "ambigous column" SQL error
+                $query .= " ORDER BY $order_by";
+            }else{
+                //table already defined, just add it to end of query
+                $query .= " ORDER BY $order_by";
+            }
         }
         return $query;
     }
-	function getAllProjectTasks(){
-		$projectTasks = array();
+    function getAllProjectTasks(){
+        $projectTasks = array();
 
-		$query = "SELECT * FROM project_task WHERE project_id = '" . $this->id. "' AND deleted = 0 ORDER BY project_task_id";
-		$result = $this->db->query($query,true,"Error retrieving project tasks");
-		$row = $this->db->fetchByAssoc($result);
+        $query = "SELECT * FROM project_task WHERE project_id = '" . $this->id. "' AND deleted = 0 ORDER BY project_task_id";
+        $result = $this->db->query($query,true,"Error retrieving project tasks");
+        $row = $this->db->fetchByAssoc($result);
 
-		while ($row != null){
-			$projectTaskBean = new ProjectTask();
-			$projectTaskBean->id = $row['id'];
-			$projectTaskBean->retrieve();
-			array_push($projectTasks, $projectTaskBean);
+        while ($row != null){
+            $projectTaskBean = new ProjectTask();
+            $projectTaskBean->id = $row['id'];
+            $projectTaskBean->retrieve();
+            array_push($projectTasks, $projectTaskBean);
 
-			$row = $this->db->fetchByAssoc($result);
-		}
+            $row = $this->db->fetchByAssoc($result);
+        }
 
-		return $projectTasks;
-	}
+        return $projectTasks;
+    }
 }
 
-// vim: ts=4 sw=4
+// vim: ts=4 sw=4 et

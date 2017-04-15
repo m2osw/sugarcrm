@@ -212,4 +212,5 @@ $form_top = <<<EOQ
         </script>
 EOQ;
 echo $form_top;
-?>
+
+// vim: ts=4 sw=4 et

@@ -42,7 +42,7 @@
  * Contributor(s): ______________________________________..
  ********************************************************************************/
 
-$mod_strings = array (
+$mod_strings = array(
 	/*'ADMIN_EXPORT_ONLY'=>'Admin export only',*/
 	'ADVANCED'=>'Advanced',
 	'DEFAULT_CURRENCY_ISO4217'=>'ISO 4217 currency code',
@@ -436,4 +436,5 @@ To configure additional system settings, click <a href="index.php?module=Adminis
 );
 
 
-?>
+
+// vim: ts=4 sw=4 et

@@ -34,20 +34,26 @@
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+require_once "include/MVC/Controller/SugarController.php";
+
 
 class ContactsController extends SugarController
 {
-	function action_Popup(){
-		if(!empty($_REQUEST['html']) && $_REQUEST['html'] == 'mail_merge'){
-			$this->view = 'mailmergepopup';
-		}else{
-			$this->view = 'popup';
-		}
-	}
-	
+    function action_Popup()
+    {
+        if(!empty($_REQUEST['html']) && $_REQUEST['html'] == 'mail_merge')
+        {
+            $this->view = 'mailmergepopup';
+        }
+        else
+        {
+            $this->view = 'popup';
+        }
+    }
+
     function action_ValidPortalUsername()
     {
-		$this->view = 'validportalusername';
+        $this->view = 'validportalusername';
     }
 
     function action_RetrieveEmail()
@@ -57,12 +63,13 @@ class ContactsController extends SugarController
 
     function action_ContactAddressPopup()
     {
-		$this->view = 'contactaddresspopup';
+        $this->view = 'contactaddresspopup';
     }
-  
+
     function action_CloseContactAddressPopup()
     {
-    	$this->view = 'closecontactaddresspopup';
+        $this->view = 'closecontactaddresspopup';
     }    
 }
-?>
+
+// vim: ts=4 sw=4 et

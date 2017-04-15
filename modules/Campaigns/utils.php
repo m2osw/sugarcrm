@@ -841,15 +841,16 @@ function process_subscriptions($subscription_string_to_parse) {
  * @param string campaign_id Primary key of the campaign
  * @param array $pl_row A row of data from prospect_lists_prospects table.
  */
-function write_mail_merge_log_entry($campaign_id,$pl_row) {
-
+function write_mail_merge_log_entry($campaign_id,$pl_row)
+{
     //Update the log entry if it exists.
     $update="update campaign_log set hits=hits+1 where campaign_id='".$GLOBALS['db']->quote($campaign_id)."' and target_tracker_key='" . $GLOBALS['db']->quote($pl_row['id']) . "'";
     $result=$GLOBALS['db']->query($update);
 
     //get affected row count...
-    $count=$GLOBALS['db']->getAffectedRowCount();
-    if ($count==0) {
+    $count=$GLOBALS['db']->getAffectedRowCount($result);
+    if($count==0)
+    {
         $data=array();
 
         $data['id']="'" . create_guid() . "'";

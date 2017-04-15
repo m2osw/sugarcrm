@@ -75,22 +75,26 @@ class ImportViewStep3 extends ImportView
         $default_values = array();
 		$ignored_fields = array();
 
-        if ( !empty( $_REQUEST['source_id']))
+        if(!empty($_REQUEST['source_id']))
         {
             $GLOBALS['log']->fatal("Loading import map properties.");
             $mapping_file = new ImportMap();
-            $mapping_file->retrieve( $_REQUEST['source_id'],false);
+            $mapping_file->retrieve($_REQUEST['source_id'], false);
             $_REQUEST['source'] = $mapping_file->source;
             $has_header = $mapping_file->has_header;
-            if (isset($mapping_file->delimiter))
+            if(isset($mapping_file->delimiter))
+            {
                 $_REQUEST['custom_delimiter'] = $mapping_file->delimiter;
+            }
             if (isset($mapping_file->enclosure))
+            {
                 $_REQUEST['custom_enclosure'] = htmlentities($mapping_file->enclosure);
+            }
             $field_map = $mapping_file->getMapping();
             //print_r($field_map);die();
 			$default_values = $mapping_file->getDefaultValues();
-            $this->ss->assign("MAPNAME",$mapping_file->name);
-            $this->ss->assign("CHECKMAP",'checked="checked" value="on"');
+            $this->ss->assign("MAPNAME", $mapping_file->name);
+            $this->ss->assign("CHECKMAP", 'checked="checked" value="on"');
         }
         else
         {
@@ -107,7 +111,7 @@ class ImportViewStep3 extends ImportView
                 $mapping_file = new $classname;
                 $ignored_fields = $mapping_file->getIgnoredFields($_REQUEST['import_module']);
                 $field_map2 = $mapping_file->getMapping($_REQUEST['import_module']);
-                $field_map = array_merge($field_map,$field_map2);
+                $field_map = array_merge($field_map, $field_map2);
             }
         }
 
@@ -817,3 +821,5 @@ enableQS(false);
 EOJAVASCRIPT;
     }
 }
+
+// vim: ts=4 sw=4 et

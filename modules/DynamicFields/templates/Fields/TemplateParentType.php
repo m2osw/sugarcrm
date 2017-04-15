@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -36,18 +36,21 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  ********************************************************************************/
 
 
-class TemplateParentType extends TemplateText{
-    var $max_size = 25;
-    var $type='parent_type';
-    
-    function get_field_def(){
-		$def = parent::get_field_def();
-		$def['dbType'] = 'varchar';
-		$def['studio'] = 'hidden';
-		return $def;	
-	}
+require_once "modules/DynamicFields/templates/Fields/TemplateText.php";
 
+
+class TemplateParentType extends TemplateText
+{
+    var $max_size = 25;
+    var $type = 'parent_type';
+
+    function get_field_def()
+    {
+        $def = parent::get_field_def();
+        $def['dbType'] = 'varchar';
+        $def['studio'] = 'hidden';
+        return $def;	
+    }
 }
 
-
-?>
+// vim: ts=4 sw=4 et

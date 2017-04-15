@@ -1,7 +1,5 @@
 <?php
-if (! defined ( 'sugarEntry' ) || ! sugarEntry)
-    die ( 'Not A Valid Entry Point'.__FILE__ ) ;
-
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -38,17 +36,16 @@ if (! defined ( 'sugarEntry' ) || ! sugarEntry)
  ********************************************************************************/
 
 
-function get_body (&$ss , $vardef)
+function get_body(&$ss, $vardef)
 {
-    
     $modules = array ( ) ;
-    
+
     require_once 'modules/ModuleBuilder/parsers/relationships/DeployedRelationships.php' ;
-    $relatableModules = array_keys ( DeployedRelationships::findRelatableModules () ) ;
+    $relatableModules = array_keys(DeployedRelationships::findRelatableModules ());
     
-    foreach ( $relatableModules as $module )
+    foreach($relatableModules as $module)
     {
-        $modules [ $module ] = translate ( 'LBL_MODULE_NAME', $module ) ;
+        $modules[$module] = translate('LBL_MODULE_NAME', $module);
     }
     
     foreach ( ACLController::disabledModuleList ( $modules, false, 'list' ) as $disabled_parent_type )
@@ -72,4 +69,5 @@ function get_body (&$ss , $vardef)
     
     return $ss->fetch ( 'modules/DynamicFields/templates/Fields/Forms/relate.tpl' ) ;
 }
-?>
+
+// vim: ts=4 sw=4 et

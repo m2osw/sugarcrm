@@ -283,4 +283,3 @@ $uwMain =<<<eoq
  </div>
 eoq;
 
-?>

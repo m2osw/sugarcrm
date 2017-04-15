@@ -36,11 +36,14 @@
 
 
 require_once('include/tabs.php');
+
+
 /**
  * Old search form
  * @api
  */
-class SearchForm {
+class SearchForm
+{
    /**
      * SearchForm Template to use (xtpl)
      * @var string
@@ -465,6 +468,7 @@ class SearchForm {
      */
     function setup() {
         global $mod_strings, $app_strings, $app_list_strings, $theme, $timedate;
+
         $GLOBALS['log']->debug('SearchForm.php->setup()');
         $this->xtpl = new XTemplate($this->tpl);
         $this->xtpl->assign("MOD", $mod_strings);
@@ -544,7 +548,8 @@ class SearchForm {
      * @param string $saved_views_text body of the saved views tab
      *
      */
-    function displayWithHeaders($view, $basic_search_text = '', $advanced_search_text = '', $saved_views_text = '') {
+    function displayWithHeaders($view, $basic_search_text = '', $advanced_search_text = '', $saved_views_text = '')
+    {
         $GLOBALS['log']->debug('SearchForm.php->displayWithHeaders()');
         $this->displayHeader($view);
         echo "<div id='{$this->module}basic_searchSearchForm' " . (($view == 'basic_search') ? '' : "style='display: none'") . ">" . $basic_search_text . "</div>";
@@ -592,7 +597,8 @@ class SearchForm {
      *
      * @return string html of contents
      */
-    function displayAdvanced($header = true, $return = false, $listViewDefs='', $lv='') {
+    function displayAdvanced($header = true, $return = false, $listViewDefs = '', $lv = '')
+    {
         global $current_user, $current_language;
         $GLOBALS['log']->debug('SearchForm.php->displayAdvanced()');
         $this->bean->custom_fields->populateAllXTPL($this->xtpl, 'search' );
@@ -693,4 +699,4 @@ class SearchForm {
     }
 }
 
-?>
+// vim: ts=4 sw=4 et

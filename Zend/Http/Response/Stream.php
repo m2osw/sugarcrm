@@ -21,6 +21,8 @@
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
+require_once "Zend/Http/Response.php";
+
 /**
  * Zend_Http_Response represents an HTTP 1.0 / 1.1 response message. It
  * includes easy access to all the response's different elemts, as well as some
@@ -233,7 +235,7 @@ class Zend_Http_Response_Stream extends Zend_Http_Response
     }
 
     /**
-	 * This is needed to prevent unserialize vulnerability
+     * This is needed to prevent unserialize vulnerability
      */
     public function __wakeup()
     {
@@ -244,3 +246,5 @@ class Zend_Http_Response_Stream extends Zend_Http_Response
         throw new Exception("Not a serializable object");
     }
 }
+
+// vim: ts=4 sw=4 et

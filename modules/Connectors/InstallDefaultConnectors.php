@@ -60,7 +60,8 @@ $default_modules_sources = array (
 );
 
 $previous_connectors = array();
-if(file_exists('custom/modules/Connectors/metadata/connectors.php')){
+if(file_exists('custom/modules/Connectors/metadata/connectors.php'))
+{
     require('custom/modules/Connectors/metadata/connectors.php');
 
     foreach($connectors as $connector_array){

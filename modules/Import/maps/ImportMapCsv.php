@@ -46,11 +46,11 @@ require_once('modules/Import/maps/ImportMapOther.php');
 
 class ImportMapCsv extends ImportMapOther
 {
-	/**
+    /**
      * String identifier for this import
      */
     public $name = 'csv';
-	/**
+    /**
      * Field delimiter
      */
     public $delimiter = ',';
@@ -59,4 +59,5 @@ class ImportMapCsv extends ImportMapOther
      */
     public $enclosure;
 }
-?>
+
+// vim: ts=4 sw=4 et

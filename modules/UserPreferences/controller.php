@@ -34,6 +34,8 @@
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+require_once "include/MVC/Controller/SugarController.php";
+
 
 class UserPreferencesController extends SugarController
 {
@@ -55,4 +57,5 @@ class UserPreferencesController extends SugarController
 	}
 	
 }
-?>
+
+// vim: ts=4 sw=4 et

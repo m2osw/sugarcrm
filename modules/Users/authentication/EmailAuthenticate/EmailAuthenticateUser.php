@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -36,16 +36,16 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  ********************************************************************************/
 
 
+require_once('modules/Users/authentication/SugarAuthenticate/SugarAuthenticateUser.php');
 
 
 /**
  * This file is where the user authentication occurs. No redirection should happen in this file.
  *
  */
-require_once('modules/Users/authentication/SugarAuthenticate/SugarAuthenticateUser.php');
-class EmailAuthenticateUser extends SugarAuthenticateUser {
+class EmailAuthenticateUser extends SugarAuthenticateUser
+{
     var $passwordLength = 4;
-
 
     /**
 	 * this is called when a user logs in
@@ -54,8 +54,8 @@ class EmailAuthenticateUser extends SugarAuthenticateUser {
 	 * @param STRING $password
 	 * @return boolean
 	 */
-    function loadUserOnLogin($name, $password) {
-
+    function loadUserOnLogin($name, $password, $fallback = false, $params = array())
+    {
         global $login_error;
 
         $GLOBALS['log']->debug("Starting user load for ". $name);
@@ -63,7 +63,7 @@ class EmailAuthenticateUser extends SugarAuthenticateUser {
 
         if(empty($_SESSION['lastUserId'])){
             $input_hash = SugarAuthenticate::encodePassword($password);
-            $user_id = $this->authenticateUser($name, $input_hash);
+            $user_id = $this->authenticateUser($name, $input_hash, $fallback);
             if(empty($user_id)) {
                 $GLOBALS['log']->fatal('SECURITY: User authentication for '.$name.' failed');
                 return false;

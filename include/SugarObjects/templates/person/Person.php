@@ -3,31 +3,31 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License version 3 as published by the
  * Free Software Foundation with the addition of the following permission added
  * to Section 15 as permitted in Section 7(a): FOR ANY PART OF THE COVERED WORK
  * IN WHICH THE COPYRIGHT IS OWNED BY SUGARCRM, SUGARCRM DISCLAIMS THE WARRANTY
  * OF NON INFRINGEMENT OF THIRD PARTY RIGHTS.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License along with
  * this program; if not, see http://www.gnu.org/licenses or write to the Free
  * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
- * 
+ *
  * You can contact SugarCRM, Inc. headquarters at 10050 North Wolfe Road,
  * SW2-130, Cupertino, CA 95014, USA. or at email address contact@sugarcrm.com.
- * 
+ *
  * The interactive user interfaces in modified source and object code versions
  * of this program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU Affero General Public License version 3.
- * 
+ *
  * In accordance with Section 7(b) of the GNU Affero General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "Powered by
  * SugarCRM" logo. If the display of the logo is not reasonably feasible for
@@ -62,7 +62,8 @@ class Person extends Basic
      *
      * @see parent::retrieve()
      */
-    public function retrieve($id = -1, $encode=true, $deleted=true) {
+    public function retrieve($id = -1, $encode = true, $deleted = true)
+    {
         $ret_val = parent::retrieve($id, $encode, $deleted);
         $this->_create_proper_name_field();
         return $ret_val;
@@ -90,23 +91,23 @@ class Person extends Basic
         // Bug# 46125 - make first name, last name, salutation and title of Contacts respect field level ACLs
         $first_name = ""; $last_name = ""; $salutation = ""; $title = "";
 
-           // first name has at least read access
-           $first_name = $this->first_name;
+        // first name has at least read access
+        $first_name = $this->first_name;
 
-            // last name has at least read access
-            $last_name = $this->last_name;
+        // last name has at least read access
+        $last_name = $this->last_name;
 
 
-            // salutation has at least read access
-            if(isset($this->field_defs['salutation']['options'])
-              && isset($app_list_strings[$this->field_defs['salutation']['options']])
-              && isset($app_list_strings[$this->field_defs['salutation']['options']][$this->salutation]) ) {
+        // salutation has at least read access
+        if(isset($this->field_defs['salutation']['options'])
+                && isset($app_list_strings[$this->field_defs['salutation']['options']])
+                && isset($app_list_strings[$this->field_defs['salutation']['options']][$this->salutation]) ) {
 
-                    $salutation = $app_list_strings[$this->field_defs['salutation']['options']][$this->salutation];
-            } // if
+            $salutation = $app_list_strings[$this->field_defs['salutation']['options']][$this->salutation];
+        } // if
 
-            // last name has at least read access
-            $title = $this->title;
+        // last name has at least read access
+        $title = $this->title;
 
         // Corner Case:
         // Both first name and last name cannot be empty, at least one must be shown
@@ -125,12 +126,12 @@ class Person extends Basic
         $this->name = $full_name;
         $this->full_name = $full_name; //used by campaigns
     }
-    
+
 
     /**
      * @see parent::save()
      */
-    public function save($check_notify=false) 
+    public function save($check_notify = false)
     {
         //If we are saving due to relationship changes, don't bother trying to update the emails
         if(!empty($GLOBALS['resavingRelatedBeans']))
@@ -157,7 +158,7 @@ class Person extends Basic
             $this->in_workflow = false;
         }
         if($ori_in_workflow === false || !empty($override_email)){
-            $this->emailAddress->save($this->id, $this->module_dir, $override_email,'','','','',$this->in_workflow);
+            $this->emailAddress->save_email_addresses($this->id, $this->module_dir, $override_email, '', '', '', '', $this->in_workflow);
             // $this->emailAddress->applyWorkflowChanges($this->id, $this->module_dir);
         }
         return $this->id;
@@ -166,7 +167,7 @@ class Person extends Basic
     /**
      * @see parent::get_summary_text()
      */
-    public function get_summary_text() 
+    public function get_summary_text()
     {
         $this->_create_proper_name_field();
         return $this->name;
@@ -175,7 +176,7 @@ class Person extends Basic
     /**
      * @see parent::get_list_view_data()
      */
-    public function get_list_view_data() 
+    public function get_list_view_data()
     {
         global $system_config;
         global $current_user;
@@ -189,7 +190,7 @@ class Person extends Basic
 
         $temp_array['EMAIL1'] = $this->emailAddress->getPrimaryAddress($this);
 
-            $this->email1 = $temp_array['EMAIL1'];
+        $this->email1 = $temp_array['EMAIL1'];
         $temp_array['EMAIL1_LINK'] = $current_user->getEmailLink('email1', $this, '', '', 'ListView');
 
         return $temp_array;
@@ -199,8 +200,8 @@ class Person extends Basic
      * @see SugarBean::populateRelatedBean()
      */
     public function populateRelatedBean(
-        SugarBean $newbean
-        )
+            SugarBean $newbean
+            )
     {
         parent::populateRelatedBean($newbean);
 
@@ -242,10 +243,10 @@ class Person extends Basic
             $custom_join['join'] .= $relate_link_join;
         }
         $query = "SELECT
-                    $table.*,
-                    email_addresses.email_address email_address,
-                    '' email_addresses_non_primary, " . // email_addresses_non_primary needed for get_field_order_mapping()
-                    "users.user_name as assigned_user_name ";
+            $table.*,
+            email_addresses.email_address email_address,
+            '' email_addresses_non_primary, " . // email_addresses_non_primary needed for get_field_order_mapping()
+                "users.user_name as assigned_user_name ";
         if($custom_join)
         {
             $query .= $custom_join['select'];
@@ -255,7 +256,7 @@ class Person extends Basic
 
 
         $query .= "LEFT JOIN users
-                    ON $table.assigned_user_id=users.id ";
+            ON $table.assigned_user_id=users.id ";
 
 
         //Join email address table too.

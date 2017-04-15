@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -27,7 +27,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * The interactive user interfaces in modified source and object code versions
  * of this program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU Affero General Public License version 3.
- * 
+ *
  * In accordance with Section 7(b) of the GNU Affero General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "Powered by
  * SugarCRM" logo. If the display of the logo is not reasonably feasible for
@@ -35,42 +35,43 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+require_once "include/formbase.php";
+require_once "modules/Opportunities/Opportunity.php";
 
 
 
-class OpportunityFormBase{
+class OpportunityFormBase
+{
+	function checkForDuplicates($prefix)
+	{
+		$focus = new Opportunity();
+		$query = '';
+		$baseQuery = 'select id, name, sales_stage,amount, date_closed  from opportunities where deleted!=1 and (';
 
-
-function checkForDuplicates($prefix){
-	require_once('include/formbase.php');
-	
-	$focus = new Opportunity();
-	$query = '';
-	$baseQuery = 'select id, name, sales_stage,amount, date_closed  from opportunities where deleted!=1 and (';
-
-	if(isset($_POST[$prefix.'name']) && !empty($_POST[$prefix.'name'])){
-		$query = $baseQuery ."  name like '%".$_POST[$prefix.'name']."%'";
-		$query .= getLikeForEachWord('name', $_POST[$prefix.'name']);
-	}
-
-	if(!empty($query)){
-		$rows = array();
-		global $db;
-		$result = $db->query($query.')');
-		$i=-1;
-		while(($row=$db->fetchByAssoc($result)) != null) {
-			$i++;
-			$rows[$i] = $row;
+		if(isset($_POST[$prefix.'name']) && !empty($_POST[$prefix.'name'])){
+			$query = $baseQuery ."  name like '%".$_POST[$prefix.'name']."%'";
+			$query .= getLikeForEachWord('name', $_POST[$prefix.'name']);
 		}
-		if ($i==-1) return null;
-		
-		return $rows;		
+
+		if(!empty($query)){
+			$rows = array();
+			global $db;
+			$result = $db->query($query.')');
+			$i=-1;
+			while(($row=$db->fetchByAssoc($result)) != null) {
+				$i++;
+				$rows[$i] = $row;
+			}
+			if ($i==-1) return null;
+			
+			return $rows;		
+		}
+		return null;
 	}
-	return null;
-}
 
 
-function buildTableForm($rows, $mod='Opportunities'){
+function buildTableForm($rows, $mod = 'Opportunities')
+{
 	if(!empty($mod)){
 	global $current_language;
 	$mod_strings = return_module_language($current_language, $mod);
@@ -464,4 +465,5 @@ function handleSave($prefix,$redirect=true, $useRequired=false){
 }
 
 }
-?>
+
+// vim: ts=4 sw=4 et

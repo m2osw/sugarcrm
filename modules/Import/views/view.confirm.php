@@ -261,7 +261,7 @@ class ImportViewConfirm extends ImportView
 
     private function getImportMap($importSource)
     {
-        if ( strncasecmp("custom:",$importSource,7) == 0)
+        if(strncasecmp("custom:",$importSource,7) == 0)
         {
             $id = substr($importSource,7);
             $import_map_seed = new ImportMap();
@@ -274,17 +274,21 @@ class ImportViewConfirm extends ImportView
         else
         {
             $classname = 'ImportMap' . ucfirst($importSource);
-            if ( file_exists("modules/Import/maps/{$classname}.php") )
+            if(file_exists("modules/Import/maps/{$classname}.php"))
+            {
                 require_once("modules/Import/maps/{$classname}.php");
-            elseif ( file_exists("custom/modules/Import/maps/{$classname}.php") )
+            }
+            elseif(file_exists("custom/modules/Import/maps/{$classname}.php"))
+            {
                 require_once("custom/modules/Import/maps/{$classname}.php");
+            }
             else
             {
                 require_once("custom/modules/Import/maps/ImportMapOther.php");
                 $classname = 'ImportMapOther';
                 $importSource = 'other';
             }
-            if ( class_exists($classname) )
+            if(class_exists($classname))
             {
                 $import_map_seed = new $classname;
                 $this->ss->assign("SOURCE", $importSource);
@@ -641,7 +645,6 @@ EOJAVASCRIPT;
 
         echo $ss->fetch('modules/Import/tpls/error.tpl');
     }
-
 }
 
-?>
+// vim: ts=4 sw=4 et

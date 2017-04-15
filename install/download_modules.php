@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -176,6 +176,10 @@ if(isset($validation_errors)) {
 $disabled = "";
 $result = "";
 $langHeader = get_language_header();
+
+// this CSS file does not exist...
+//<link rel="stylesheet" type="text/css" media="all" href="jscalendar/calendar-win2k-cold-1.css?s={$sugar_version}&c={$js_custom_version}">
+
 $out =<<<EOQ
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html {$langHeader}>
@@ -187,7 +191,6 @@ $out =<<<EOQ
    <link REL="SHORTCUT ICON" HREF="include/images/sugar_icon.ico">
    <link rel="stylesheet" href="install/install.css" type="text/css">
    <script type="text/javascript" src="install/installCommon.js"></script>
-   <link rel="stylesheet" type="text/css" media="all" href="jscalendar/calendar-win2k-cold-1.css?s={$sugar_version}&c={$js_custom_version}">
    <script>jscal_today = 1161698116000; if(typeof app_strings == "undefined") app_strings = new Array();</script>
    <script type="text/javascript" src="cache/include/javascript/sugar_grp1.js?s={$sugar_version}&c={$js_custom_version}"></script>
    <script type="text/javascript" src="cache/include/javascript/sugar_grp1_yui.js?s={$sugar_version}&c={$js_custom_version}"></script>
@@ -355,4 +358,5 @@ echo $out.$form2.$out1;
 //unlinkTempFiles('','');
 ////    END PAGEOUTPUT
 ///////////////////////////////////////////////////////////////////////////////
-?>
+
+// vim: ts=4 sw=4 et

@@ -186,4 +186,5 @@ $sugar_smarty = new Sugar_Smarty();
 				echo 'Admin\'s Only';	
 			}
 
-?>
+
+// vim: ts=4 sw=4 et

@@ -38,7 +38,8 @@
 
 require_once('include/DetailView/DetailView2.php');
 
-class ViewMetadata extends SugarView{
+class ViewMetadata extends SugarView
+{
 	var $type ='detail';
 	var $dv;
 	
@@ -100,7 +101,7 @@ class ViewMetadata extends SugarView{
  		$this->displayCheckBoxes('attributes[]', $allAttributes, $attributes, ' id="_attributes" ');
  		$this->displayTextBoxes($allAttributes, ' id="_fields" ');
  		echo "</form>";
- 		 		echo <<<EOQ
+ 		echo <<<EOQ
  		<script>
  			function toggleLearn(value){
  				document.getElementById('_modules').style.display = 'None';	
@@ -370,3 +371,5 @@ class VardefBrowser{
 	
 
 }
+
+// vim: ts=4 sw=4 et

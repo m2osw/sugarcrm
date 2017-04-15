@@ -1,7 +1,5 @@
 <?php
-if (! defined ( 'sugarEntry' ) || ! sugarEntry)
-    die ( 'Not A Valid Entry Point'.__FILE__ ) ;
-
+if(!defined('sugarEntry') || ! sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -37,10 +35,11 @@ if (! defined ( 'sugarEntry' ) || ! sugarEntry)
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-
 require_once ('modules/ModuleBuilder/parsers/ParserFactory.php') ;
 require_once ('modules/ModuleBuilder/MB/AjaxCompose.php') ;
 require_once 'modules/ModuleBuilder/parsers/constants.php' ;
+require_once "include/MVC/View/SugarView.php";
+
 
 class ViewLayoutView extends SugarView
 {
@@ -55,7 +54,8 @@ class ViewLayoutView extends SugarView
         {
             $this->package = $_REQUEST [ 'view_package' ] ;
             $this->type = $this->editLayout;
-        } else
+        }
+        else
         {
             global $app_list_strings ;
             $moduleNames = array_change_key_case ( $app_list_strings [ 'moduleList' ] ) ;
@@ -66,16 +66,16 @@ class ViewLayoutView extends SugarView
     }
 
     /**
-	 * @see SugarView::_getModuleTitleParams()
-	 */
-	protected function _getModuleTitleParams($browserTitle = false)
-	{
-	    global $mod_strings;
-	    
-    	return array(
-    	   translate('LBL_MODULE_NAME','Administration'),
-    	   ModuleBuilderController::getModuleTitle(),
-    	   );
+     * @see SugarView::_getModuleTitleParams()
+     */
+    protected function _getModuleTitleParams($browserTitle = false)
+    {
+        global $mod_strings;
+
+        return array(
+                translate('LBL_MODULE_NAME','Administration'),
+                ModuleBuilderController::getModuleTitle(),
+                );
     }
 
     // DO NOT REMOVE - overrides parent ViewEdit preDisplay() which attempts to load a bean for a non-existent module
@@ -91,13 +91,13 @@ class ViewLayoutView extends SugarView
         $history = $parser->getHistory () ;
         $smarty = new Sugar_Smarty ( ) ;
         //Add in the module we are viewing to our current mod strings
-		if (! $this->fromModuleBuilder) {
-			global $current_language;
-			$editModStrings = return_module_language($current_language, $this->editModule);
-			$mod_strings = sugarArrayMerge($editModStrings, $mod_strings);
-		}
+        if (! $this->fromModuleBuilder) {
+            global $current_language;
+            $editModStrings = return_module_language($current_language, $this->editModule);
+            $mod_strings = sugarArrayMerge($editModStrings, $mod_strings);
+        }
         $smarty->assign('mod', $mod_strings);
-		$smarty->assign('MOD', $mod_strings);
+        $smarty->assign('MOD', $mod_strings);
         // assign buttons
         $images = array ( 'icon_save' => 'studio_save' , 'icon_publish' => 'studio_publish' , 'icon_address' => 'icon_Address' , 'icon_emailaddress' => 'icon_EmailAddress' , 'icon_phone' => 'icon_Phone' ) ;
         foreach ( $images as $image => $file )
@@ -119,9 +119,9 @@ class ViewLayoutView extends SugarView
 
             //Check if we need to synch edit view to other layouts
             if($this->editLayout == MB_DETAILVIEW || $this->editLayout == MB_QUICKCREATE){
-		        $parser2 = ParserFactory::getParser(MB_EDITVIEW,$this->editModule,$this->package);
+                $parser2 = ParserFactory::getParser(MB_EDITVIEW,$this->editModule,$this->package);
                 if($this->editLayout == MB_DETAILVIEW){
-		            $disableLayout = $parser2->getSyncDetailEditViews();
+                    $disableLayout = $parser2->getSyncDetailEditViews();
                 }
                 if(!empty($_REQUEST['copyFromEditView'])){
                     $editViewPanels = $parser2->convertFromCanonicalForm ( $parser2->_viewdefs [ 'panels' ] , $parser2->_fielddefs ) ;
@@ -130,66 +130,66 @@ class ViewLayoutView extends SugarView
                     $parser->setUseTabs($parser2->getUseTabs());
                     $parser->setTabDefs($parser2->getTabDefs());
                 }
-		    }
+            }
 
             if (! $this->fromModuleBuilder)
             {
-	            $buttons [] = array (
-                    'id' => 'saveBtn' , 
-                    'text' => translate ( 'LBL_BTN_SAVE' ) , 
-                    'actionScript' => "onclick='if(Studio2.checkGridLayout(\"{$this->editLayout}\")) Studio2.handleSave();'",
-                	'disabled' => $disableLayout, 
-                ) ;
+                $buttons [] = array (
+                        'id' => 'saveBtn' , 
+                        'text' => translate ( 'LBL_BTN_SAVE' ) , 
+                        'actionScript' => "onclick='if(Studio2.checkGridLayout(\"{$this->editLayout}\")) Studio2.handleSave();'",
+                        'disabled' => $disableLayout, 
+                        ) ;
                 $buttons [] = array ( 
-                    'id' => 'publishBtn' , 
-                    'text' => translate ( 'LBL_BTN_SAVEPUBLISH' ) , 
-                    'actionScript' => "onclick='if(Studio2.checkGridLayout(\"{$this->editLayout}\")) Studio2.handlePublish();'",
-                	'disabled' => $disableLayout, 
-                ) ;
+                        'id' => 'publishBtn' , 
+                        'text' => translate ( 'LBL_BTN_SAVEPUBLISH' ) , 
+                        'actionScript' => "onclick='if(Studio2.checkGridLayout(\"{$this->editLayout}\")) Studio2.handlePublish();'",
+                        'disabled' => $disableLayout, 
+                        ) ;
                 $buttons [] = array ( 'id' => 'spacer' , 'width' => '33px' ) ;
                 $buttons [] = array ( 
-	                'id' => 'historyBtn' , 
-	                'text' => translate ( 'LBL_HISTORY' ) , 
-	                'actionScript' => "onclick='ModuleBuilder.history.browse(\"{$this->editModule}\", \"{$this->editLayout}\")'",
-                    'disabled' => $disableLayout,
-                ) ;
+                        'id' => 'historyBtn' , 
+                        'text' => translate ( 'LBL_HISTORY' ) , 
+                        'actionScript' => "onclick='ModuleBuilder.history.browse(\"{$this->editModule}\", \"{$this->editLayout}\")'",
+                        'disabled' => $disableLayout,
+                        ) ;
                 $buttons [] = array ( 
-	                'id' => 'historyDefault' , 
-	                'text' => translate ( 'LBL_RESTORE_DEFAULT' ) , 
-	                'actionScript' => "onclick='ModuleBuilder.history.revert(\"{$this->editModule}\", \"{$this->editLayout}\", \"{$history->getLast()}\", \"\")'",
-                	'disabled' => $disableLayout, 
-                ) ;
+                        'id' => 'historyDefault' , 
+                        'text' => translate ( 'LBL_RESTORE_DEFAULT' ) , 
+                        'actionScript' => "onclick='ModuleBuilder.history.revert(\"{$this->editModule}\", \"{$this->editLayout}\", \"{$history->getLast()}\", \"\")'",
+                        'disabled' => $disableLayout, 
+                        ) ;
             } else
             {
                 $buttons [] = array ( 
-                    'id' => 'saveBtn' , 
-                    'text' => $GLOBALS [ 'mod_strings' ] [ 'LBL_BTN_SAVE' ] , 
-                    'actionScript' => "onclick='if(Studio2.checkGridLayout(\"{$this->editLayout}\")) Studio2.handlePublish();'",
-                    'disabled' => $disableLayout,
-                ) ;
+                        'id' => 'saveBtn' , 
+                        'text' => $GLOBALS [ 'mod_strings' ] [ 'LBL_BTN_SAVE' ] , 
+                        'actionScript' => "onclick='if(Studio2.checkGridLayout(\"{$this->editLayout}\")) Studio2.handlePublish();'",
+                        'disabled' => $disableLayout,
+                        ) ;
                 $buttons [] = array ( 'id' => 'spacer' , 'width' => '33px' ) ;
                 $buttons [] = array (
-                    'id' => 'historyBtn' , 
-                    'text' => translate ( 'LBL_HISTORY' ) , 
-                    'actionScript' => "onclick='ModuleBuilder.history.browse(\"{$this->editModule}\", \"{$this->editLayout}\")'",
-                    'disabled' => $disableLayout, 
-                ) ;
+                        'id' => 'historyBtn' , 
+                        'text' => translate ( 'LBL_HISTORY' ) , 
+                        'actionScript' => "onclick='ModuleBuilder.history.browse(\"{$this->editModule}\", \"{$this->editLayout}\")'",
+                        'disabled' => $disableLayout, 
+                        ) ;
                 $buttons [] = array ( 
-                    'id' => 'historyDefault' , 
-                    'text' => translate ( 'LBL_RESTORE_DEFAULT' ) , 
-                    'actionScript' => "onclick='ModuleBuilder.history.revert(\"{$this->editModule}\", \"{$this->editLayout}\", \"{$history->getLast()}\", \"\")'",
-                    'disabled' => $disableLayout, 
-                ) ;
+                        'id' => 'historyDefault' , 
+                        'text' => translate ( 'LBL_RESTORE_DEFAULT' ) , 
+                        'actionScript' => "onclick='ModuleBuilder.history.revert(\"{$this->editModule}\", \"{$this->editLayout}\", \"{$history->getLast()}\", \"\")'",
+                        'disabled' => $disableLayout, 
+                        ) ;
             }
 
 
             if($this->editLayout == MB_DETAILVIEW || $this->editLayout == MB_QUICKCREATE){
                 $buttons [] = array (
-                'id' => 'copyFromEditView' ,
-                'text' => translate ( 'LBL_COPY_FROM_EDITVIEW' ) ,
-                'actionScript' => "onclick='ModuleBuilder.copyFromView(\"{$this->editModule}\", \"{$this->editLayout}\")'",
-                'disabled' => $disableLayout,
-                ) ;
+                        'id' => 'copyFromEditView' ,
+                        'text' => translate ( 'LBL_COPY_FROM_EDITVIEW' ) ,
+                        'actionScript' => "onclick='ModuleBuilder.copyFromView(\"{$this->editModule}\", \"{$this->editLayout}\")'",
+                        'disabled' => $disableLayout,
+                        ) ;
             }
         }
 
@@ -197,15 +197,15 @@ class ViewLayoutView extends SugarView
         foreach ( $buttons as $button )
         {
             if ($button['id'] == "spacer") {
-            	$html .= "<td style='width:{$button['width']}'> </td>";
+                $html .= "<td style='width:{$button['width']}'> </td>";
             } else {
-        	    $html .= "<td><input id='{$button['id']}' type='button' valign='center' class='button' style='cursor:pointer' "
-        	       . "onmousedown='this.className=\"buttonOn\";return false;' onmouseup='this.className=\"button\"' "
-        	       . "onmouseout='this.className=\"button\"' {$button['actionScript']} value = '{$button['text']}'" ;
-        	    if(!empty($button['disabled'])){
-        	    	 $html .= " disabled";
-        	    }
-        	    $html .= "></td>";
+                $html .= "<td><input id='{$button['id']}' type='button' valign='center' class='button' style='cursor:pointer' "
+                    . "onmousedown='this.className=\"buttonOn\";return false;' onmouseup='this.className=\"button\"' "
+                    . "onmouseout='this.className=\"button\"' {$button['actionScript']} value = '{$button['text']}'" ;
+                if(!empty($button['disabled'])){
+                    $html .= " disabled";
+                }
+                $html .= "></td>";
             }
         }
 
@@ -213,7 +213,7 @@ class ViewLayoutView extends SugarView
 
         // assign fields and layout
         $smarty->assign ( 'available_fields', $parser->getAvailableFields () ) ;
-        
+
         $smarty->assign ( 'disable_layout', $disableLayout) ;
         $smarty->assign ( 'required_fields', $requiredFields) ;
         $smarty->assign ( 'layout', $parser->getLayout () ) ;
@@ -235,10 +235,10 @@ class ViewLayoutView extends SugarView
         }
 
         $labels = array (
-        			MB_EDITVIEW => 'LBL_EDITVIEW' ,
-        			MB_DETAILVIEW => 'LBL_DETAILVIEW' ,
-        			MB_QUICKCREATE => 'LBL_QUICKCREATE',
-        			) ;
+                MB_EDITVIEW => 'LBL_EDITVIEW' ,
+                MB_DETAILVIEW => 'LBL_DETAILVIEW' ,
+                MB_QUICKCREATE => 'LBL_QUICKCREATE',
+                ) ;
 
         $layoutLabel = 'LBL_LAYOUTS' ;
         $layoutView = 'layouts' ;
@@ -247,8 +247,8 @@ class ViewLayoutView extends SugarView
         $ajax = new AjaxCompose ( ) ;
 
         $translatedViewType = '' ;
-		if ( isset ( $labels [ strtolower ( $this->editLayout ) ] ) )
-			$translatedViewType = translate ( $labels [ strtolower( $this->editLayout ) ] , 'ModuleBuilder' ) ;
+        if ( isset ( $labels [ strtolower ( $this->editLayout ) ] ) )
+            $translatedViewType = translate ( $labels [ strtolower( $this->editLayout ) ] , 'ModuleBuilder' ) ;
         else if (isset($this->sm))
         {
             foreach($this->sm->sources as $file => $def)
@@ -286,20 +286,22 @@ class ViewLayoutView extends SugarView
         }
 
         // set up language files
-		$smarty->assign ( 'language', $parser->getLanguage() ) ; // for sugar_translate in the smarty template
+        $smarty->assign ( 'language', $parser->getLanguage() ) ; // for sugar_translate in the smarty template
         $smarty->assign('from_mb',$this->fromModuleBuilder);
         $smarty->assign('calc_field_list', json_encode($parser->getCalculatedFields()));
-		if ($this->fromModuleBuilder) {
-			$mb = new ModuleBuilder ( ) ;
+        if ($this->fromModuleBuilder) {
+            $mb = new ModuleBuilder ( ) ;
             $module = & $mb->getPackageModule ( $this->package, $this->editModule ) ;
-		    $smarty->assign('current_mod_strings', $module->getModStrings());
-		}
+            $smarty->assign('current_mod_strings', $module->getModStrings());
+        }
 
         $ajax->addSection ( 'center', $translatedViewType, $smarty->fetch ( 'modules/ModuleBuilder/tpls/layoutView.tpl' ) ) ;
         if ($preview) {
-        	echo $smarty->fetch ( 'modules/ModuleBuilder/tpls/Preview/layoutView.tpl' );
-		} else {
-			echo $ajax->getJavascript () ;
-    	}
+            echo $smarty->fetch ( 'modules/ModuleBuilder/tpls/Preview/layoutView.tpl' );
+        } else {
+            echo $ajax->getJavascript () ;
+        }
     }
 }
+
+// vim: ts=4 sw=4 et

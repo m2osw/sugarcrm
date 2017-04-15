@@ -72,7 +72,8 @@ foreach ($sm as $mod_dir_name => $links)
 // Specify the sitemap template to use; allow developers to override this with a custom one to add/remove modules
 // from the list
 $tpl = 'modules/Home/sitemap.tpl';
-if ( sugar_is_file('custom/modules/Home/sitemap.tpl') ) {
+if(sugar_is_file('custom/modules/Home/sitemap.tpl'))
+{
     $tpl = 'custom/modules/Home/sitemap.tpl';
 }
 echo $sm_smarty->fetch($tpl);
@@ -86,14 +87,14 @@ function sm_build_array()
 
 
     include("include/modules.php");
-	global $sugar_config,$mod_strings;
+    global $sugar_config,$mod_strings;
 
 
-	// Need to set up mod_strings when we iterate through module menus.
+    // Need to set up mod_strings when we iterate through module menus.
     $orig_modstrings = array();
     if(!empty($mod_strings))
     {
-     $orig_modstrings = $mod_strings;
+        $orig_modstrings = $mod_strings;
     }
     if(isset($_SESSION['authenticated_user_language']) && $_SESSION['authenticated_user_language'] != '')
     {
@@ -103,29 +104,29 @@ function sm_build_array()
     {
         $current_language = $sugar_config['default_language'];
     }
-	$exclude= array();		// in case you want to exclude any.
+    $exclude= array();		// in case you want to exclude any.
     $mstr_array = array();
 
-	global $modListHeader;
-	if(!isset($modListHeader))
-	{
-		global $current_user;
-		if(isset($current_user))
-		{
-			$modListHeader = query_module_access_list($current_user);
-		}
-	}
+    global $modListHeader;
+    if(!isset($modListHeader))
+    {
+        global $current_user;
+        if(isset($current_user))
+        {
+            $modListHeader = query_module_access_list($current_user);
+        }
+    }
 
-    foreach($modListHeader as $key=>$val)
+    foreach($modListHeader as $key => $val)
     {
         if(!empty($exclusion_array) && in_array($val,$exclude ))
         {
-           continue;
+            continue;
         }
         else
         {
-		    if (file_exists('modules/'.$val.'/Menu.php'))
-		    {
+            if (file_exists('modules/'.$val.'/Menu.php'))
+            {
                 $mod_strings = return_module_language($current_language, $val);
                 $module_menu = array();
                 include('modules/'.$val.'/Menu.php');
@@ -133,8 +134,8 @@ function sm_build_array()
                 $tmp_menu_items = array();
                 foreach($module_menu as $menu)
                 {
-               		if(isset($menu[0]) && !empty($menu[0]) && isset($menu[1]) && !empty($menu[1]) && trim($menu[0]) !='#')
-               		{
+                    if(isset($menu[0]) && !empty($menu[0]) && isset($menu[1]) && !empty($menu[1]) && trim($menu[0]) !='#')
+                    {
                         $tmp_menu_items[$menu[1]] =$menu[0];
                     }
                 }
@@ -143,9 +144,11 @@ function sm_build_array()
         }
     }
 
-	//reset the modstrings to current module
-	$mod_strings = $orig_modstrings ;
+    //reset the modstrings to current module
+    $mod_strings = $orig_modstrings ;
     //store master array into session variable
     $_SESSION['SM_ARRAY'] = $mstr_array; 
-	return $mstr_array;
+    return $mstr_array;
 }
+
+// vim: ts=4 sw=4 et

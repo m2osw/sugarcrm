@@ -34,8 +34,12 @@
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-require_once('soap/SoapHelperFunctions.php');
-class MailMergeController extends SugarController{
+require_once "soap/SoapHelperFunctions.php";
+require_once "include/MVC/Controller/SugarController.php";
+
+
+class MailMergeController extends SugarController
+{
 	function MailMergeController(){
 		parent::SugarController();
 	}
@@ -113,4 +117,5 @@ class MailMergeController extends SugarController{
         print $json_response;
     }
 }
-?>
+
+// vim: ts=4 sw=4 et

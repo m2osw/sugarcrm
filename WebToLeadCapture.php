@@ -44,4 +44,5 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
 
 header('HTTP/1.1 301 Moved Permanently');
 header('Location: index.php?entryPoint=WebToLeadCapture&'.$_SERVER["QUERY_STRING"]);
-?>
+
+// vim: ts=4 sw=4 et

@@ -45,13 +45,14 @@
 
 
 
+require_once "data/SugarBean.php";
 
-
-class CampaignTracker extends SugarBean {
+class CampaignTracker extends SugarBean
+{
     /* Foreach instance of the bean you will need to access the fields in the table.
-    * So define a variable for each one of them, the variable name should be same as the field name
-    * Use this module's vardef file as a reference to create these variables.
-    */
+     * So define a variable for each one of them, the variable name should be same as the field name
+     * Use this module's vardef file as a reference to create these variables.
+     */
     var $id;
     var $date_entered;
     var $created_by;
@@ -69,8 +70,8 @@ class CampaignTracker extends SugarBean {
     /* End field definitions*/
 
     /* variable $table_name is used by SugarBean and methods in this file to constructs queries
-    * set this variables value to the table associated with this bean.
-    */
+     * set this variables value to the table associated with this bean.
+     */
     var $table_name = 'campaign_trkrs';
 
     /*This  variable overrides the object_name variable in SugarBean, wher it has a value of null.*/
@@ -83,15 +84,15 @@ class CampaignTracker extends SugarBean {
     var $new_schema = true;
 
     /* $column_fields holds a list of columns that exist in this bean's table. This list is referenced
-    * when fetching or saving data for the bean. As you modify a table you need to keep this up to date.
-    */
+     * when fetching or saving data for the bean. As you modify a table you need to keep this up to date.
+     */
     var $column_fields = Array(
             'id'
             ,'tracker_key'
             ,'tracker_url'
             ,'tracker_name'
             ,'campaign_id'
-    );
+            );
 
     // This is used to retrieve related fields from form posts.
     var $additional_column_fields = Array('campaign_id');
@@ -99,15 +100,19 @@ class CampaignTracker extends SugarBean {
 
     var $required_fields =  array('tracker_name'=>1,'tracker_url'=>1);
     /*This bean's constructor*/
-    function CampaignTracker() {
+    function CampaignTracker()
+    {
         parent::SugarBean();
     }
 
-    function save() {
+    function save($check_notify = false)
+    {
         //make sure that the url has a scheme, if not then add http:// scheme
-        if ($this->is_optout!=1 ){
+        if($this->is_optout != 1)
+        {
             $url = strtolower(trim($this->tracker_url));
-            if(!preg_match('/^(http|https|ftp):\/\//i', $url)){
+            if(!preg_match('/^(http|https|ftp):\/\//i', $url))
+            {
                 $this->tracker_url = 'http://'.$url;
             }
         }
@@ -124,9 +129,9 @@ class CampaignTracker extends SugarBean {
 
 
     /* This method is used to generate query for the list form. The base implementation of this method
-    * uses the table_name and list_field variable to generate the basic query and then  adds the custom field
-    * join and team filter. If you are implementing this function do not forget to consider the additional conditions.
-    */
+     * uses the table_name and list_field variable to generate the basic query and then  adds the custom field
+     * join and team filter. If you are implementing this function do not forget to consider the additional conditions.
+     */
 
     function fill_in_additional_detail_fields() {
         global $sugar_config;
@@ -158,4 +163,5 @@ class CampaignTracker extends SugarBean {
         }
     }
 }
-?>
+
+// vim: ts=4 sw=4 et

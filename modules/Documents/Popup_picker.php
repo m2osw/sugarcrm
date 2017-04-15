@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,23 +35,14 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-
+//include tree view classes.
+require_once "include/ytree/Tree.php";
+require_once "include/ytree/Node.php";
+require_once "modules/Documents/TreeData.php";
+require_once "XTemplate/xtpl.php";
 
 
 global $theme;
-
-
-
-
-
-
-
-
-//include tree view classes.
-require_once('include/ytree/Tree.php');
-require_once('include/ytree/Node.php');
-
-require_once('modules/Documents/TreeData.php');
 
 class Popup_Picker
 {

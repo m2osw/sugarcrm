@@ -850,7 +850,7 @@ function handleSugarConfig() {
         '// created: ' . date('Y-m-d H:i:s') . "\n" .
         '$sugar_config = ' .
         var_export($sugar_config, true) .
-        ";\n?>\n";
+        ";\n?\076\n";
     if($is_writable && write_array_to_file( "sugar_config", $sugar_config, "config.php")) {
         // was 'Done'
     } else {
@@ -2159,3 +2159,5 @@ function enableInsideViewConnector()
     // $mapping is brought in from the mapping.php file above
     $source->saveMappingHook($mapping);
 }
+
+// vim: ts=4 sw=4 et

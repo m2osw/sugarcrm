@@ -127,6 +127,6 @@ if(empty($_REQUEST['refresh_page'])){
 	handleRedirect();
 }
 
-
 exit;
-?>
+
+// vim: ts=4 sw=4 et

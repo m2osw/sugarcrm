@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -550,7 +550,8 @@ class User extends Person
 			return false;
 	}
 
-    function get_summary_text() {
+    function get_summary_text()
+	{
         //$this->_create_proper_name_field();
         return $this->name;
 	}
@@ -565,10 +566,9 @@ class User extends Person
 	function encrypt_password($user_password)
 	{
 		// encrypt the password.
+		//
 		$salt = substr($this->user_name, 0, 2);
-		$encrypted_password = crypt($user_password, $salt);
-
-		return $encrypted_password;
+		return crypt($user_password, $salt);
 	}
 
 	/**
@@ -710,17 +710,24 @@ EOQ;
 	 */
 	public static function getPasswordHash($password)
 	{
-	    if(!defined('CRYPT_MD5') || !constant('CRYPT_MD5')) {
-	        // does not support MD5 crypt - leave as is
-	        if(defined('CRYPT_EXT_DES') && constant('CRYPT_EXT_DES')) {
+	    if(!defined('CRYPT_MD5')
+		|| !constant('CRYPT_MD5'))
+		{
+	        if(defined('CRYPT_EXT_DES')
+			&& constant('CRYPT_EXT_DES'))
+			{
 	            return crypt(strtolower(md5($password)),
 	            	"_.012".substr(str_shuffle('./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), -4));
 	        }
+
 	        // plain crypt cuts password to 8 chars, which is not enough
 	        // fall back to old md5
 	        return strtolower(md5($password));
 	    }
-	    return crypt(strtolower(md5($password)));
+
+		// support MD5 crypt
+	    return crypt(strtolower(md5($password)),
+					substr(str_shuffle('./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), -4));
 	}
 
 	/**

@@ -777,3 +777,5 @@ if($email_type == 'archived') {
 	$javascript->addFieldIsValidTime('time_start', 'time', $mod_strings['LBL_TIME'], $mod_strings['ERR_TIME_SENT'], true);
 }
 echo $javascript->getScript();
+
+// vim: ts=4 sw=4 et

@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,6 +35,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+require_once "include/MVC/View/SugarView.php";
+
 
 /**
  * view.showduplicates.php
@@ -44,7 +46,6 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  */
 class ViewShowDuplicates extends SugarView
 {
-
     function display()
     {
         global $app_strings;
@@ -145,16 +146,16 @@ class ViewShowDuplicates extends SugarView
         }
 
         ///////////////////////////////////////////////////////////////////////////////
-        ////	INBOUND EMAIL WORKFLOW
+        //// INBOUND EMAIL WORKFLOW
         if(isset($_REQUEST['inbound_email_id'])) {
             $this->ss->assign('INBOUND_EMAIL_ID', $_REQUEST['inbound_email_id']);
             $this->ss->assign('RETURN_MODULE', 'Emails');
             $this->ss->assign('RETURN_ACTION', 'EditView');
             if(isset($_REQUEST['start'])) {
-               $this->ss->assign('START', $_REQUEST['start']);
+                $this->ss->assign('START', $_REQUEST['start']);
             }
         }
-        ////	END INBOUND EMAIL WORKFLOW
+        //// END INBOUND EMAIL WORKFLOW
         ///////////////////////////////////////////////////////////////////////////////
         if(!empty($_POST['popup']))
         {
@@ -188,12 +189,13 @@ class ViewShowDuplicates extends SugarView
         $template = 'modules/Leads/tpls/ShowDuplicates.tpl';
         if(file_exists('custom/' . $template))
         {
-           $template = 'custom/' . $template;
+            $template = 'custom/' . $template;
         }
 
         $saveLabel = string_format($app_strings['LBL_SAVE_OBJECT'], array($this->module));
         $this->ss->assign('TITLE', getClassicModuleTitle('Leads', array($this->module, $saveLabel), true));
         $this->ss->display($template);
     }
-
 }
+
+// vim: ts=4 sw=4 et

@@ -46,8 +46,8 @@
 {/if}
 </div>
 <div id="footer">
-	<div id="responseTime">
-    	{$STATISTICS}
+    <div id="responseTime">
+        {$STATISTICS}
     </div>
     <div id="copyright">
         {$COPYRIGHT}
@@ -60,10 +60,10 @@ if(SUGAR.util.isTouchScreen()) {
 }
 
 //qe_init function sets listeners to click event on elements of 'quickEdit' class
- if(typeof(DCMenu) !='undefined'){
+if(typeof(DCMenu) !='undefined'){
     DCMenu.qe_refresh = false;
     DCMenu.qe_handle;
- }
+}
 function qe_init(){
 
     //do not process if YUI is undefined
@@ -103,10 +103,10 @@ function qe_init(){
     qe_init();
 
 
-	SUGAR_callsInProgress++;
-	SUGAR._ajax_hist_loaded = true;
+    SUGAR_callsInProgress++;
+    SUGAR._ajax_hist_loaded = true;
     if(SUGAR.ajaxUI)
-    	YAHOO.util.Event.onContentReady('ajaxUI-history-field', SUGAR.ajaxUI.firstLoad);
+        YAHOO.util.Event.onContentReady('ajaxUI-history-field', SUGAR.ajaxUI.firstLoad);
 </script>
 {/literal}
 

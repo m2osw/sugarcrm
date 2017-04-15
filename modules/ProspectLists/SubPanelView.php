@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -116,4 +116,5 @@ $ListView->setHeaderTitle($current_module_strings['LBL_MODULE_NAME'] );
 $ListView->setHeaderText($button);
 $ListView->processListView($focus_list, "main", "PROSPECT_LIST");
 
-?>
+
+// vim: ts=4 sw=4 et

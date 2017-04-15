@@ -178,7 +178,7 @@ class OAuthPluginBase extends ExternalAPIBase implements ExternalOAuthAPIPlugin 
 
             $GLOBALS['log']->debug("OAuth request token: {$oauthReq} callback: $callback_url");
 
-            $request_token_info = $oauth->getRequestToken($oauthReq, $callback_url);
+            $request_token_info = $oauth->getOAuthToken($oauthReq, $callback_url);
 
             $GLOBALS['log']->debug("OAuth token: ".var_export($request_token_info, true));
 
@@ -195,7 +195,7 @@ class OAuthPluginBase extends ExternalAPIBase implements ExternalOAuthAPIPlugin 
             $accReq = $this->getOauthAccessURL();
             $oauth->setToken($_SESSION['eapm_oauth_token'],$_SESSION['eapm_oauth_secret']);
             $GLOBALS['log']->debug("OAuth access token: {$accReq}");
-            $access_token_info = $oauth->getAccessToken($accReq);
+            $access_token_info = $oauth->getOAuthAccessToken($accReq);
             $GLOBALS['log']->debug("OAuth token: ".var_export($access_token_info, true));
             // FIXME: error checking here
             $this->oauth_token = $access_token_info['oauth_token'];

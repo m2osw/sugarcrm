@@ -151,4 +151,5 @@ $out .= <<<EOQ2
 </html>
 EOQ2;
 echo $out;
-?>
+
+// vim: ts=4 sw=4 et

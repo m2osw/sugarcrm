@@ -208,10 +208,13 @@ class SugarJobQueue
             // using direct query here to be able to fetch affected count
             // if count is 0 this means somebody changed the job status and we have to try again
             $res = $this->db->query("UPDATE {$this->job_queue_table} SET status='{$job->status}', date_modified=$now, client='$client' WHERE id='{$job->id}' AND status='$queued'");
-            if($this->db->getAffectedRowCount($res) == 0) {
+            if($this->db->getAffectedRowCount($res) == 0)
+	    {
                 // somebody stole our job, try again
                 continue;
-            } else {
+            }
+	    else
+	    {
                 // to update dates & possible hooks
                 $job->save();
                 break;

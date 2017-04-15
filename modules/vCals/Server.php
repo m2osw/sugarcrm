@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -77,8 +77,10 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
 // http://servername/sugarcrm/index.php?entryPoint=vcal_server/type=vfb&source=outlook&user_name=user_name
 // or:
 // http://servername/sugarcrm/index.php?entryPoint=vcal_server/type=vfb&source=outlook&user_id=user_id
-	require_once "modules/vCals/HTTP_WebDAV_Server_vCal.php";
-	$server = new HTTP_WebDAV_Server_vCal();
-	$server->ServeRequest();
-	sugar_cleanup();
-?>
+
+require_once "modules/vCals/HTTP_WebDAV_Server_vCal.php";
+$server = new HTTP_WebDAV_Server_vCal();
+$server->ServeRequest();
+sugar_cleanup();
+
+// vim: ts=4 sw=4 et

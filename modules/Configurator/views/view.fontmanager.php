@@ -1,6 +1,5 @@
 <?php
 if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
-
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -39,8 +38,10 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
 require_once('include/Sugarpdf/sugarpdf_config.php');
 require_once('include/MVC/View/SugarView.php');
 require_once('include/Sugarpdf/FontManager.php');
-class ConfiguratorViewFontManager extends SugarView {
-   
+
+
+class ConfiguratorViewFontManager extends SugarView
+{
     /**
      * Constructor
      */
@@ -242,4 +243,4 @@ BSOFR;
     }
 }
 
-    
+// vim: ts=4 sw=4 et

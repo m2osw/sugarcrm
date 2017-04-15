@@ -58,3 +58,6 @@ $dashletData['<module_name>Dashlet']['columns'] =  array(   'name' => array('wid
                                                       'assigned_user_name' => array('width'   => '8', 
                                                                                      'label'   => 'LBL_LIST_ASSIGNED_USER'),
                                                );
+
+
+// vim: ts=4 sw=4 et

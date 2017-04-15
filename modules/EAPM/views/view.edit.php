@@ -1,6 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
-
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -24,11 +23,11 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * 
  * You can contact SugarCRM, Inc. headquarters at 10050 North Wolfe Road,
  * SW2-130, Cupertino, CA 95014, USA. or at email address contact@sugarcrm.com.
- * 
+ *
  * The interactive user interfaces in modified source and object code versions
  * of this program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU Affero General Public License version 3.
- * 
+ *
  * In accordance with Section 7(b) of the GNU Affero General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "Powered by
  * SugarCRM" logo. If the display of the logo is not reasonably feasible for
@@ -36,9 +35,11 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+require_once "include/MVC/View/views/view.edit.php";
 
-class EAPMViewEdit extends ViewEdit {
 
+class EAPMViewEdit extends ViewEdit
+{
     private $_returnId;
 
     public function __construct()
@@ -62,11 +63,11 @@ class EAPMViewEdit extends ViewEdit {
     }
 
     /**
-	 * @see SugarView::_getModuleTitleParams()
-	 */
-	protected function _getModuleTitleParams($browserTitle = false)
-	{
-	    global $mod_strings;
+     * @see SugarView::_getModuleTitleParams()
+     */
+    protected function _getModuleTitleParams($browserTitle = false)
+    {
+        global $mod_strings;
 
         $returnAction = 'DetailView';
         $returnModule = 'Users';
@@ -103,14 +104,14 @@ class EAPMViewEdit extends ViewEdit {
     }
 
     /**
-	 * @see SugarView::getModuleTitleIconPath()
-	 */
-	protected function getModuleTitleIconPath($module) 
+     * @see SugarView::getModuleTitleIconPath()
+     */
+    protected function getModuleTitleIconPath($module) 
     {
         return parent::getModuleTitleIconPath('Users');
     }
 
- 	function display() {
+    function display() {
         $this->bean->password = empty($this->bean->password) ? '' : EAPM::$passwordPlaceholder;
 
         $this->ss->assign('return_id', $this->_returnId);
@@ -120,18 +121,18 @@ class EAPMViewEdit extends ViewEdit {
         if(isset($_REQUEST['return_module']) && $_REQUEST['return_module'] == 'Import') {
             $cancelUrl = "index.php?module=Import&action=Step1&import_module=". $_REQUEST['return_action'] . "&application=" . $_REQUEST['application'];
         }
-         $this->ss->assign('cancelUrl', $cancelUrl);
+        $this->ss->assign('cancelUrl', $cancelUrl);
 
         if($GLOBALS['current_user']->is_admin || empty($this->bean) || empty($this->bean->id) || $this->bean->isOwner($GLOBALS['current_user']->id)){
             if(!empty($this->bean) && empty($this->bean->id) && $this->_returnId != $GLOBALS['current_user']->id){
                 $this->bean->assigned_user_id = $this->_returnId;
             }
-            
+
             parent::display();
         } else {
-        	ACLController::displayNoAccess();
+            ACLController::displayNoAccess();
         }
- 	}
+    }
 }
 
-?>
+// vim: ts=4 sw=4 et

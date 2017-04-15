@@ -16,7 +16,8 @@
  */
 
 // PHP 5.2 compatibility: E_USER_DEPRECATED was added in 5.3
-if (!defined('E_USER_DEPRECATED')) {
+if(!defined('E_USER_DEPRECATED'))
+{
   define('E_USER_DEPRECATED', E_USER_WARNING);
 }
 

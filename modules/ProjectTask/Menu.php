@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,7 +35,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-
+require_once "modules/ACL/ACLController.php";
 
 
 $module_menu = array();
@@ -44,16 +44,36 @@ global $mod_strings;
 // Each index of module_menu must be an array of:
 // the link url, display text for the link, and the icon name.
 
-if(ACLController::checkAccess('Project', 'edit', true))$module_menu[] = array("index.php?module=Project&action=EditView&return_module=Project&return_action=DetailView",
-	$mod_strings['LNK_NEW_PROJECT'], 'CreateProject');
-if(ACLController::checkAccess('Project', 'list', true))$module_menu[] = array('index.php?module=Project&action=index',
-	$mod_strings['LNK_PROJECT_LIST'], 'Project');
-    /*
-if(ACLController::checkAccess('ProjectTask', 'edit', true))$module_menu[] = array("index.php?module=ProjectTask&action=EditView&return_module=ProjectTask&return_action=DetailView",
-	$mod_strings['LNK_NEW_PROJECT_TASK'], 'CreateProjectTask');
-    */
-if(ACLController::checkAccess('ProjectTask', 'list', true))$module_menu[] = array('index.php?module=ProjectTask&action=index',
-	$mod_strings['LNK_PROJECT_TASK_LIST'], 'ProjectTask');
+if(ACLController::checkAccess('Project', 'edit', true))
+{
+    $module_menu[] = array(
+            "index.php?module=Project&action=EditView&return_module=Project&return_action=DetailView",
+            $mod_strings['LNK_NEW_PROJECT'],
+            'CreateProject');
+}
+if(ACLController::checkAccess('Project', 'list', true))
+{
+    $module_menu[] = array(
+            'index.php?module=Project&action=index',
+            $mod_strings['LNK_PROJECT_LIST'],
+            'Project');
+}
+/*
+if(ACLController::checkAccess('ProjectTask', 'edit', true))
+{
+    $module_menu[] = array(
+            "index.php?module=ProjectTask&action=EditView&return_module=ProjectTask&return_action=DetailView",
+            $mod_strings['LNK_NEW_PROJECT_TASK'],
+            'CreateProjectTask');
+}
+*/
+if(ACLController::checkAccess('ProjectTask', 'list', true))
+{
+    $module_menu[] = array(
+            'index.php?module=ProjectTask&action=index',
+            $mod_strings['LNK_PROJECT_TASK_LIST'],
+            'ProjectTask');
+}
 
 
-?>
+// vim: ts=4 sw=4 et

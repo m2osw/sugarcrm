@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,37 +35,39 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+require_once "include/MVC/View/SugarView.php";
+
 
 class ConfiguratorViewSugarpdfsettings extends SugarView
 {
     /**
-	 * @see SugarView::preDisplay()
-	 */
-	public function preDisplay()
+     * @see SugarView::preDisplay()
+     */
+    public function preDisplay()
     {
         if(!is_admin($GLOBALS['current_user']))
             sugar_die($GLOBALS['app_strings']['ERR_NOT_ADMIN']);
     }
 
     /**
-	 * @see SugarView::_getModuleTitleParams()
-	 */
-	protected function _getModuleTitleParams($browserTitle = false)
-	{
-	    global $mod_strings;
+     * @see SugarView::_getModuleTitleParams()
+     */
+    protected function _getModuleTitleParams($browserTitle = false)
+    {
+        global $mod_strings;
 
-    	return array(
-    	   "<a href='index.php?module=Administration&action=index'>".translate('LBL_MODULE_NAME','Administration')."</a>",
-    	   $mod_strings['LBL_PDFMODULE_NAME']
-    	   );
+        return array(
+                "<a href='index.php?module=Administration&action=index'>".translate('LBL_MODULE_NAME','Administration')."</a>",
+                $mod_strings['LBL_PDFMODULE_NAME']
+                );
     }
 
-	/**
-	 * @see SugarView::display()
-	 */
-	public function display()
-	{
-	    global $mod_strings, $app_strings, $app_list_strings;
+    /**
+     * @see SugarView::display()
+     */
+    public function display()
+    {
+        global $mod_strings, $app_strings, $app_list_strings;
 
         require_once("modules/Configurator/metadata/SugarpdfSettingsdefs.php");
         if(file_exists('custom/modules/Configurator/metadata/SugarpdfSettingsdefs.php')){
@@ -114,8 +116,8 @@ class ConfiguratorViewSugarpdfsettings extends SugarView
                 "Administration",
                 array(
                     "<a href='index.php?module=Administration&action=index'>".translate('LBL_MODULE_NAME','Administration')."</a>",
-                   $mod_strings['LBL_PDFMODULE_NAME'],
-                   ),
+                    $mod_strings['LBL_PDFMODULE_NAME'],
+                    ),
                 false
                 );
 
@@ -167,7 +169,7 @@ class ConfiguratorViewSugarpdfsettings extends SugarView
                 if (!empty($v['error']))
                     $error='ERR_ALERT_FILE_UPLOAD';
                 if(!mkdir_recursive(K_PATH_CUSTOM_IMAGES))
-                   $error='ERR_ALERT_FILE_UPLOAD';
+                    $error='ERR_ALERT_FILE_UPLOAD';
                 if(empty($error)){
                     if (!move_uploaded_file($v['tmp_name'], $file_name))
                         die("Possible file upload attack!\n");
@@ -195,3 +197,5 @@ class ConfiguratorViewSugarpdfsettings extends SugarView
         return $error;
     }
 }
+
+// vim: ts=4 sw=4 et

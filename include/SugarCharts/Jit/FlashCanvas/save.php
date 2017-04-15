@@ -32,18 +32,24 @@
  * @link       http://code.google.com/p/flashcanvas/
  */
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if($_SERVER['REQUEST_METHOD'] === 'POST')
+{
     // Force download
     header('Content-Type: application/octet-stream');
     header('Content-Disposition: attachment; filename="canvas.png"');
 
-    if (isset($_POST['dataurl'])) {
+    if(isset($_POST['dataurl']))
+    {
         // Decode the base64-encoded data
         $data = $_POST['dataurl'];
         $data = substr($data, strpos($data, ',') + 1);
         echo base64_decode($data);
-    } else {
+    }
+    else
+    {
         // Output the raw data
         readfile('php://input');
     }
 }
+
+// vim: ts=4 sw=4 et

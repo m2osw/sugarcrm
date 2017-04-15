@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -114,7 +114,7 @@ class StudioParser {
 		$this->positions = $results;
 	}
 	function parseCols($str){
-		preg_match_all("'(<td[^>]*?)>(.*?)(</td[^>]*?>)'si", $str, $this->cols,PREG_SET_ORDER);
+		preg_match_all("'(<td[^>]*?)>(.*?)(</td[^>]*?\076)'si", $str, $this->cols,PREG_SET_ORDER);
 
 	}
 	function parse($str){
@@ -124,12 +124,14 @@ class StudioParser {
 		$result = array ();
 		return preg_match_all("'<span[^>]*sugar=[\'\"]+([a-zA-Z\_]*)([0-9]+)([b]*)[\'\"]+[^>]*>(.*?)</span[ ]*sugar=[\'\"]+[a-zA-Z0-9\_]*[\'\"]+>'si", $str, $result, PREG_SET_ORDER)/2;
 	}
-	function rowCount($str) {
+	function rowCount($str)
+    {
 		$result = array ();
 		return preg_match_all("'(<tr[^>]*>)(.*?)(</tr[^>]*>)'si", $str, $result);
 	}
 
-	function loadFile($file) {
+	function loadFile($file)
+    {
 		$this->curFile = $file;
 		$this->curText = file_get_contents($file);
 		$this->form = <<<EOQ
@@ -141,28 +143,35 @@ class StudioParser {
 EOQ;
 
 	}
-	function buildImageButtons($buttons,$horizontal=true){
+
+	function buildImageButtons($buttons, $horizontal = true)
+    {
 		$text = '<table cellspacing=2><tr>';
-		foreach($buttons as $button){
-			if(!$horizontal){
+		foreach($buttons as $button)
+        {
+			if(!$horizontal)
+            {
 				$text .= '</tr><tr>';
 			}
 			if(!empty($button['plain'])){
 				$text .= <<<EOQ
 				<td valign='center' {$button['actionScript']}>
 EOQ;
-
-			}else{
-
-
+			}
+            else
+            {
 				$text .= <<<EOQ
 				<td valign='center' class='button' style='cursor:default' onmousedown='this.className="buttonOn";return false;' onmouseup='this.className="button"' onmouseout='this.className="button"' {$button['actionScript']} >
 EOQ;
 			}
-            if ( !isset($button['image']) )
+            if(!isset($button['image']))
+            {
                 $text .= "{$button['text']}</td>";
+            }
             else
+            {
 			    $text .= "{$button['image']}&nbsp;{$button['text']}</td>";
+            }
 		}
 		$text .= '</tr></table>';
 		return $text;
@@ -227,14 +236,16 @@ EOQ;
 		return $customFile;
 	}
 
-	function getSwapWith($value){
+	function getSwapWith($value)
+    {
 		return $value * 2 - 1;
 	}
 	/**
 	 * takes the submited form and parses the file moving the fields around accordingly
 	 * it also checks if the original file has a matching field and uses that field instead of attempting to generate a new one
 	 */
-	function handleSave() {
+	function handleSave()
+    {
 		$this->parseOldestFile($this->curFile);
 		$fileDef = $this->getFiles($_SESSION['studio']['module'], $_SESSION['studio']['selectedFileId']);
 		$type = $this->getFileType($fileDef['type']);
@@ -243,7 +254,8 @@ EOQ;
 		$return_view = '';
 		$slotCount = 0;
 		$slotLookup = array();
-		for ($i = 0; $i < sizeof($this->positions); $i ++) {
+		for ($i = 0; $i < sizeof($this->positions); $i ++)
+        {
 			//used for reverse lookups to figure out where the associated slot is
 			$slotLookup[$this->positions[$i][2]][$this->positions[$i][3]] = array('position'=>$i, 'value'=>$this->positions[$i][4]);
 		}
@@ -252,7 +264,8 @@ EOQ;
 
 		//now we set it to the new values
 
-		for ($i = 0; $i < sizeof($this->positions); $i ++) {
+		for ($i = 0; $i < sizeof($this->positions); $i ++)
+        {
 			$slot = $this->positions[$i];
 
 			if (empty($slot[3])) {
@@ -355,7 +368,8 @@ EOQ;
 		fclose($fp);
 	}
 
-	function handleSaveLabels($module_name, $language){
+	function handleSaveLabels($module_name, $language)
+    {
 		require_once('modules/Studio/LabelEditor/LabelEditor.php');
 		LabelEditor::saveLabels($_REQUEST, $module_name, $language);
 	}
@@ -482,7 +496,7 @@ EOQ;
 		}
 
 		$buffer = str_replace($originalFile, $cache_file, $buffer);
-		$buffer = "<?php\n\$sugar_config['list_max_entries_per_page'] = 1;\n ?>".$buffer;
+		$buffer = "<?php\n\$sugar_config['list_max_entries_per_page'] = 1;\n ?\076".$buffer;
 
 		$buffer = str_replace($form_string, '', $buffer);
 		$buffer = $this->disableInputs($buffer);
@@ -655,4 +669,5 @@ EOQ;
 		return str_replace('{', '{$', $this->curText);
 	}
 }
-?>
+
+// vim: ts=4 sw=4 et

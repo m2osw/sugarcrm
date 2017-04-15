@@ -1,5 +1,5 @@
 <?php
- if(!defined('sugarEntry'))define('sugarEntry', true);
+if(!defined('sugarEntry'))define('sugarEntry', true);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -39,7 +39,10 @@
 /**
  * This is a rest entry point for rest version 2
  */
-chdir('../..');
+if(php_sapi_name() !== 'cli')
+{
+    chdir('../..');
+}
 $webservice_class = 'SugarRestService';
 $webservice_path = 'service/core/SugarRestService.php';
 $webservice_impl_class = 'SugarRestServiceImpl';
@@ -47,3 +50,5 @@ $registry_class = 'registry';
 $location = '/service/v2/rest.php';
 $registry_path = 'service/v2/registry.php';
 require_once('service/core/webservice.php');
+
+// vim: ts=4 sw=4 et

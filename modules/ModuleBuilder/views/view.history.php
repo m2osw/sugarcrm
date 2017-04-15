@@ -38,38 +38,40 @@
 require_once ('modules/ModuleBuilder/MB/AjaxCompose.php') ;
 require_once ('modules/ModuleBuilder/parsers/views/History.php') ;
 require_once ('modules/ModuleBuilder/parsers/ParserFactory.php') ;
+require_once "include/MVC/View/SugarView.php";
+
 
 class ViewHistory extends SugarView
 {
-    var $pageSize = 10 ;
+    var $pageSize = 10;
 
     /**
-	 * @see SugarView::_getModuleTitleParams()
-	 */
-	protected function _getModuleTitleParams($browserTitle = false)
-	{
-	    global $mod_strings;
-	    
-    	return array(
-    	   translate('LBL_MODULE_NAME','Administration'),
-    	   ModuleBuilderController::getModuleTitle(),
-    	   );
+     * @see SugarView::_getModuleTitleParams()
+     */
+    protected function _getModuleTitleParams($browserTitle = false)
+    {
+        global $mod_strings;
+
+        return array(
+                translate('LBL_MODULE_NAME','Administration'),
+                ModuleBuilderController::getModuleTitle(),
+                );
     }
 
-	function display ()
+    function display ()
     {
         $this->layout = strtolower ( $_REQUEST [ 'view' ] ) ;
-        
+
         $subpanelName = null ;
         if ((strtolower ( $this->layout ) == 'listview') && (!empty ( $_REQUEST [ 'subpanel' ] )))
         {
             $subpanelName = $_REQUEST [ 'subpanel' ] ;
-            
+
         }
-        
+
         $packageName = (isset ( $_REQUEST [ 'view_package' ] ) && (strtolower ( $_REQUEST [ 'view_package' ] ) != 'studio')) ? $_REQUEST [ 'view_package' ] : null ;
         $this->module = $_REQUEST [ 'view_module' ] ;
-        
+
         $this->parser = ParserFactory::getParser ( $this->layout, $this->module, $packageName, $subpanelName ) ;
         $this->history = $this->parser->getHistory () ;
         $action = ! empty ( $_REQUEST [ 'histAction' ] ) ? $_REQUEST [ 'histAction' ] : 'browse' ;
@@ -84,7 +86,7 @@ class ViewHistory extends SugarView
         $smarty->assign ( 'mod_strings', $mod_strings ) ;
         $smarty->assign ( 'view_module', $this->module ) ;
         $smarty->assign ( 'view', $this->layout ) ;
-        
+
         if (! empty ( $_REQUEST [ 'subpanel' ] ))
         {
             $smarty->assign ( 'subpanel', $_REQUEST [ 'subpanel' ] ) ;
@@ -112,7 +114,7 @@ class ViewHistory extends SugarView
         $snapshots = array_slice ( $snapshots, 0, $this->pageSize, true ) ;
         $smarty->assign ( 'currentPage', $page ) ;
         $smarty->assign ( 'snapshots', $snapshots ) ;
-        
+
         $html = $smarty->fetch ( 'modules/ModuleBuilder/tpls/history.tpl' ) ;
         echo $html ;
     }
@@ -131,9 +133,9 @@ class ViewHistory extends SugarView
             $subpanel = ',"' . $_REQUEST [ 'subpanel' ] . '"' ;
         }
         echo "<input type='button' name='close$sid' value='". translate ( 'LBL_BTN_CLOSE' )."' " . 
-                "class='button' onclick='ModuleBuilder.tabPanel.removeTab(ModuleBuilder.tabPanel.get(\"activeTab\"));' style='margin:5px;'>" . 
-             "<input type='button' name='restore$sid' value='" . translate ( 'LBL_MB_RESTORE' ) . "' " .  
-                "class='button' onclick='ModuleBuilder.history.revert(\"$this->module\",\"{$this->layout}\",\"$sid\"$subpanel);' style='margin:5px;'>" ;
+            "class='button' onclick='ModuleBuilder.tabPanel.removeTab(ModuleBuilder.tabPanel.get(\"activeTab\"));' style='margin:5px;'>" . 
+            "<input type='button' name='restore$sid' value='" . translate ( 'LBL_MB_RESTORE' ) . "' " .  
+            "class='button' onclick='ModuleBuilder.history.revert(\"$this->module\",\"{$this->layout}\",\"$sid\"$subpanel);' style='margin:5px;'>" ;
         $this->history->restoreByTimestamp ( $sid ) ;
         $view ;
         if ($this->layout == 'listview')
@@ -146,18 +148,18 @@ class ViewHistory extends SugarView
             $view = new ViewSearchView ( ) ;
         } else if ($this->layout == 'dashlet' || $this->layout == 'dashletsearch')
         {
-        	require_once ("modules/ModuleBuilder/views/view.dashlet.php") ;
-        	$view = new ViewDashlet ( ) ;
+            require_once ("modules/ModuleBuilder/views/view.dashlet.php") ;
+            $view = new ViewDashlet ( ) ;
         }  else if ($this->layout == 'popuplist' || $this->layout == 'popupsearch')
         {
-        	require_once ("modules/ModuleBuilder/views/view.popupview.php") ;
-        	$view = new ViewPopupview ( ) ;
+            require_once ("modules/ModuleBuilder/views/view.popupview.php") ;
+            $view = new ViewPopupview ( ) ;
         } else
         {
             require_once ("modules/ModuleBuilder/views/view.layoutview.php") ;
             $view = new ViewLayoutView ( ) ;
         }
-        
+
         $view->display ( true ) ;
         $this->history->undoRestore () ;
     }
@@ -172,12 +174,14 @@ class ViewHistory extends SugarView
         $this->history->restoreByTimestamp ( $sid ) ;
     }
 
-	/**
- 	 * Restores a layout to its current customized state. 
- 	 * Called when leaving a restored layout without saving.
- 	 */
+    /**
+     * Restores a layout to its current customized state. 
+     * Called when leaving a restored layout without saving.
+     */
     function unrestore() 
     {
-    	$this->history->undoRestore () ;
+        $this->history->undoRestore () ;
     }
 }
+
+// vim: ts=4 sw=4 et

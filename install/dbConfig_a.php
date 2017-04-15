@@ -45,7 +45,7 @@ if(empty($_SESSION['setup_db_host_name'])){
 }
 
 if( !isset( $install_script ) || !$install_script ){
-	die($mod_strings['ERR_NO_DIRECT_SCRIPT']);
+    die($mod_strings['ERR_NO_DIRECT_SCRIPT']);
 }
 
 
@@ -55,18 +55,15 @@ $createDb = (!empty($_SESSION['setup_db_create_database'])) ? 'checked="checked"
 $dropCreate = (!empty($_SESSION['setup_db_drop_tables'])) ? 'checked="checked"' : '';
 $instanceName = '';
 if (isset($_SESSION['setup_db_host_instance']) && !empty($_SESSION['setup_db_host_instance'])){
-	$instanceName = $_SESSION['setup_db_host_instance'];
+    $instanceName = $_SESSION['setup_db_host_instance'];
 }
 
 $setupDbPortNum ='';
 if (isset($_SESSION['setup_db_port_num']) && !empty($_SESSION['setup_db_port_num'])){
-	$setupDbPortNum = $_SESSION['setup_db_port_num'];
+    $setupDbPortNum = $_SESSION['setup_db_port_num'];
 }
 
 $db = getInstallDbInstance();
-
-///////////////////////////////////////////////////////////////////////////////
-////	BEGIN PAGE OUTPUT
 
 $langHeader = get_language_header();
 
@@ -172,32 +169,52 @@ FORM;
 $out2 .= $form;
 
 //if we are installing in custom mode, include the following html
-if($db->supports("create_user")){
-// create / set db user dropdown
-$auto_select = '';$provide_select ='';$create_select = '';$same_select = '';
-if(isset($_SESSION['dbUSRData'])){
-//    if($_SESSION['dbUSRData']=='auto')    {$auto_select ='selected';}
-    if($_SESSION['dbUSRData']=='provide') {$provide_select ='selected';}
-if(isset($_SESSION['install_type'])  && !empty($_SESSION['install_type'])  && strtolower($_SESSION['install_type'])=='custom'){
-    if($_SESSION['dbUSRData']=='create')  {$create_select ='selected';}
-}
-    if($_SESSION['dbUSRData']=='same')  {$same_select ='selected';}
-}else{
-    $same_select ='selected';
-}
-$dbUSRDD   = "<select name='dbUSRData' id='dbUSRData' onchange='toggleDBUser();'>";
-$dbUSRDD  .= "<option value='provide' $provide_select>".$mod_strings['LBL_DBCONFIG_PROVIDE_DD']."</option>";
-$dbUSRDD  .= "<option value='create' $create_select>".$mod_strings['LBL_DBCONFIG_CREATE_DD']."</option>";
-$dbUSRDD  .= "<option value='same' $same_select>".$mod_strings['LBL_DBCONFIG_SAME_DD']."</option>";
-$dbUSRDD  .= "</select><br>&nbsp;";
+if($db->supports("create_user"))
+{
+    // create / set db user dropdown
+    $auto_select = '';
+    $provide_select = '';
+    $create_select = '';
+    $same_select = '';
+    if(isset($_SESSION['dbUSRData']))
+    {
+        //if($_SESSION['dbUSRData'] == 'auto')
+        //{
+        //    $auto_select ='selected';
+        //}
+        if($_SESSION['dbUSRData'] == 'provide')
+        {
+            $provide_select ='selected';
+        }
+        if(isset($_SESSION['install_type'])
+        && !empty($_SESSION['install_type'])
+        && strtolower($_SESSION['install_type']) == 'custom')
+        {
+            if($_SESSION['dbUSRData'] == 'create')
+            {
+                $create_select = 'selected';
+            }
+        }
+        if($_SESSION['dbUSRData'] == 'same')
+        {
+            $same_select = 'selected';
+        }
+    }
+    else
+    {
+        $same_select ='selected';
+    }
+    $dbUSRDD   = "<select name='dbUSRData' id='dbUSRData' onchange='toggleDBUser();'>";
+    $dbUSRDD  .= "<option value='provide' $provide_select>".$mod_strings['LBL_DBCONFIG_PROVIDE_DD']."</option>";
+    $dbUSRDD  .= "<option value='create' $create_select>".$mod_strings['LBL_DBCONFIG_CREATE_DD']."</option>";
+    $dbUSRDD  .= "<option value='same' $same_select>".$mod_strings['LBL_DBCONFIG_SAME_DD']."</option>";
+    $dbUSRDD  .= "</select><br>&nbsp;";
 
+    $setup_db_sugarsales_user = urldecode($_SESSION['setup_db_sugarsales_user']);
+    $setup_db_sugarsales_password = urldecode($_SESSION['setup_db_sugarsales_password']);
+    $setup_db_sugarsales_password_retype = urldecode($_SESSION['setup_db_sugarsales_password_retype']);
 
-
-$setup_db_sugarsales_password = urldecode($_SESSION['setup_db_sugarsales_password']);
-$setup_db_sugarsales_user = urldecode($_SESSION['setup_db_sugarsales_user']);
-$setup_db_sugarsales_password_retype = urldecode($_SESSION['setup_db_sugarsales_password_retype']);
-
-$out2 .=<<<EOQ2
+    $out2 .=<<<EOQ2
 
 <table width="100%" cellpadding="0" cellpadding="0" border="0" class="StyleDottedHr">
 <tr><td colspan="3" align="left"><br>{$mod_strings['LBL_DBCONFIG_SECURITY']}</td></tr>
@@ -216,13 +233,13 @@ $out2 .=<<<EOQ2
 <tr>
     <td>&nbsp;</td>
     <td nowrap><b>{$mod_strings['LBL_DBCONF_DB_PASSWORD']}</b></td>
-    <td nowrap align="left"><input type="password" name="setup_db_sugarsales_password_entry" value="{$setup_db_sugarsales_password}" /><input type="hidden" name="setup_db_sugarsales_password" value="{$setup_db_sugarsales_password}" /></td>
-    <input type="hidden" name="setup_db_sugarsales_password" value="{$_SESSION['setup_db_sugarsales_password']}" /></td>
+    <td nowrap align="left"><input type="password" name="setup_db_sugarsales_password_entry" value="{$setup_db_sugarsales_password}"/>
+        <input type="hidden" name="setup_db_sugarsales_password" value="{$setup_db_sugarsales_password}" data-org="{$setup_db_sugarsales_password}"/></td>
 </tr>
 <tr>
     <td>&nbsp;</td>
     <td nowrap><b>{$mod_strings['LBL_DBCONF_DB_PASSWORD2']}</b></td>
-    <td nowrap align="left"><input type="password" name="setup_db_sugarsales_password_retype_entry" value="{$setup_db_sugarsales_password_retype}"  /><input type="hidden" name="setup_db_sugarsales_password_retype" value="{$setup_db_sugarsales_password_retype}" /></td>
+    <td nowrap align="left"><input type="password" name="setup_db_sugarsales_password_retype_entry" value="{$setup_db_sugarsales_password_retype}"  /><input type="hidden" name="setup_db_sugarsales_password_retype" value="{$setup_db_sugarsales_password_retype}"/></td>
 </tr></table>
 </span>
 
@@ -245,7 +262,6 @@ $out3 =<<<EOQ3
 </tr>
 </table>
 EOQ3;
-
 
 
 $out4 =<<<EOQ4
@@ -390,7 +406,7 @@ function callDBCheck(){
                     postData += "&setup_db_sugarsales_user="+document.setConfig.setup_db_sugarsales_user.value;
                 }
                 if(typeof(document.setConfig.setup_db_sugarsales_password) != 'undefined'){
-                document.setConfig.setup_db_sugarsales_password.value = document.setConfig.setup_db_sugarsales_password_entry.value;
+                    document.setConfig.setup_db_sugarsales_password.value = document.setConfig.setup_db_sugarsales_password_entry.value;
                     postData += "&setup_db_sugarsales_password="+encodeURIComponent(document.setConfig.setup_db_sugarsales_password.value);
                 }
                 if(typeof(document.setConfig.setup_db_sugarsales_password_retype) != 'undefined'){
@@ -472,19 +488,11 @@ function confirm_drop_tables(yes_no){
 
 EOQ5;
 
-
-
-
-////	END PAGE OUTPUT
-///////////////////////////////////////////////////////////////////////////////
-
-
-
 echo $out;
 echo $out2;
-    echo $out3;
+echo $out3;
 echo $out4;
-    echo $out_dd;
+echo $out_dd;
 echo $out5;
 
-?>
+// vim: ts=4 sw=4 et

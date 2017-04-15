@@ -54,7 +54,8 @@ function MetaParser() {
 
 }
 
-function parse() {
+function parse($filePath, $vardefs = array(), $moduleDir = '', $merge = false, $masterCopy = null)
+{
    return "NOT AVAILABLE";
 }
 
@@ -64,11 +65,11 @@ function parse() {
  */
 function getFormContents($contents, $all = true) {
    if($all) {
-      preg_match_all("'(<form[^>]*?>)(.*?)(</form[^>]*?>)'si", $contents, $matches);
+      preg_match_all("'(<form[^>]*?\076)(.*?)(</form[^>]*?\076)'si", $contents, $matches);
       return $matches;
    }
 
-   preg_match("'(<form[^>]*?>)(.*?)(</form[^>]*?>)'si", $contents, $matches);
+   preg_match("'(<form[^>]*?\076)(.*?)(</form[^>]*?\076)'si", $contents, $matches);
    return $this->convertToTagElement($matches);
    //return $matches;
 }
@@ -97,7 +98,7 @@ function getFormElements($contents) {
  * @return $matches Array of name/value pairs
  */
 function getFormElementsNames($contents) {
-   preg_match_all("'(<[ ]*?)(textarea|input|select)[^>]*?name=[\'\"]([^\'\"]*?)(\[\])?(_basic)?[\'\"]([^>]*?>)'si", $contents, $matches, PREG_PATTERN_ORDER);
+   preg_match_all("'(<[ ]*?)(textarea|input|select)[^>]*?name=[\'\"]([^\'\"]*?)(\[\])?(_basic)?[\'\"]([^>]*?\076)'si", $contents, $matches, PREG_PATTERN_ORDER);
    return !empty($matches[3]) ? $matches[3] : null;
 }
 
@@ -137,7 +138,7 @@ function getTagAttribute($name, $contents, $filter = '') {
  * @return Array of table elements found
  */
 function getTables($tableClass = null, $contents) {
-   preg_match_all("'(<table[^>]*?>)(.*?)(</table[^>]*?>)'si", $contents, $matches, PREG_SET_ORDER);
+   preg_match_all("'(<table[^>]*?\076)(.*?)(</table[^>]*?\076)'si", $contents, $matches, PREG_SET_ORDER);
    if($tableClass == null) {
    	  return $matches;
    }
@@ -207,7 +208,7 @@ function getElementsByType($type, $contents) {
  *
  */
 function getElementValue($type, $contents, $filter = "(.*?)") {
-   $exp = "'<".$type."[^>]*?>".$filter."</".$type."[^>]*?>'si";
+   $exp = "'<".$type."[^>]*?\076".$filter."</".$type."[^>]*?\076'si";
    preg_match($exp, $contents, $matches);
    return isset($matches[1]) ? $matches[1] : '';
 }
@@ -244,7 +245,7 @@ function stripFlavorTags($contents) {
  * @return The maximum column count
  */
 function getMaxColumns($contents, $filter) {
-   preg_match_all("'(<tr[^>]*?>)(.*?)(</tr[^>]*?>)'si", $contents, $matches, PREG_SET_ORDER);
+   preg_match_all("'(<tr[^>]*?\076)(.*?)(</tr[^>]*?\076)'si", $contents, $matches, PREG_SET_ORDER);
    $max = 0;
    foreach($matches as $tableRows) {
            $count = substr_count($tableRows[2], $filter);
@@ -302,7 +303,7 @@ function getJavascript($contents, $addLiterals = true) {
 $javascript = null;
 
 //Check if there are Javascript blocks of code to process
-preg_match_all("'(<script[^>]*?>)(.*?)(</script[^>]*?>)'si", $contents, $matches, PREG_PATTERN_ORDER);
+preg_match_all("'(<script[^>]*?\076)(.*?)(</script[^>]*?\076)'si", $contents, $matches, PREG_PATTERN_ORDER);
 if(empty($matches)) {
    return $javascript;
 }
@@ -569,7 +570,7 @@ $header .= "\n 'panels' =>";
 $footer = "
 \n
 );
-?>";
+?\076";
 
    $metadata = '';
    $body = var_export($panels, true);
@@ -698,7 +699,7 @@ function hasRequiredSpanLabel($html) {
    	  return false;
    }
 
-   return preg_match('/\<(div|span) class=(\")?required(\")?\s?>\*<\/(div|span)>/si', $html);
+   return preg_match('/\<(div|span) class=(\")?required(\")?\s?'."\076".'>\*<\/(div|span)>/si', $html);
 }
 
 function hasMultiplePanels($panels) {
@@ -756,8 +757,9 @@ function getCustomPanels() {
  *
  */
 function fixTablesWithMissingTr($tableContents) {
-   if(preg_match('/(<table[^>]*?[\/]?>\s*?<td)/i', $tableContents, $matches)) {
-   	  return preg_replace('/(<table[^>]*?[\/]?>\s*?<td)/i', '<table><tr><td', $tableContents);
+   if(preg_match('/(<table[^>]*?[\/]?'."\076".'\s*?<td)/i', $tableContents, $matches))
+   {
+   	  return preg_replace('/"<table[^>]*?[\/]?'."\076".'\s*?<td)/i', '<table><tr><td', $tableContents);
    }
    return $tableContents;
 }
@@ -767,8 +769,9 @@ function fixTablesWithMissingTr($tableContents) {
  * This is a very crude function to fix instances where files have an </tr> tag immediately followed by a <td> tag
  */
 function fixRowsWithMissingTr($tableContents) {
-   if(preg_match('/(<\/tr[^>]*?[\/]?>\s*?<td)/i', $tableContents, $matches)) {
-   	  return preg_replace('/(<\/tr[^>]*?[\/]?>\s*?<td)/i', '</tr><tr><td', $tableContents);
+   if(preg_match('/(<\/tr[^>]*?[\/]?'."\076".'\s*?<td)/i', $tableContents, $matches))
+   {
+   	  return preg_replace('/(<\/tr[^>]*?[\/]?'."\076".'\s*?<td)/i', '</tr><tr><td', $tableContents);
    }
    return $tableContents;
 }
@@ -778,8 +781,8 @@ function fixRowsWithMissingTr($tableContents) {
  * This is a very crude function to fix instances where files have two consecutive <tr> tags
  */
 function fixDuplicateTrTags($tableContents) {
-   if(preg_match('/(<tr[^>]*?[\/]?>\s*?<tr)/i', $tableContents, $matches)) {
-   	  return preg_replace('/(<tr[^>]*?[\/]?>\s*?<tr)/i', '<tr', $tableContents);
+   if(preg_match('/(<tr[^>]*?[\/]?'."\076".'\s*?<tr)/i', $tableContents, $matches)) {
+   	  return preg_replace('/(<tr[^>]*?[\/]?'."\076".'\s*?<tr)/i', '<tr', $tableContents);
    }
    return $tableContents;
 }
@@ -806,4 +809,5 @@ function findSingleVardefElement($formElements=array(), $vardefs=array()) {
 
 
 }
-?>
+
+// vim: ts=4 sw=4 et

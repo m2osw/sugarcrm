@@ -34,4 +34,6 @@
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-require_once('modules/Calendar/Forms.php');
+require_once('modules/Calendar/Calendar.php');
+
+// vim: ts=4 sw=4 et

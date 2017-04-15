@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -46,7 +46,10 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
 
 
 
-require_once('modules/CampaignTrackers/Forms.php');
+require_once "modules/CampaignTrackers/Forms.php";
+require_once "modules/CampaignTrackers/CampaignTracker.php";
+require_once "include/database/DBManagerFactory.php";
+
 global $app_strings;
 global $app_list_strings;
 global $mod_strings;
@@ -54,13 +57,15 @@ global $sugar_version, $sugar_config;
 
 $focus = new CampaignTracker();
 
-if(isset($_REQUEST['record'])) {
+if(isset($_REQUEST['record']))
+{
     $focus->retrieve($_REQUEST['record']);
 }
 $old_id = '';
 
-if(isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] == 'true') {
-	$focus->id = "";
+if(isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] == 'true')
+{
+    $focus->id = "";
 }
 
 
@@ -129,4 +134,5 @@ $javascript->setFormName('EditView');
 $javascript->setSugarBean($focus);
 $javascript->addAllFields('');
 echo $javascript->getScript();
-?>
+
+// vim: ts=4 sw=4 et

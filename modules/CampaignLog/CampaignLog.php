@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,9 +35,11 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+require_once "data/SugarBean.php";
 
-class CampaignLog extends SugarBean {
 
+class CampaignLog extends SugarBean
+{
     var $table_name = 'campaign_log';
     var $object_name = 'CampaignLog';
     var $module_dir = 'CampaignLog';
@@ -57,13 +59,18 @@ class CampaignLog extends SugarBean {
     var $hits;
     var $more_information;
     var $marketing_id;
-    function CampaignLog() {
+
+
+    function CampaignLog()
+    {
         global $sugar_config;
         parent::SugarBean();
 
     }
 
-    function get_list_view_data(){
+
+    function get_list_view_data()
+    {
         global $locale;
         $temp_array = $this->get_list_view_array();
         //make sure that both items in array are set to some value, else return null
@@ -101,7 +108,7 @@ class CampaignLog extends SugarBean {
 
         if ($row)
         {
-        	$temp_array['MARKETING_NAME'] = $row['name'];
+            $temp_array['MARKETING_NAME'] = $row['name'];
         }
 
         return $temp_array;
@@ -183,8 +190,8 @@ class CampaignLog extends SugarBean {
                 return $row['name'];
             }
         }
-		return $related_id.$related_type;
-	}
+        return $related_id.$related_type;
+    }
 }
 
-?>
+// vim: ts=4 sw=4 et

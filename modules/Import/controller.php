@@ -114,21 +114,26 @@ class ImportController extends SugarController
             if($_REQUEST['publish'] == 'yes')
             {
                 $result = $import_map->mark_published($current_user->id,true);
-                if (!$result)
+                if(!$result)
+		{
                     $results['message'] = $mod_strings['LBL_ERROR_UNABLE_TO_PUBLISH'];
+	    	}
             }
-            elseif( $_REQUEST['publish'] == 'no')
+            elseif($_REQUEST['publish'] == 'no')
             {
                 // if you don't own this importmap, you do now, unless you have a map by the same name
                 $result = $import_map->mark_published($current_user->id,false);
-                if (!$result)
+                if(!$result)
+		{
                     $results['message'] = $mod_strings['LBL_ERROR_UNABLE_TO_UNPUBLISH'];
+	    	}
             }
         }
         
         echo json_encode($results);
         sugar_cleanup(TRUE);
     }
+
     function action_RefreshMapping()
     {
         global $mod_strings;

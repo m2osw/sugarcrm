@@ -34,87 +34,92 @@
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+require_once "include/MVC/View/SugarView.php";
+
 
 class ViewMain extends SugarView
-{ 	
- 	function ViewMain(){
-		$this->options['show_footer'] = false;
- 		parent::SugarView();
- 	}
- 	
- 	/**
-	 * @see SugarView::_getModuleTitleParams()
-	 */
-	protected function _getModuleTitleParams($browserTitle = false)
-	{
-	    global $mod_strings;
-	    
-    	return array(
-    	   translate('LBL_MODULE_NAME','Administration'),
-    	   ModuleBuilderController::getModuleTitle(),
-    	   );
+{
+    function ViewMain()
+    {
+        $this->options['show_footer'] = false;
+        parent::SugarView();
     }
-    
- 	function display()
- 	{
-		global $app_strings, $current_user, $mod_strings, $theme;
 
- 		$smarty = new Sugar_Smarty();
- 		$type = (!empty($_REQUEST['type']))?$_REQUEST['type']:'main';
- 		$mbt = false;
- 		$admin = false;
- 		$mb = strtolower($type);
- 		$smarty->assign('TYPE', $type);
- 		$smarty->assign('app_strings', $app_strings);
- 		$smarty->assign('mod', $mod_strings);
- 		//Replaced by javascript function "setMode"
- 		switch($type){
- 			case 'studio':
- 				//$smarty->assign('ONLOAD','ModuleBuilder.getContent("module=ModuleBuilder&action=wizard")');
- 				require_once('modules/ModuleBuilder/Module/StudioTree.php');
-				$mbt = new StudioTree();
-				break;
- 			case 'mb':
- 				//$smarty->assign('ONLOAD','ModuleBuilder.getContent("module=ModuleBuilder&action=package&package=")');
- 				require_once('modules/ModuleBuilder/MB/MBPackageTree.php');
-				$mbt = new MBPackageTree();
-				break;
- 			case 'dropdowns':
- 			   // $admin = is_admin($current_user);
- 			    require_once('modules/ModuleBuilder/Module/DropDownTree.php');
- 			    $mbt = new DropDownTree();
- 			    break;
- 			default:
- 				//$smarty->assign('ONLOAD','ModuleBuilder.getContent("module=ModuleBuilder&action=home")');	
-				require_once('modules/ModuleBuilder/Module/MainTree.php');
-				$mbt = new MainTree();
- 		}
- 		$smarty->assign('TEST_STUDIO', displayStudioForCurrentUser());
- 		$smarty->assign('ADMIN', is_admin($current_user));
- 		$smarty->display('modules/ModuleBuilder/tpls/includes.tpl');
-		if($mbt)
-		{
-			$smarty->assign('TREE',$mbt->fetch());
-			$smarty->assign('TREElabel', $mbt->getName());
-		}
-		$userPref = $current_user->getPreference('mb_assist', 'Assistant');
-		if(!$userPref) $userPref="na"; 
-		$smarty->assign('userPref',$userPref);
-		
-		///////////////////////////////////
-	    require_once('include/SugarTinyMCE.php');
-	    $tiny = new SugarTinyMCE();
-	    $tiny->defaultConfig['width']=300;
-	    $tiny->defaultConfig['height']=300;
-	    $tiny->buttonConfig = "code,separator,bold,italic,underline,strikethrough,separator,justifyleft,justifycenter,justifyright,
-	                         justifyfull,separator,forecolor,backcolor,
-	                         ";
-	    $tiny->buttonConfig2 = "pastetext,pasteword,fontselect,fontsizeselect,";
-	    $tiny->buttonConfig3 = "";
-	    $ed = $tiny->getInstance();
-	    $smarty->assign("tiny", $ed);
-		
-		$smarty->display('modules/ModuleBuilder/tpls/index.tpl');
-		
- 	}
+    /**
+     * @see SugarView::_getModuleTitleParams()
+     */
+    protected function _getModuleTitleParams($browserTitle = false)
+    {
+        global $mod_strings;
+
+        return array(
+                translate('LBL_MODULE_NAME','Administration'),
+                ModuleBuilderController::getModuleTitle(),
+                );
+    }
+
+    function display()
+    {
+        global $app_strings, $current_user, $mod_strings, $theme;
+
+        $smarty = new Sugar_Smarty();
+        $type = (!empty($_REQUEST['type']))?$_REQUEST['type']:'main';
+        $mbt = false;
+        $admin = false;
+        $mb = strtolower($type);
+        $smarty->assign('TYPE', $type);
+        $smarty->assign('app_strings', $app_strings);
+        $smarty->assign('mod', $mod_strings);
+        //Replaced by javascript function "setMode"
+        switch($type){
+            case 'studio':
+                //$smarty->assign('ONLOAD','ModuleBuilder.getContent("module=ModuleBuilder&action=wizard")');
+                require_once('modules/ModuleBuilder/Module/StudioTree.php');
+                $mbt = new StudioTree();
+                break;
+            case 'mb':
+                //$smarty->assign('ONLOAD','ModuleBuilder.getContent("module=ModuleBuilder&action=package&package=")');
+                require_once('modules/ModuleBuilder/MB/MBPackageTree.php');
+                $mbt = new MBPackageTree();
+                break;
+            case 'dropdowns':
+                // $admin = is_admin($current_user);
+                require_once('modules/ModuleBuilder/Module/DropDownTree.php');
+                $mbt = new DropDownTree();
+                break;
+            default:
+                //$smarty->assign('ONLOAD','ModuleBuilder.getContent("module=ModuleBuilder&action=home")');
+                require_once('modules/ModuleBuilder/Module/MainTree.php');
+                $mbt = new MainTree();
+        }
+        $smarty->assign('TEST_STUDIO', displayStudioForCurrentUser());
+        $smarty->assign('ADMIN', is_admin($current_user));
+        $smarty->display('modules/ModuleBuilder/tpls/includes.tpl');
+        if($mbt)
+        {
+            $smarty->assign('TREE',$mbt->fetch());
+            $smarty->assign('TREElabel', $mbt->getName());
+        }
+        $userPref = $current_user->getPreference('mb_assist', 'Assistant');
+        if(!$userPref) $userPref="na"; 
+        $smarty->assign('userPref',$userPref);
+
+        ///////////////////////////////////
+        require_once('include/SugarTinyMCE.php');
+        $tiny = new SugarTinyMCE();
+        $tiny->defaultConfig['width']=300;
+        $tiny->defaultConfig['height']=300;
+        $tiny->buttonConfig = "code,separator,bold,italic,underline,strikethrough,separator,justifyleft,justifycenter,justifyright,
+            justifyfull,separator,forecolor,backcolor,
+            ";
+        $tiny->buttonConfig2 = "pastetext,pasteword,fontselect,fontsizeselect,";
+        $tiny->buttonConfig3 = "";
+        $ed = $tiny->getInstance();
+        $smarty->assign("tiny", $ed);
+
+        $smarty->display('modules/ModuleBuilder/tpls/index.tpl');
+
+    }
 }
+
+// vim: ts=4 sw=4 et

@@ -34,14 +34,18 @@
  * "Powered by SugarCRM".
  ********************************************************************************/
 
- require_once('include/ListView/ListViewSmarty.php');
+require_once('include/ListView/ListViewSmarty.php');
+
  
-class ListViewPackages extends ListViewSmarty{
+class ListViewPackages extends ListViewSmarty
+{
     var $secondaryDisplayColumns;
+
     /**
      * Constructor  Call ListViewSmarty
      */
-    function ListViewPackages(){
+    function ListViewPackages()
+    {
         parent::ListViewSmarty();   
     } 
     
@@ -51,7 +55,8 @@ class ListViewPackages extends ListViewSmarty{
      * @param data  the data to display on the page
      * @param file  the template file to parse
      */
-    function setup($data, $file){
+    function setup($data, $file, $where, $params = array(), $offset = 0, $limit = -1, $filter_fields = array(), $id_field = 'id')
+    {
         $this->data = $data;
         $this->tpl = $file;       
     }
@@ -59,7 +64,8 @@ class ListViewPackages extends ListViewSmarty{
     /**
      * Override the display method
      */
-    function display(){
+    function display($end = true)
+    {
         global $odd_bg, $even_bg, $app_strings;
         $this->ss->assign('rowColor', array('oddListRow', 'evenListRow'));
         $this->ss->assign('bgColor', array($odd_bg, $even_bg));
@@ -69,4 +75,5 @@ class ListViewPackages extends ListViewSmarty{
         return $this->ss->fetch($this->tpl);  
     }  
 }
-?>
+
+// vim: ts=4 sw=4 et

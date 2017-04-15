@@ -41,26 +41,29 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
   * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc. All Rights
   * Reserved. Contributor(s): ______________________________________..
   *********************************************************************************/
-  //increate timeout for phpo script execution
-  ini_set('max_execution_time',300);
-  //ajaxInit();
+
+//increate timeout for phpo script execution
+ini_set('max_execution_time', 300);
+//ajaxInit();
 
 
-  require_once("include/OutboundEmail/OutboundEmail.php");
-  require_once("include/ytree/Tree.php");
-  require_once("include/ytree/ExtNode.php");
+require_once("include/OutboundEmail/OutboundEmail.php");
+require_once("include/ytree/Tree.php");
+require_once("include/ytree/ExtNode.php");
 
-  $email = new Email();
-  $email->email2init();
-  $ie = new InboundEmail();
-  $ie->email = $email;
-  $json = getJSONobj();
+$email = new Email();
+$email->email2init();
+$ie = new InboundEmail();
+$ie->email = $email;
+$json = getJSONobj();
 
 
-  $showFolders = unserialize(base64_decode($current_user->getPreference('showFolders', 'Emails')));
+$showFolders = unserialize(base64_decode($current_user->getPreference('showFolders', 'Emails')));
 
- if (isset($_REQUEST['emailUIAction'])) {
-  switch($_REQUEST['emailUIAction']) {
+if(isset($_REQUEST['emailUIAction']))
+{
+    switch($_REQUEST['emailUIAction'])
+    {
 
 
         ///////////////////////////////////////////////////////////////////////////
@@ -125,7 +128,9 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
         $email->type = 'out';
         $email->status = 'sent';
 
-        if(isset($_REQUEST['email_id']) && !empty($_REQUEST['email_id'])) {// && isset($_REQUEST['saveDraft']) && !empty($_REQUEST['saveDraft'])) {
+        if(isset($_REQUEST['email_id']) && !empty($_REQUEST['email_id']))
+	//&& isset($_REQUEST['saveDraft']) && !empty($_REQUEST['saveDraft']))
+	{
             $email->retrieve($_REQUEST['email_id']); // uid is GUID in draft cases
         }
         if (isset($_REQUEST['uid']) && !empty($_REQUEST['uid'])) {
@@ -139,7 +144,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
 	        $out = $json->encode($ret, true);
             echo $out; // async call to close the proper compose tab
         }
-    break;
+        break;
 
     case "uploadAttachment":
         $GLOBALS['log']->debug("********** EMAIL 2.0 - Asynchronous - at: uploadAttachment");
@@ -1638,5 +1643,8 @@ eoq;
         $GLOBALS['log']->debug("********** EMAIL 2.0 - Asynchronous - at: default");
         echo "NOOP";
         break;
-  } // switch
- } // if
+
+    } // switch
+} // if
+
+// vim: ts=4 sw=4 et

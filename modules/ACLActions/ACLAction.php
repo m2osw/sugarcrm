@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,7 +35,10 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-require_once('modules/ACLActions/actiondefs.php');
+
+require_once "modules/ACLActions/actiondefs.php";
+require_once "data/SugarBean.php";
+
 
 class ACLAction  extends SugarBean
 {
@@ -44,6 +47,7 @@ class ACLAction  extends SugarBean
     var $table_name = 'acl_actions';
     var $new_schema = true;
     var $disable_custom_fields = true;
+
     function ACLAction(){
         parent::SugarBean();
     }
@@ -341,14 +345,6 @@ class ACLAction  extends SugarBean
         }
         return false;
     }
-
-
-
-
-
-
-
-
 
     /**
     * static function userHasAccess($user_id, $category, $action, $is_owner = false)

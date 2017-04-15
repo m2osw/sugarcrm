@@ -44,7 +44,6 @@ require_once('include/SubPanel/SubPanelTiles.php');
  */
 class SubPanelTilesTabs extends SubPanelTiles
 {
-
 	function SubPanelTiles(&$focus, $layout_def_key='', $layout_def_override = '')
 	{
 
@@ -70,7 +69,7 @@ class SubPanelTilesTabs extends SubPanelTiles
         return $current_user->getPreference('subpanelLayout', $layoutParams);
     }
 
-    function applyUserCustomLayoutToTabs($tabs, $key='All')
+    function applyUserCustomLayoutToTabs($tabs, $key = 'All')
     {
         //WDong Bug: 12258 "All" tab in the middle of a record's detail view is not localized.
         if($key=='All')
@@ -101,11 +100,13 @@ class SubPanelTilesTabs extends SubPanelTiles
      * @param boolean $showTabs	Call the view code to display the generated tabs
      * @param string $selectedGroup	(Optional) Name of any selected tab (defaults to 'All')
      */
-	function getTabs($tabs, $showTabs = true, $selectedGroup='All')
+	function getPanelTabs($tabs, $showTabs = true, $selectedGroup = 'All')
     {
         //WDong Bug: 12258 "All" tab in the middle of a record's detail view is not localized.
-        if($selectedGroup=='All')
-        	$selectedGroup=translate('LBL_TABGROUP_ALL');
+        if($selectedGroup == 'All')
+        {
+        	$selectedGroup = translate('LBL_TABGROUP_ALL');
+        }
 
     	// Set up a mapping from subpanelID, found in the $tabs list, to the source module name
     	// As the $GLOBALS['tabStructure'] array holds the Group Tabs by module name we need to efficiently convert between the two
@@ -114,39 +115,45 @@ class SubPanelTilesTabs extends SubPanelTiles
     	// for use when constructing the module by module tabs, not the subpanel tabs, as we move away from using module names to represent
     	// subpanels, and use unique subpanel IDs instead.
 
-    	$moduleNames = array () ;
-    	foreach ( $tabs as $subpanelID )
+    	$moduleNames = array();
+    	foreach($tabs as $subpanelID)
     	{
             // Bug #44344 : Custom relationships under same module only show once in subpanel tabs
             // use object property instead new object to have ability run unit test (can override subpanel_definitions)
-            $subpanel =  $this->subpanel_definitions->load_subpanel( $subpanelID );
-    		if ($subpanel !== false)
-    		  $moduleNames [ $subpanelID ] = $subpanel->get_module_name() ;
+            $subpanel = $this->subpanel_definitions->load_subpanel($subpanelID);
+    		if($subpanel !== false)
+            {
+    		    $moduleNames[$subpanelID] = $subpanel->get_module_name();
+            }
     	}
 
-    	$groups =  array () ;
-    	$found = array () ;
+    	$groups = array();
+    	$found = array();
 
-        foreach( $GLOBALS['tabStructure'] as $mainTab => $subModules)
+        foreach($GLOBALS['tabStructure'] as $mainTab => $subModules)
         {
-            foreach( $subModules['modules'] as $key => $subModule )
+            foreach($subModules['modules'] as $key => $subModule )
             {
-    			foreach ( $tabs as $subpanelID )
-                    if (isset($moduleNames[ $subpanelID ] ) && strcasecmp( $subModule , $moduleNames[ $subpanelID ] ) === 0)
+    			foreach($tabs as $subpanelID)
+                {
+                    if(isset($moduleNames[$subpanelID])
+                    && strcasecmp($subModule, $moduleNames[$subpanelID]) === 0)
                     {
                         // Bug #44344 : Custom relationships under same module only show once in subpanel tabs
-                        $groups [ translate ( $mainTab ) ] [ 'modules' ] [] = $subpanelID ;
-                    	$found [ $subpanelID ] = true ;
+                        $groups[translate($mainTab)]['modules'][] = $subpanelID;
+                    	$found[$subpanelID] = true;
                 	}
+                }
             }
         }
 
         // Put all the remaining subpanels into the 'Other' tab.
-
-        foreach( $tabs as $subpanelID )
+        foreach($tabs as $subpanelID)
         {
-        	if ( ! isset ( $found [ $subpanelID ] ) )
-	        	$groups [ translate ('LBL_TABGROUP_OTHER') ]['modules'] [] = $subpanelID ;
+        	if(!isset($found[$subpanelID]))
+            {
+	        	$groups[translate('LBL_TABGROUP_OTHER')]['modules'][] = $subpanelID;
+            }
         }
 
         /* Move history to same tab as activities */
@@ -265,4 +272,5 @@ class SubPanelTilesTabs extends SubPanelTiles
 		return $retTabs;
 	}
 }
-?>
+
+// vim: ts=4 sw=4 et

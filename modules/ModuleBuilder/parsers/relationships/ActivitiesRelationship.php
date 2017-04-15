@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -68,43 +68,42 @@ require_once 'modules/ModuleBuilder/parsers/relationships/OneToManyRelationship.
 
 class ActivitiesRelationship extends OneToManyRelationship
 {
+    protected static $subpanelsAdded = array();
+    protected static $labelsAdded = array();
 
-	protected static $subpanelsAdded = array();
-	protected static $labelsAdded = array();
-
-	/*
+    /*
      * Constructor
      * @param array $definition Parameters passed in as array defined in parent::$definitionKeys
      * The lhs_module value is for the One side; the rhs_module value is for the Many
      */
-    function __construct ($definition)
+    function __construct($definition)
     {
-        parent::__construct ( $definition ) ;
+        parent::__construct($definition);
     }
 
     /*
      * BUILD methods called during the build
      */
 
-	/*
+    /*
      * Define the labels to be added to the module for the new relationships
      * @return array    An array of system value => display value
      */
-    function buildLabels ()
+    function buildLabels($update = false)
     {
-        $labelDefinitions = array ( ) ;
+        $labelDefinitions = array();
         if (!$this->relationship_only )
         {
             if (!isset(ActivitiesRelationship::$labelsAdded[$this->lhs_module])) {
                 foreach(getTypeDisplayList() as $typeDisplay)
                 {
                     $labelDefinitions [] = array (
-                        'module' => 'application',
-                        'system_label' => $typeDisplay,
-                        'display_label' => array(
-                            $this->lhs_module => $this->lhs_label ? $this->lhs_label : ucfirst($this->lhs_module)
-                        ),
-                    );
+                            'module' => 'application',
+                            'system_label' => $typeDisplay,
+                            'display_label' => array(
+                                $this->lhs_module => $this->lhs_label ? $this->lhs_label : ucfirst($this->lhs_module)
+                                ),
+                            );
                 }
             }
 
@@ -121,15 +120,15 @@ class ActivitiesRelationship extends OneToManyRelationship
             $lhs_display_label .= translate($this->lhs_module);
 
             $labelDefinitions[] = array (
-                'module' => $this->lhs_module ,
-                'system_label' => 'LBL_' . strtoupper($this->relationship_name . '_FROM_' . $this->getRightModuleSystemLabel()) . '_TITLE',
-                'display_label' => $rhs_display_label
-            );
+                    'module' => $this->lhs_module ,
+                    'system_label' => 'LBL_' . strtoupper($this->relationship_name . '_FROM_' . $this->getRightModuleSystemLabel()) . '_TITLE',
+                    'display_label' => $rhs_display_label
+                    );
             $labelDefinitions[] = array(
-                'module' => $this->rhs_module,
-                'system_label' => 'LBL_' . strtoupper($this->relationship_name . '_FROM_' . $this->getLeftModuleSystemLabel()) . '_TITLE',
-                'display_label' => $lhs_display_label
-            );
+                    'module' => $this->rhs_module,
+                    'system_label' => 'LBL_' . strtoupper($this->relationship_name . '_FROM_' . $this->getLeftModuleSystemLabel()) . '_TITLE',
+                    'display_label' => $lhs_display_label
+                    );
 
             ActivitiesRelationship::$labelsAdded[$this->lhs_module] = true;
         }
@@ -137,7 +136,7 @@ class ActivitiesRelationship extends OneToManyRelationship
     }
 
 
-	/*
+    /*
      * @return array    An array of field definitions, ready for the vardefs, keyed by module
      */
     function buildVardefs ( )
@@ -151,9 +150,9 @@ class ActivitiesRelationship extends OneToManyRelationship
         return $vardefs ;
     }
 
-	protected function getLinkFieldDefinition ($sourceModule , $relationshipName)
+    protected function getLinkFieldDefinition ($sourceModule , $relationshipName, $right_side = false, $vname = '', $id_name = false)
     {
-        $vardef = array ( ) ;
+        $vardef = array();
         $vardef [ 'name' ] = $relationshipName;
         $vardef [ 'type' ] = 'link' ;
         $vardef [ 'relationship' ] = $relationshipName ;
@@ -176,7 +175,7 @@ class ActivitiesRelationship extends OneToManyRelationship
         return array( $this->rhs_module => $this->relationship_name . "_name" ) ; // this must match the name of the relate field from buildVardefs
     }
 
- 	function buildSubpanelDefinitions ()
+    function buildSubpanelDefinitions ()
     {
         if ($this->relationship_only || isset(ActivitiesRelationship::$subpanelsAdded[$this->lhs_module]))
             return array () ;
@@ -184,9 +183,9 @@ class ActivitiesRelationship extends OneToManyRelationship
         ActivitiesRelationship::$subpanelsAdded[$this->lhs_module] = true;
         $relationshipName = substr($this->relationship_name, 0, strrpos($this->relationship_name, '_'));
         return array( $this->lhs_module => array (
-        			  'activities' => $this->buildActivitiesSubpanelDefinition ( $relationshipName ),
-        			  'history' => $this->buildHistorySubpanelDefinition ( $relationshipName ) ,
-        			));
+                    'activities' => $this->buildActivitiesSubpanelDefinition ( $relationshipName ),
+                    'history' => $this->buildHistorySubpanelDefinition ( $relationshipName ) ,
+                    ));
     }
 
     /*
@@ -206,31 +205,31 @@ class ActivitiesRelationship extends OneToManyRelationship
         $relMetadata ['relationship_role_column'] = 'parent_type';
         $relMetadata ['relationship_role_column_value'] = $this->definition [ 'lhs_module' ] ;
 
-    	return array( $this->lhs_module => array(
-    		'relationships' => array ($relationshipName => $relMetadata),
-    		'fields' => '', 'indices' => '', 'table' => '')
-    	) ;
+        return array( $this->lhs_module => array(
+                    'relationships' => array ($relationshipName => $relMetadata),
+                    'fields' => '', 'indices' => '', 'table' => '')
+                ) ;
     }
 
-/*
+    /*
      * Shortcut to construct an Activities collection subpanel
      * @param AbstractRelationship $relationship    Source relationship to Activities module
      */
     protected function buildActivitiesSubpanelDefinition ( $relationshipName )
     {
-		return array (
-            'order' => 10 ,
-            'sort_order' => 'desc' ,
-            'sort_by' => 'date_start' ,
-            'title_key' => 'LBL_ACTIVITIES_SUBPANEL_TITLE' ,
-            'type' => 'collection' ,
-            'subpanel_name' => 'activities' , //this value is not associated with a physical file
-            'module' => 'Activities' ,
-            'top_buttons' => array (
-                array ( 'widget_class' => 'SubPanelTopCreateTaskButton' ) ,
-                array ( 'widget_class' => 'SubPanelTopScheduleMeetingButton' ) ,
-                array ( 'widget_class' => 'SubPanelTopScheduleCallButton' ) ,
-                array ( 'widget_class' => 'SubPanelTopComposeEmailButton' ) ) ,
+        return array (
+                'order' => 10 ,
+                'sort_order' => 'desc' ,
+                'sort_by' => 'date_start' ,
+                'title_key' => 'LBL_ACTIVITIES_SUBPANEL_TITLE' ,
+                'type' => 'collection' ,
+                'subpanel_name' => 'activities' , //this value is not associated with a physical file
+                'module' => 'Activities' ,
+                'top_buttons' => array (
+                    array ( 'widget_class' => 'SubPanelTopCreateTaskButton' ) ,
+                    array ( 'widget_class' => 'SubPanelTopScheduleMeetingButton' ) ,
+                    array ( 'widget_class' => 'SubPanelTopScheduleCallButton' ) ,
+                    array ( 'widget_class' => 'SubPanelTopComposeEmailButton' ) ) ,
                 'collection_list' => array (
                     'meetings' => array (
                         'module' => 'Meetings' ,
@@ -253,17 +252,17 @@ class ActivitiesRelationship extends OneToManyRelationship
     protected function buildHistorySubpanelDefinition ( $relationshipName )
     {
         return array (
-            'order' => 20 ,
-            'sort_order' => 'desc' ,
-            'sort_by' => 'date_modified' ,
-            'title_key' => 'LBL_HISTORY' ,
-            'type' => 'collection' ,
-            'subpanel_name' => 'history' , //this values is not associated with a physical file.
-            'module' => 'History' ,
-            'top_buttons' => array (
-                array ( 'widget_class' => 'SubPanelTopCreateNoteButton' ) ,
-				array ( 'widget_class' => 'SubPanelTopArchiveEmailButton'),
-                array ( 'widget_class' => 'SubPanelTopSummaryButton' ) ) ,
+                'order' => 20 ,
+                'sort_order' => 'desc' ,
+                'sort_by' => 'date_modified' ,
+                'title_key' => 'LBL_HISTORY' ,
+                'type' => 'collection' ,
+                'subpanel_name' => 'history' , //this values is not associated with a physical file.
+                'module' => 'History' ,
+                'top_buttons' => array (
+                    array ( 'widget_class' => 'SubPanelTopCreateNoteButton' ) ,
+                    array ( 'widget_class' => 'SubPanelTopArchiveEmailButton'),
+                    array ( 'widget_class' => 'SubPanelTopSummaryButton' ) ) ,
                 'collection_list' => array (
                     'meetings' => array (
                         'module' => 'Meetings' ,
@@ -287,3 +286,5 @@ class ActivitiesRelationship extends OneToManyRelationship
                         'get_subpanel_data' => $relationshipName. '_emails' ) ) )  ;
     }
 }
+
+// vim: ts=4 sw=4 et

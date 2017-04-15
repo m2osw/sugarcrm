@@ -92,7 +92,7 @@ class Importer
         // use our own error handler
         set_error_handler(array('Importer','handleImportErrors'),E_ALL);
 
-         // Increase the max_execution_time since this step can take awhile
+        // Increase the max_execution_time since this step can take awhile
         ini_set("max_execution_time", max($sugar_config['import_max_execution_time'],3600));
 
         // stop the tracker
@@ -306,10 +306,10 @@ class Importer
 
                 if ($rowValue === false)
                 {
-					/* BUG 51213 - jeff @ neposystems.com */
+                    /* BUG 51213 - jeff @ neposystems.com */
                     $do_save = false;
                     continue;
-				}
+                }
             }
 
             // if the parent type is in singular form, get the real module name for parent_type
@@ -376,7 +376,7 @@ class Importer
             // check if it already exists
             $query = "SELECT * FROM {$focus->table_name} WHERE id='".$focus->db->quote($focus->id)."'";
             $result = $focus->db->query($query)
-            or sugar_die("Error selecting sugarbean: ");
+                or sugar_die("Error selecting sugarbean: ");
 
             $dbrow = $focus->db->fetchByAssoc($result);
 
@@ -536,18 +536,18 @@ class Importer
             $focus->assigned_user_id = $current_user->id;
         }
         /*
-        * Bug 34854: Added all conditions besides the empty check on date modified.
-        */
+         * Bug 34854: Added all conditions besides the empty check on date modified.
+         */
         if ( ( !empty($focus->new_with_id) && !empty($focus->date_modified) ) ||
-             ( empty($focus->new_with_id) && $timedate->to_db($focus->date_modified) != $timedate->to_db($timedate->to_display_date_time($focus->fetched_row['date_modified'])) )
-        ) 
+                ( empty($focus->new_with_id) && $timedate->to_db($focus->date_modified) != $timedate->to_db($timedate->to_display_date_time($focus->fetched_row['date_modified'])) )
+           ) 
             $focus->update_date_modified = false;
 
         // Bug 53636 - Allow update of "Date Created"
         if (!empty($focus->date_entered)) {
-        	$focus->update_date_entered = true;
+            $focus->update_date_entered = true;
         }
-            
+
         $focus->optimistic_lock = false;
         if ( $focus->object_name == "Contact" && isset($focus->sync_contact) )
         {
@@ -578,7 +578,7 @@ class Importer
         // Bug51192: check if there are any changes in the imported data
         $hasDataChanges = false;
         $dataChanges=$focus->db->getAuditDataChanges($focus);
-        
+
         if(!empty($dataChanges)) {
             foreach($dataChanges as $field=>$fieldData) {
                 if($fieldData['data_type'] != 'date' || strtotime($fieldData['before']) != strtotime($fieldData['after'])) {
@@ -587,7 +587,7 @@ class Importer
                 }
             }
         }
-        
+
         // if modified_user_id is set, set the flag to false so SugarBEan will not reset it
         if (isset($focus->modified_user_id) && $focus->modified_user_id && !$hasDataChanges) {
             $focus->update_modified_by = false;
@@ -697,9 +697,15 @@ class Importer
             }
         }
         $mapping_file->setDefaultValues($defaultValues);
-        $result = $mapping_file->save( $current_user->id,  $_REQUEST['save_map_as'], $_REQUEST['import_module'], $_REQUEST['source'],
-            ( isset($_REQUEST['has_header']) && $_REQUEST['has_header'] == 'on'), $_REQUEST['custom_delimiter'], html_entity_decode($_REQUEST['custom_enclosure'],ENT_QUOTES)
-        );
+        $result = $mapping_file->save_mapping(
+                $current_user->id,
+                $_REQUEST['save_map_as'],
+                $_REQUEST['import_module'],
+                $_REQUEST['source'],
+                (isset($_REQUEST['has_header']) && $_REQUEST['has_header'] == 'on'),
+                $_REQUEST['custom_delimiter'],
+                html_entity_decode($_REQUEST['custom_enclosure'], ENT_QUOTES)
+            );
     }
 
 
@@ -807,14 +813,14 @@ class Importer
     protected function _convertId($string)
     {
         return preg_replace_callback(
-            '|[^A-Za-z0-9\-\_]|',
-            create_function(
-            // single quotes are essential here,
-            // or alternative escape all $ as \$
-            '$matches',
-            'return ord($matches[0]);'
-                 ) ,
-            $string);
+                '|[^A-Za-z0-9\-\_]|',
+                create_function(
+                    // single quotes are essential here,
+                    // or alternative escape all $ as \$
+                    '$matches',
+                    'return ord($matches[0]);'
+                    ) ,
+                $string);
     }
 
     public function retrieveAdvancedMapping()
@@ -926,10 +932,10 @@ class Importer
 
 
     /**
-	 * upon bean save, the relationships are saved by SugarBean->save_relationship_changes() method, but those values depend on
+     * upon bean save, the relationships are saved by SugarBean->save_relationship_changes() method, but those values depend on
      * the request object and is not reliable during import.  This function makes sure any defined related or parent id's are processed
-	 * and their relationship saved.
-	 */
+     * and their relationship saved.
+     */
     public function checkRelatedIDsAfterSave($focus)
     {
         if(empty($focus)){
@@ -977,6 +983,6 @@ class Importer
             }
         }
     }
-
-
 }
+
+// vim: ts=4 sw=4 et

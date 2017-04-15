@@ -361,4 +361,5 @@ function insert_popup_footer()
 </html>
 EOQ;
 }
-?>
+
+// vim: ts=4 sw=4 et

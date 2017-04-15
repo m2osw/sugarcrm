@@ -88,4 +88,5 @@ function get_new_record_form () {
 	$accountForm = new ProspectListFormBase();
 	return $accountForm->getForm('','ProspectLists');
 }
-?>
+
+// vim: ts=4 sw=4 et

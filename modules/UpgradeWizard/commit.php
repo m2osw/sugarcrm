@@ -1,6 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry)
-	die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -42,7 +41,10 @@ if(!defined('sugarEntry') || !sugarEntry)
  * Portions created by SugarCRM are Copyright(C) SugarCRM, Inc. All Rights
  * Reserved. Contributor(s): ______________________________________..
  * *******************************************************************************/
-require_once('include/SugarLogger/SugarLogger.php');
+
+require_once "include/SugarLogger/SugarLogger.php";
+require_once "modules/Trackers/TrackerManager.php";
+
 
 $trackerManager = TrackerManager::getInstance();
 $trackerManager->pause();
@@ -647,8 +649,10 @@ $GLOBALS['top_message'] = "<b>{$mod_strings['LBL_UW_COMMIT_DESC']}</b>";
 $stepBack = $_REQUEST['step'] - 1;
 //Skip ahead to the end page as no layouts need to be merged.
 $skipLayouts = true;
-foreach($_SESSION['sugarMergeRunResults'] as $mergeModule => $mergeModuleFileList){
-    if(!empty($mergeModuleFileList)){
+foreach($_SESSION['sugarMergeRunResults'] as $mergeModule => $mergeModuleFileList)
+{
+    if(!empty($mergeModuleFileList))
+    {
         $skipLayouts = false;
     }
 }
@@ -659,14 +663,15 @@ $stepRecheck = $_REQUEST['step'];
 $_SESSION['step'][$steps['files'][$_REQUEST['step']]] =($stop) ? 'failed' : 'success';
 
 // clear out the theme cache
-if(!class_exists('SugarThemeRegistry')){
+if(!class_exists('SugarThemeRegistry'))
+{
     require_once('include/SugarTheme/SugarTheme.php');
 }
 
 $themeObject = SugarThemeRegistry::current();
 
 $styleJSFilePath = sugar_cached($themeObject->getJSPath() . DIRECTORY_SEPARATOR .  'style-min.js');
-if( file_exists($styleJSFilePath) )
+if(file_exists($styleJSFilePath))
 {
     logThis("Rebuilding style js file: $styleJSFilePath");
     unlink($styleJSFilePath);
@@ -696,6 +701,8 @@ require_once('jssource/minify.php');
 //which we don't want to happen until after this request as we have already started rendering with a specific theme.
 $themeName = (string) $themeObject;
 if($themeName != $GLOBALS['sugar_config']['default_theme'])
+{
     SugarThemeRegistry::set($themeName);
+}
 
-
+// vim: ts=4 sw=4 et

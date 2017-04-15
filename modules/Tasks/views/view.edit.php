@@ -1,6 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
-
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -36,31 +35,35 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+require_once "include/MVC/View/views/view.edit.php";
+
 
 class TasksViewEdit extends ViewEdit
 {
     /**
- 	 * @see SugarView::preDisplay()
- 	 */
- 	public function preDisplay()
- 	{
- 		if($_REQUEST['module'] != 'Tasks' && isset($_REQUEST['status']) && empty($_REQUEST['status'])) {
-	       $this->bean->status = '';
- 		} //if
- 		if(!empty($_REQUEST['status']) && ($_REQUEST['status'] == 'Completed')) {
-	       $this->bean->status = 'Completed';
- 		}
- 		parent::preDisplay();
- 	}
+     * @see SugarView::preDisplay()
+     */
+    public function preDisplay()
+    {
+        if($_REQUEST['module'] != 'Tasks' && isset($_REQUEST['status']) && empty($_REQUEST['status'])) {
+            $this->bean->status = '';
+        } //if
+        if(!empty($_REQUEST['status']) && ($_REQUEST['status'] == 'Completed')) {
+            $this->bean->status = 'Completed';
+        }
+        parent::preDisplay();
+    }
 
- 	/**
- 	 * @see SugarView::display()
- 	 */
- 	public function display()
- 	{
- 		if($this->ev->isDuplicate){
-	       $this->bean->status = $this->bean->getDefaultStatus();
- 		} //if
- 		parent::display();
- 	}
+    /**
+     * @see SugarView::display()
+     */
+    public function display()
+    {
+        if($this->ev->isDuplicate){
+            $this->bean->status = $this->bean->getDefaultStatus();
+        } //if
+        parent::display();
+    }
 }
+
+// vim: ts=4 sw=4 et

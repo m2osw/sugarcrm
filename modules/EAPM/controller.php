@@ -34,6 +34,8 @@
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+require_once "include/MVC/Controller/SugarController.php";
+
 
 class EAPMController extends SugarController
 {

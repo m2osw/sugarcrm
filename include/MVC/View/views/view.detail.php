@@ -34,7 +34,8 @@
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-require_once('include/DetailView/DetailView2.php');
+require_once "include/DetailView/DetailView2.php";
+require_once "include/MVC/View/SugarView.php";
 
 /**
  * Default view class for handling DetailViews

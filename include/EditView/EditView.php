@@ -39,7 +39,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * Old EditView
  * @deprecated
  */
-class EditView {
+class EditView
+{
     /**
      * smarty object
      * @var object
@@ -61,7 +62,8 @@ class EditView {
      * @param string $module module to use
      * @param string $template template of the form to retreive
      */
-    function EditView($module, $template) {
+    function EditView($module, $template)
+    {
         $this->module = $module;
         $this->template = $template;
         $this->ss = new Sugar_Smarty();
@@ -72,7 +74,8 @@ class EditView {
      * assigns all things to the template like mod_srings and app_strings
      *
      */
-    function process() {
+    function process()
+    {
         global $current_language, $app_strings, $sugar_version, $sugar_config, $timedate, $theme;;
         $module_strings = return_module_language($current_language, $this->module);
 
@@ -90,9 +93,10 @@ class EditView {
      *
      * @return string HTML of parsed template
      */
-    function display() {
+    function display()
+    {
         return $this->ss->fetch($this->template);
     }
-
 }
-?>
+
+// vim: ts=4 sw=4 et

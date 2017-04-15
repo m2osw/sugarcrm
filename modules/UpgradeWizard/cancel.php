@@ -88,4 +88,5 @@ $stepNext		= $_REQUEST['step'] + 1;
 $stepCancel		= -1;
 $stepRecheck	= $_REQUEST['step'];
 
-?>
+
+// vim: ts=4 sw=4 et

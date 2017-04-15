@@ -504,5 +504,4 @@ function handleSave($prefix,$redirect=true, $useRequired=false){
 
 }
 
-
-?>
+// vim: ts=4 sw=4 et

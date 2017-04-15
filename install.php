@@ -1,5 +1,5 @@
 <?php
- if(!defined('sugarEntry'))define('sugarEntry', true);
+if(!defined('sugarEntry'))define('sugarEntry', true);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -36,12 +36,15 @@
  ********************************************************************************/
 
 //session_destroy();
-if (version_compare(phpversion(),'5.2.0') < 0) {
+if(version_compare(phpversion(), '5.2.0') < 0)
+{
 	$msg = 'Minimum PHP version required is 5.2.0.  You are using PHP version  '. phpversion();
     die($msg);
 }
+
 $session_id = session_id();
-if(empty($session_id)){
+if(empty($session_id))
+{
 	@session_start();
 }
 $GLOBALS['installing'] = true;
@@ -61,7 +64,9 @@ require_once('include/entryPoint.php');
 //check to see if the script files need to be rebuilt, add needed variables to request array
 $_REQUEST['root_directory'] = getcwd();
 $_REQUEST['js_rebuild_concat'] = 'rebuild';
-if(isset($_REQUEST['goto']) && $_REQUEST['goto'] != 'SilentInstall') {
+if(isset($_REQUEST['goto'])
+&& $_REQUEST['goto'] != 'SilentInstall')
+{
     require_once('jssource/minify.php');
 }
 
@@ -70,7 +75,8 @@ $timedate = TimeDate::getInstance();
 setPhpIniSettings();
 $locale = new Localization();
 
-if(get_magic_quotes_gpc() == 1) {
+if(get_magic_quotes_gpc() == 1)
+{
    $_REQUEST = array_map("stripslashes_checkstrings", $_REQUEST);
    $_POST = array_map("stripslashes_checkstrings", $_POST);
    $_GET = array_map("stripslashes_checkstrings", $_GET);
@@ -91,51 +97,67 @@ $common = 'install/installCommon.js';
 
 ///////////////////////////////////////////////////////////////////////////////
 ////	INSTALLER LANGUAGE
-function getSupportedInstallLanguages(){
+function getSupportedInstallLanguages()
+{
 	$supportedLanguages = array(
-	'en_us'	=> 'English (US)',
+        'en_us'	=> 'English (US)',
 	);
-	if(file_exists('install/lang.config.php')){
-		include('install/lang.config.php');
-		if(!empty($config['languages'])){
 
-			foreach($config['languages'] as $k=>$v){
-				if(file_exists('install/language/' . $k . '.lang.php')){
+	if(file_exists('install/lang.config.php'))
+    {
+		include('install/lang.config.php');
+		if(!empty($config['languages']))
+        {
+			foreach($config['languages'] as $k=>$v)
+            {
+				if(file_exists('install/language/' . $k . '.lang.php'))
+                {
 					$supportedLanguages[$k] = $v;
 				}
 			}
 		}
 	}
+
 	return $supportedLanguages;
 }
 $supportedLanguages = getSupportedInstallLanguages();
 
 // after install language is selected, use that pack
 $default_lang = 'en_us';
-if(!isset($_POST['language']) && (!isset($_SESSION['language']) && empty($_SESSION['language']))) {
-	if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) && !empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+if(!isset($_POST['language']) && (!isset($_SESSION['language']) && empty($_SESSION['language'])))
+{
+	if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) && !empty($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+    {
 		$lang = parseAcceptLanguage();
-		if(isset($supportedLanguages[$lang])) {
+		if(isset($supportedLanguages[$lang]))
+        {
 			$_POST['language'] = $lang;
-		} else {
+		}
+        else
+        {
 			$_POST['language'] = $default_lang;
 	    }
 	}
 }
 
-if(isset($_POST['language'])) {
-	$_SESSION['language'] = str_replace('-','_',$_POST['language']);
+if(isset($_POST['language']))
+{
+	$_SESSION['language'] = str_replace('-', '_', $_POST['language']);
 }
 
 $current_language = isset($_SESSION['language']) ? $_SESSION['language'] : $default_lang;
 
-if(file_exists("install/language/{$current_language}.lang.php")) {
+if(file_exists("install/language/{$current_language}.lang.php"))
+{
 	require_once("install/language/{$current_language}.lang.php");
-} else {
+}
+else
+{
 	require_once("install/language/{$default_lang}.lang.php");
 }
 
-if($current_language != 'en_us') {
+if($current_language != 'en_us')
+{
 	$my_mod_strings = $mod_strings;
 	include('install/language/en_us.lang.php');
 	$mod_strings = sugarLangArrayMerge($mod_strings, $my_mod_strings);
@@ -164,7 +186,8 @@ if(isset($_REQUEST['checkInstallSystem']) && ($_REQUEST['checkInstallSystem'])){
 
 //if this is a DB Settings check, then just run the check and return,
 //this is an ajax call and there is no need for further processing
-if(isset($_REQUEST['checkDBSettings']) && ($_REQUEST['checkDBSettings'])){
+if(isset($_REQUEST['checkDBSettings']) && ($_REQUEST['checkDBSettings']))
+{
     require_once('install/checkDBSettings.php');
     echo checkDBSettings();
     return;
@@ -614,4 +637,4 @@ require('install/' . $the_file);
 
 installerHook('post_installFileRequire', array('the_file' => $the_file));
 
-?>
+# vim: ts=4 sw=4 et

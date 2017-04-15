@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,12 +35,15 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+require_once "modules/DynamicFields/templates/Fields/TemplateText.php";
 
-class TemplatePhone extends TemplateText{
+
+class TemplatePhone extends TemplateText
+{
     var $max_size = 25;
     var $type='phone';
     var $supports_unified_search = true;
-    
+
     /**
      * __construct
      * 
@@ -48,23 +51,23 @@ class TemplatePhone extends TemplateText{
      * validate_usa_format vardef value.
      */
     function __construct()
-	{
-	}	
-	
-	/**
-	 * get_field_def
-	 * 
-	 * @see parent::get_field_def
-	 * This method checks to see if the validate_usa_format key/value entry should be
-	 * added to the vardef entry representing the module
-	 */	
-    function get_field_def(){
-		$def = parent::get_field_def();
-		$def['dbType'] = 'varchar';
-		
-		return $def;	
-	}
+    {
+    }
+
+    /**
+     * get_field_def
+     * 
+     * @see parent::get_field_def
+     * This method checks to see if the validate_usa_format key/value entry should be
+     * added to the vardef entry representing the module
+     */
+    function get_field_def()
+    {
+        $def = parent::get_field_def();
+        $def['dbType'] = 'varchar';
+
+        return $def;
+    }
 }
 
-
-?>
+// vim: ts=4 sw=4 et

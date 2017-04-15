@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -42,6 +42,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * All Rights Reserved.
  ********************************************************************************/
 
+require_once "data/SugarBean.php";
 
 
 class ImportMap extends SugarBean
@@ -73,20 +74,20 @@ class ImportMap extends SugarBean
     public $new_schema  = true;
     var $disable_custom_fields = true;
     public $column_fields = array(
-        "id",
-        "name",
-        "module",
-        "source",
-        "enclosure",
-        "delimiter",
-        "content",
-        "has_header",
-        "deleted",
-        "date_entered",
-        "date_modified",
-        "assigned_user_id",
-        "is_published",
-        );
+            "id",
+            "name",
+            "module",
+            "source",
+            "enclosure",
+            "delimiter",
+            "content",
+            "has_header",
+            "deleted",
+            "date_entered",
+            "date_modified",
+            "assigned_user_id",
+            "is_published",
+            );
 
     /**
      * Constructor
@@ -122,8 +123,8 @@ class ImportMap extends SugarBean
      * @param string $mapping_arr
      */
     public function setMapping(
-        $mapping_arr
-        )
+            $mapping_arr
+            )
     {
         $output = array ();
         foreach ($mapping_arr as $key => $item) {
@@ -158,8 +159,8 @@ class ImportMap extends SugarBean
      * @param string $defa_arr
      */
     public function setDefaultValues(
-        $defa_arr
-        )
+            $defa_arr
+            )
     {
         $output = array ();
         foreach ($defa_arr as $key => $item) {
@@ -172,19 +173,19 @@ class ImportMap extends SugarBean
      * @see SugarBean::retrieve()
      */
     public function retrieve($id = -1, $encode=true,$deleted=true)
-	{
-	    $returnVal = parent::retrieve($id,$encode,$deleted);
+    {
+        $returnVal = parent::retrieve($id,$encode,$deleted);
 
-	    if ( !($returnVal instanceOf $this) ) {
-	        return $returnVal;
-	    }
+        if ( !($returnVal instanceOf $this) ) {
+            return $returnVal;
+        }
 
-	    if ( $this->source == 'tab' && $this->delimiter == '' ) {
-	        $this->delimiter = "\t";
-	    }
+        if ( $this->source == 'tab' && $this->delimiter == '' ) {
+            $this->delimiter = "\t";
+        }
 
-	    return $this;
-	}
+        return $this;
+    }
 
     /**
      * Save
@@ -198,29 +199,32 @@ class ImportMap extends SugarBean
      * @param  string $enclosure
      * @return bool
      */
-    public function save(
-        $owner_id,
-        $name,
-        $module,
-        $source,
-        $has_header,
-        $delimiter,
-        $enclosure
-        )
+    public function save_mapping(
+            $owner_id,
+            $name,
+            $module,
+            $source,
+            $has_header,
+            $delimiter,
+            $enclosure
+            )
     {
         $olddefault_values = $this->default_values;
         $oldcontent = $this->content;
 
         $this->retrieve_by_string_fields(
-            array(
-                'assigned_user_id'=>$owner_id,
-                'name'=>$name),
-            false
-            );
+                array(
+                    'assigned_user_id' => $owner_id,
+                    'name' => $name),
+                false
+                );
 
         // Bug 23354 - Make sure enclosure gets saved as an empty string if
         // it is an empty string, instead of as a null
-        if ( strlen($enclosure) <= 0 ) $enclosure = ' ';
+        if(strlen($enclosure) <= 0)
+        {
+            $enclosure = ' ';
+        }
 
         $this->assigned_user_id = $owner_id;
         $this->name             = $name;
@@ -235,7 +239,8 @@ class ImportMap extends SugarBean
         parent::save();
 
         // Bug 29365 - The enclosure character isn't saved correctly if it's a tab using MssqlManager, so resave it
-        if ( $enclosure == '\\t' && $this->db instanceOf MssqlManager ) {
+        if($enclosure == '\\t' && $this->db instanceOf MssqlManager)
+        {
             $this->enclosure = $enclosure;
             parent::save();
         }
@@ -249,18 +254,19 @@ class ImportMap extends SugarBean
      *
      * @param $id
      */
-    public function mark_deleted(
-        $id
-        )
+    public function mark_deleted($id)
     {
         global $current_user;
 
-        if ( !is_admin($current_user) ) {
+        if(!is_admin($current_user))
+        {
             $other_map = new ImportMap();
             $other_map->retrieve_by_string_fields(array('id'=> $id), false);
 
-            if ( $other_map->assigned_user_id != $current_user->id )
+            if($other_map->assigned_user_id != $current_user->id)
+            {
                 return false;
+            }
         }
 
         return parent::mark_deleted($id);
@@ -274,9 +280,9 @@ class ImportMap extends SugarBean
      * @return bool
      */
     public function mark_published(
-        $user_id,
-        $flag
-        )
+            $user_id,
+            $flag
+            )
     {
         global $current_user;
 
@@ -289,30 +295,32 @@ class ImportMap extends SugarBean
             // but there's another published map
             // by the same name
             $query_arr = array(
-                'name'         =>$this->name,
-                'is_published' =>'yes'
-                );
+                    'name'         =>$this->name,
+                    'is_published' =>'yes'
+                    );
         }
         else {
             // if you are trying to unpublish a map
             // but you own an unpublished map by the same name
             $query_arr = array(
-                'name'             => $this->name,
-                'assigned_user_id' => $user_id,
-                'is_published'     => 'no'
-                );
+                    'name'             => $this->name,
+                    'assigned_user_id' => $user_id,
+                    'is_published'     => 'no'
+                    );
         }
         $other_map = new ImportMap();
         $other_map->retrieve_by_string_fields($query_arr, false);
 
         // if we find this other map, quit
-        if ( isset($other_map->id) )
+        if(isset($other_map->id))
+        {
             return false;
+        }
 
         // otherwise update the is_published flag
         $query = "UPDATE $this->table_name
-                    SET is_published = '". ($flag?'yes':'no') . "',
-                        assigned_user_id = '$user_id'
+            SET is_published = '". ($flag?'yes':'no') . "',
+                assigned_user_id = '$user_id'
                     WHERE id = '{$this->id}'";
 
         $this->db->query($query,true,"Error marking import map published: ");
@@ -327,26 +335,29 @@ class ImportMap extends SugarBean
      * @return array $obj_arr
      */
     public function retrieve_all_by_string_fields(
-        $fields_array
-        )
+            $fields_array
+            )
     {
         $query = "SELECT *
-                    FROM {$this->table_name}
-                    " . $this->get_where($fields_array);
+            FROM {$this->table_name}
+        " . $this->get_where($fields_array);
 
         $result = $this->db->query($query,true," Error: ");
         $obj_arr = array();
 
-        while ($row = $this->db->fetchByAssoc($result,FALSE) ) {
+        while($row = $this->db->fetchByAssoc($result,FALSE))
+        {
             $focus = new ImportMap();
 
-            foreach($this->column_fields as $field) {
-                if(isset($row[$field])) {
+            foreach($this->column_fields as $field)
+            {
+                if(isset($row[$field]))
+                {
                     $focus->$field = $row[$field];
                 }
             }
             $focus->fill_in_additional_detail_fields();
-            $obj_arr[]=$focus;
+            $obj_arr[] = $focus;
         }
 
         return $obj_arr;
@@ -364,49 +375,54 @@ class ImportMap extends SugarBean
         $set = false;
         //list of field values we track during import wizard
         $import_step_fields = array(
-        //step1
-          //  'import_module', 'source', 'custom_enclosure', 'custom_enclosure_other', 'custom_delimiter', 'type',
-        //step2
-           // 'custom_delimiter', 'custom_enclosure', 'type', 'source', 'source_id', 'import_module', 'has_header',
-         //step3
-            'display_tabs_def','custom_delimiter', 'custom_enclosure', 'import_type', 'source', 'source_id', 'import_module', 'has_header', 'importlocale_charset',
-            'importlocale_dateformat', 'importlocale_timeformat', 'importlocale_timezone', 'importlocale_currency',
-            'importlocale_default_currency_significant_digits', 'importlocale_num_grp_sep', 'importlocale_dec_sep',
-        '   importlocale_default_locale_name_format');
+                //step1
+                //  'import_module', 'source', 'custom_enclosure', 'custom_enclosure_other', 'custom_delimiter', 'type',
+                //step2
+                // 'custom_delimiter', 'custom_enclosure', 'type', 'source', 'source_id', 'import_module', 'has_header',
+                //step3
+                'display_tabs_def','custom_delimiter', 'custom_enclosure', 'import_type', 'source', 'source_id', 'import_module', 'has_header', 'importlocale_charset',
+                'importlocale_dateformat', 'importlocale_timeformat', 'importlocale_timezone', 'importlocale_currency',
+                'importlocale_default_currency_significant_digits', 'importlocale_num_grp_sep', 'importlocale_dec_sep',
+                '   importlocale_default_locale_name_format');
 
         //retrieve user preferences and populate preference array
         $preference_values_str = $current_user->getPreference('field_values', 'import');
         $preference_values = json_decode($preference_values_str,true);
 
-        foreach ($import_step_fields as $val){
+        foreach ($import_step_fields as $val)
+        {
             //overwrite preference array with new values from request if the value is different or new
-            if((isset($_REQUEST[$val]) && !isset($preference_values[$val])) || (isset($_REQUEST[$val]) && $preference_values[$val] != $_REQUEST[$val])){
+            if((isset($_REQUEST[$val]) && !isset($preference_values[$val]))
+            || (isset($_REQUEST[$val]) && $preference_values[$val] != $_REQUEST[$val]))
+            {
                 $preference_values[$val] = $_REQUEST[$val];
                 $set = true;
             }
         }
 
         //force the values to passed in array if array is set
-        if(!empty($ForceValsArr) && is_array($ForceValsArr)){
-            foreach ($ForceValsArr as $forceKey=>$forceVal){
+        if(!empty($ForceValsArr) && is_array($ForceValsArr))
+        {
+            foreach($ForceValsArr as $forceKey=>$forceVal)
+            {
                 $preference_values[$forceKey] = $forceVal;
                 $set = true;
             }
         }
 
         //set preferences if any changes were made and return the new array
-        if($set){
+        if($set)
+        {
             $preference_values_str =  json_encode($preference_values);
             $current_user->setPreference('field_values', $preference_values_str, 0, 'import');
         }
-        if(empty($preference_values)){
+        if(empty($preference_values))
+        {
             return array();
         }
 
         return $preference_values;
     }
-
 }
 
-
-?>
+// vim: ts=4 sw=4 et

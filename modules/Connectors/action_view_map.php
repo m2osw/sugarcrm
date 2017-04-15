@@ -57,4 +57,5 @@ $action_view_map['searchproperties'] = 'searchproperties';
 //Admin pages to modify field mapping for the connectors
 $action_view_map['modifymapping'] = 'modifymapping';
 $action_view_map['mappingproperties'] = 'mappingproperties';
-?>
+
+// vim: ts=4 sw=4 et

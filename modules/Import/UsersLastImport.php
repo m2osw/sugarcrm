@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -42,8 +42,9 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * All Rights Reserved.
  ********************************************************************************/
 
+require_once "modules/Import/Forms.php";
+require_once "data/SugarBean.php";
 
-require_once('modules/Import/Forms.php');
 
 class UsersLastImport extends SugarBean
 {
@@ -232,4 +233,5 @@ class UsersLastImport extends SugarBean
     }
 
 }
-?>
+
+// vim: ts=4 sw=4 et

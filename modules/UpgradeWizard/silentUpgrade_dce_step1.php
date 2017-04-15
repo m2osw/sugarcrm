@@ -72,10 +72,12 @@ function clearCacheSU($thedir, $extension) {
 			}
 		}
 	}
- }
- //Bug 24890, 24892. default_permissions not written to config.php. Following function checks and if
- //no found then adds default_permissions to the config file.
- function checkConfigForPermissions(){
+}
+
+
+//Bug 24890, 24892. default_permissions not written to config.php. Following function checks and if
+//no found then adds default_permissions to the config file.
+function checkConfigForPermissions(){
      if(file_exists(getcwd().'/config.php')){
          require(getcwd().'/config.php');
      }
@@ -93,6 +95,8 @@ function clearCacheSU($thedir, $extension) {
  		}
      }
 }
+
+
 function checkLoggerSettings(){
 	if(file_exists(getcwd().'/config.php')){
          require(getcwd().'/config.php');
@@ -631,4 +635,5 @@ if(count($errors) > 0) {
 	}
 	echo "FAILED\n";
 }
-?>
+
+// vim: ts=4 sw=4 et

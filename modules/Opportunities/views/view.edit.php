@@ -1,6 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
-
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -24,7 +23,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * 
  * You can contact SugarCRM, Inc. headquarters at 10050 North Wolfe Road,
  * SW2-130, Cupertino, CA 95014, USA. or at email address contact@sugarcrm.com.
- * 
+ *
  * The interactive user interfaces in modified source and object code versions
  * of this program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU Affero General Public License version 3.
@@ -45,14 +44,19 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * Contributor(s): ______________________________________..
  ********************************************************************************/
 
-class OpportunitiesViewEdit extends ViewEdit {
+require_once "include/MVC/View/views/view.edit.php";
 
- 	function OpportunitiesViewEdit(){
+
+class OpportunitiesViewEdit extends ViewEdit
+{
+ 	function OpportunitiesViewEdit()
+	{
  		parent::ViewEdit();
  		$this->useForSubpanel = true;
  	}
  	
- 	function display() {
+ 	function display()
+	{
 		global $app_list_strings;
 		$json = getJSONobj();
 		$prob_array = $json->encode($app_list_strings['sales_probability_dom']);
@@ -81,4 +85,5 @@ EOQ;
  		parent::display();
  	}
 }
-?>
+
+// vim: ts=4 sw=4 et

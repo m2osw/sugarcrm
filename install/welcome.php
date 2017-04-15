@@ -76,6 +76,10 @@ $out = <<<EOQ
       </th>
     </tr>
    <tr>
+      <td colspan="2"><em style="color: #880000;">Modified version that works with PHP 7.
+      May have changes or missing fixes that mean some features may not work.</em></td>
+    </tr>
+   <tr>
       <td colspan="2"  id="ready_image"><IMG src="include/images/install_themes.jpg" width="698" height="247" alt="Sugar Themes" border="0"></td>
     </tr>
                 <td>
@@ -142,4 +146,5 @@ eoq;
 	$out = $php_verison_warning;
 }
 echo $out;
-?>
+
+// vim: ts=4 sw=4 et

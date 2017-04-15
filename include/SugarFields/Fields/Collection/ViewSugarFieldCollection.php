@@ -37,7 +37,8 @@
 require_once('include/SugarFields/Fields/Collection/SugarFieldCollection.php');
 
 
-class ViewSugarFieldCollection{
+class ViewSugarFieldCollection
+{
     var $ss; // Sugar Smarty Object
     var $bean;
     var $bean_id;
@@ -59,21 +60,21 @@ class ViewSugarFieldCollection{
     var $form_name;
 
     function ViewSugarFieldCollection($fill_data = true){
-    	$this->json = getJSONobj();
-    	if($fill_data){
-	        $this->displayParams = $this->json->decode(html_entity_decode($_REQUEST['displayParams']));
-	        $this->vardef = $this->json->decode(html_entity_decode($_REQUEST['vardef']));
-	        $this->module_dir = $_REQUEST['module_dir'];
-	        $this->action_type = $_REQUEST['action_type'];
-	        $this->name = $this->vardef['name'];
-	        $this->value_name = $this->name . '_values';
-	        $this->numFields = 1;
-	        $this->ss = new Sugar_Smarty();
-	        $this->edit_tpl_path = $this->findTemplate('CollectionEditView');
-	        $this->detail_tpl_path = $this->findTemplate('CollectionDetailView');
-	        $this->extra_var = array();
-	        $this->field_to_name_array = array();
-    	}
+        $this->json = getJSONobj();
+        if($fill_data){
+            $this->displayParams = $this->json->decode(html_entity_decode($_REQUEST['displayParams']));
+            $this->vardef = $this->json->decode(html_entity_decode($_REQUEST['vardef']));
+            $this->module_dir = $_REQUEST['module_dir'];
+            $this->action_type = $_REQUEST['action_type'];
+            $this->name = $this->vardef['name'];
+            $this->value_name = $this->name . '_values';
+            $this->numFields = 1;
+            $this->ss = new Sugar_Smarty();
+            $this->edit_tpl_path = $this->findTemplate('CollectionEditView');
+            $this->detail_tpl_path = $this->findTemplate('CollectionDetailView');
+            $this->extra_var = array();
+            $this->field_to_name_array = array();
+        }
     }
     /*
      * Retrieve the related module and load the bean and the relationship
@@ -85,7 +86,7 @@ class ViewSugarFieldCollection{
         }
         $rel = new Relationship();
         if(!empty($this->vardef['relationship'])){
-        	$rel->retrieve_by_name($this->vardef['relationship']);
+            $rel->retrieve_by_name($this->vardef['relationship']);
         }
         if($rel->relationship_type == 'many-to-many'){
             if($rel->lhs_module == $this->module_dir){
@@ -202,9 +203,9 @@ class ViewSugarFieldCollection{
             $this->numFields=count($this->bean->{$this->value_name}['secondaries'])+1;
         }
         if(!isset($this->displayParams['readOnly'])) {
-           $this->displayParams['readOnly'] = '';
+            $this->displayParams['readOnly'] = '';
         } else {
-           $this->displayParams['readOnly'] = $this->displayParams['readOnly'] == false ? '' : 'READONLY';
+            $this->displayParams['readOnly'] = $this->displayParams['readOnly'] == false ? '' : 'READONLY';
         }
         // If there is extra field to show.
         if(isset($this->displayParams['collection_field_list'])){
@@ -258,7 +259,7 @@ class ViewSugarFieldCollection{
                         $v['displayParams']=array();
                     }
                 }
-                    $viewtype='EditView';
+                $viewtype='EditView';
                 $name = $collection_field_vardef['name'];
                 // Rearranging the array with name as key instaead of number. This is required for displaySmarty() to assign the good variable.
                 $this->displayParams['collection_field_list'][$name]['vardefName'] = $this->displayParams['collection_field_list'][$k]['name'];
@@ -270,14 +271,14 @@ class ViewSugarFieldCollection{
                 $this->displayParams['collection_field_list'][$name]['label'] = "{sugar_translate label='{$collection_field_vardef['vname']}' module='{$this->related_module}'}";//translate($collection_field_vardef['vname'], $this->related_module);
                 $this->displayParams['collection_field_list'][$name]['field'] = $sfh->displaySmarty('displayParams.collection_field_list', $collection_field_vardef, $viewtype, $v['displayParams'], 1);
                 $this->displayParams['collection_field_list'][$name]['field'] .= '{literal}'.$javascript;
-            // Handle update_field array ONCHANGE
+                // Handle update_field array ONCHANGE
                 $this->displayParams['collection_field_list'][$name]['field'] .= <<<FRA
-                <script language='javascript'>
+                    <script language='javascript'>
                     var oldonchange = '';
-                    if(typeof(document.getElementById('{$collection_field_vardef['name']}').attributes.onchange) != 'undefined')
-                    {
-                        oldonchange=document.getElementById('{$collection_field_vardef['name']}').attributes.onchange.value;
-                    }
+                if(typeof(document.getElementById('{$collection_field_vardef['name']}').attributes.onchange) != 'undefined')
+                {
+                    oldonchange=document.getElementById('{$collection_field_vardef['name']}').attributes.onchange.value;
+                }
 FRA;
                 $this->displayParams['collection_field_list'][$name]['field'] .= "eval(\"document.getElementById('{$collection_field_vardef['name']}').onchange = function onchange(event){collection['{$this->vardef['name']}'].update_fields.{$collection_field_vardef['name']}=true;";
                 if($collection_field_vardef['type'] == 'relate'){
@@ -336,7 +337,7 @@ FRA;
             $dir = dirname($cacheRowFile);
             if(!file_exists($dir)) {
 
-               mkdir_recursive($dir, null, true);
+                mkdir_recursive($dir, null, true);
             }
             $cacheRow = $this->ss->fetch($this->findTemplate('CollectionEditViewRow'));
             file_put_contents($cacheRowFile, $cacheRow);
@@ -380,11 +381,11 @@ FRA;
                     $nameKey = "{$this->name}_collection_{$i}";
                     $idKey = "id_{$this->name}_collection_{$i}";
 
-                 //There are billingKey, shippingKey and additionalFields entries you can define in editviewdefs.php
-                 //entry to allow quick search to autocomplete fields with a suffix value of the
-                 //billing/shippingKey value (i.e. 'billingKey' => 'primary' in Contacts will populate
-                 //primary_XXX fields with the Account's billing address values).
-                 //addtionalFields are key/value pair of fields to fill from Accounts(key) to Contacts(value)
+                    //There are billingKey, shippingKey and additionalFields entries you can define in editviewdefs.php
+                    //entry to allow quick search to autocomplete fields with a suffix value of the
+                    //billing/shippingKey value (i.e. 'billingKey' => 'primary' in Contacts will populate
+                    //primary_XXX fields with the Account's billing address values).
+                    //addtionalFields are key/value pair of fields to fill from Accounts(key) to Contacts(value)
                     $billingKey = isset($this->displayParams['billingKey']) ? $this->displayParams['billingKey'] : null;
                     $shippingKey = isset($this->displayParams['shippingKey']) ? $this->displayParams['shippingKey'] : null;
                     $additionalFields = isset($this->displayParams['additionalFields']) ? $this->displayParams['additionalFields'] : null;
@@ -394,7 +395,7 @@ FRA;
                 }
 
 
-				$temp_array = array('field_list'=>array(),'populate_list'=>array());
+                $temp_array = array('field_list'=>array(),'populate_list'=>array());
                 foreach($sqs_objects[$name1]['field_list'] as $k=>$v){
                     if(!in_array($v, array('name','id'))){
                         $sqs_objects[$name1]['primary_field_list'][]=$v;
@@ -452,19 +453,19 @@ FRA;
                 $this->field_to_name_array[$v] = $sqs_objects[$id]['populate_list'][$k];
             }
             if($returnAsJavascript){
-	            $quicksearch_js = '<script language="javascript">';
-	            $quicksearch_js.= "if(typeof sqs_objects == 'undefined'){var sqs_objects = new Array;}";
+                $quicksearch_js = '<script language="javascript">';
+                $quicksearch_js.= "if(typeof sqs_objects == 'undefined'){var sqs_objects = new Array;}";
 
-	            foreach($sqs_objects as $sqsfield=>$sqsfieldArray){
-	               $quicksearch_js .= "sqs_objects['$sqsfield']={$this->json->encode($sqsfieldArray)};";
-	            }
+                foreach($sqs_objects as $sqsfield=>$sqsfieldArray){
+                    $quicksearch_js .= "sqs_objects['$sqsfield']={$this->json->encode($sqsfieldArray)};";
+                }
 
-	            return $quicksearch_js .= '</script>';
+                return $quicksearch_js .= '</script>';
             }else{
-            	return $sqs_objects;
+                return $sqs_objects;
             }
-       }
-       return '';
+        }
+        return '';
     }
     /*
      * Always call createQuickSearchCode() before createPopupCode() to define field_to_name_array
@@ -487,10 +488,10 @@ FRA;
             }
 
             $popup_request_data= array(
-                'call_back_function' => $call_back_function,
-                'form_name' => $form,
-                'field_to_name_array' => $this->field_to_name_array,
-            );
+                    'call_back_function' => $call_back_function,
+                    'form_name' => $form,
+                    'field_to_name_array' => $this->field_to_name_array,
+                    );
 
             //Make sure to replace {{ and }} with spacing in between because Smarty template parsing will treat {{ or }} specially
             $this->displayParams['popupData'] = '{literal}'. str_replace(array('{{', '}}'), array('{ {', '} }'), $this->json->encode($popup_request_data)) . '{/literal}';
@@ -540,3 +541,5 @@ FRA;
         return $tplName;
     }
 }
+
+// vim: ts=4 sw=4 et

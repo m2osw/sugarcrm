@@ -46,7 +46,6 @@ if (! defined ( 'sugarEntry' ) || ! sugarEntry)
  */
 class AbstractRelationships
 {
-    
     static $methods = array (
         'Labels' => 'language' ,
         'RelationshipMetaData' => 'relationships' ,
@@ -327,7 +326,7 @@ class AbstractRelationships
      * @param string $installDefPrefix  Pathname prefix for the installdefs, for example for ModuleBuilder use "<basepath>/SugarModules"
      * @param array $relationships      Relationships to implement
      */
-    protected function build ($basepath , $installDefPrefix , $relationships )
+    protected function build($basepath, $installDefPrefix, $relationships)
     {
         global $sugar_config;
     	// keep the relationships data separate from any other build data by ading /relationships to the basepath
@@ -335,19 +334,19 @@ class AbstractRelationships
 
         $installDefs = array ( ) ;
         $compositeAdded = false ;
-        foreach ( self::$methods as $method => $key )
+        foreach(self::$methods as $method => $key)
         {
             $buildMethod = 'build' . $method ;
             $saveMethod = 'save' . $method ;
             
-            foreach ( $relationships as $name => $relationship )
+            foreach($relationships as $name => $relationship)
             {
-                if (! ($relationship->readonly () || $relationship->deleted ()))
+                if (!($relationship->readonly() || $relationship->deleted()))
                 {
-                    if (method_exists ( $relationship, $buildMethod ) && method_exists ( $this, $saveMethod ))
+                    if(method_exists($relationship, $buildMethod) && method_exists ($this, $saveMethod))
                     {
-                        $metadata = $relationship->$buildMethod () ;
-                        
+                        $metadata = $relationship->$buildMethod();
+
                         if (count ( $metadata ) > 0) // don't clutter up the filesystem with empty files...
                         {
                             $GLOBALS [ 'log' ]->debug ( get_class ( $this ) . ": BUILD is running METHOD $saveMethod" ) ;
@@ -371,6 +370,13 @@ class AbstractRelationships
         }
         
         return $installDefs ;
+    }
+
+    /*
+     * This function is derived in the various implementations.
+     */
+    function buildRelationships($basepath = "custom/Extension/modules")
+    {
     }
 
     /*
@@ -604,3 +610,5 @@ class AbstractRelationships
 
 
 }
+
+// vim: ts=4 sw=4 et

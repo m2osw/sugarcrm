@@ -36,26 +36,30 @@
 
 require_once('modules/ModuleBuilder/MB/AjaxCompose.php');
 require_once('modules/ModuleBuilder/MB/ModuleBuilder.php');
+require_once "include/MVC/View/SugarView.php";
+
  
 class Viewdeletemodule extends SugarView
 {
-/**
-	 * @see SugarView::_getModuleTitleParams()
-	 */
-	protected function _getModuleTitleParams($browserTitle = false)
-	{
-	    global $mod_strings;
-	    
-    	return array(
-    	   translate('LBL_MODULE_NAME','Administration'),
-    	   ModuleBuilderController::getModuleTitle(),
-    	   );
+    /**
+     * @see SugarView::_getModuleTitleParams()
+     */
+    protected function _getModuleTitleParams($browserTitle = false)
+    {
+        global $mod_strings;
+
+        return array(
+                translate('LBL_MODULE_NAME','Administration'),
+                ModuleBuilderController::getModuleTitle(),
+                );
     }
 
-	function display()
-	{
- 		$ajax = new AjaxCompose();
-		$ajax->addSection('center', 'Module Deleted', $_REQUEST['module'] . ' was deleted from ' . $_REQUEST['package']);
-		echo $ajax->getJavascript(); 
- 	}
+    function display()
+    {
+        $ajax = new AjaxCompose();
+        $ajax->addSection('center', 'Module Deleted', $_REQUEST['module'] . ' was deleted from ' . $_REQUEST['package']);
+        echo $ajax->getJavascript(); 
+    }
 }
+
+// vim: ts=4 sw=4 et

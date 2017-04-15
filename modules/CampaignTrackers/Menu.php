@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__); 
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__); 
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -43,7 +43,16 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * Contributor(s): ______________________________________..
  ********************************************************************************/
 
+require_once "modules/ACL/ACLController.php";
+
 global $mod_strings;
-$module_menu  = Array();
-if(ACLController::checkAccess('Campaigns', 'list', true))$module_menu[]=	Array("index.php?module=Campaigns&action=index&return_module=Campaigns&return_action=index", $mod_strings['LNK_CAMPAIGN_LIST'],"Campaigns");
-?>
+$module_menu = Array();
+if(ACLController::checkAccess('Campaigns', 'list', true))
+{
+    $module_menu[] = Array(
+            "index.php?module=Campaigns&action=index&return_module=Campaigns&return_action=index",
+            $mod_strings['LNK_CAMPAIGN_LIST'],
+            "Campaigns");
+}
+
+// vim: ts=4 sw=4 et

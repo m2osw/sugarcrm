@@ -43,10 +43,12 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * Contributor(s): ______________________________________..
  ********************************************************************************/
 
-class AccountFormBase{
+class AccountFormBase
+{
 
 
-function checkForDuplicates($prefix){
+function checkForDuplicates($prefix)
+{
 	require_once('include/formbase.php');
 	
 	$focus = new Account();
@@ -551,4 +553,5 @@ function handleSave($prefix,$redirect=true, $useRequired=false){
 
 
 }
-?>
+
+// vim: ts=4 sw=4 et

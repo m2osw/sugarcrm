@@ -44,49 +44,52 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  ********************************************************************************/
 
 
-class ProspectListFormBase {
+class ProspectListFormBase
+{
+    function getForm($prefix, $mod='', $form='')
+    {
+        if(!ACLController::checkAccess('ProspectLists', 'edit', true))
+        {
+            return '';
+        }
+        
+        if(!empty($mod))
+        {
+            global $current_language;
+            $mod_strings = return_module_language($current_language, $mod);
+        }
+        else
+        {
+            global $mod_strings;
+        }
+        global $app_strings, $current_user;
+
+        $lbl_save_button_title = $app_strings['LBL_SAVE_BUTTON_TITLE'];
+        $lbl_save_button_key = $app_strings['LBL_SAVE_BUTTON_KEY'];
+        $lbl_save_button_label = $app_strings['LBL_SAVE_BUTTON_LABEL'];
+        $user_id = $current_user->id;
 
 
-function getForm($prefix, $mod='', $form=''){
-	
-	if(!ACLController::checkAccess('ProspectLists', 'edit', true)){
-		return '';
-	}
-	
-	if(!empty($mod)){
-		global $current_language;
-		$mod_strings = return_module_language($current_language, $mod);
-	} else {
-		global $mod_strings;
-	}
-	global $app_strings,$current_user;
-	
-	$lbl_save_button_title = $app_strings['LBL_SAVE_BUTTON_TITLE'];
-	$lbl_save_button_key = $app_strings['LBL_SAVE_BUTTON_KEY'];
-	$lbl_save_button_label = $app_strings['LBL_SAVE_BUTTON_LABEL'];
-	$user_id = $current_user->id;
-
-
-	$the_form = get_left_form_header($mod_strings['LBL_NEW_FORM_TITLE']);
-	$the_form .= <<<EOQ
+        $the_form = get_left_form_header($mod_strings['LBL_NEW_FORM_TITLE']);
+        $the_form .= <<<EOQ
 		<form name="${prefix}ProspectListSave" onSubmit="return check_form('${prefix}ProspectListSave');" method="POST" action="index.php">
 			<input type="hidden" name="${prefix}module" value="ProspectLists">
 			<input type="hidden" name="${prefix}action" value="Save">
 			<input type="hidden" name="assigned_user_id" value='${user_id}'>
 EOQ;
 
-	$the_form .= $this->getFormBody($prefix, $mod, $prefix."ProspectListSave");
-	$the_form .= <<<EOQ
+        $the_form .= $this->getFormBody($prefix, $mod, $prefix."ProspectListSave");
+        $the_form .= <<<EOQ
 		<p><input title="$lbl_save_button_title" accessKey="$lbl_save_button_key" class="button" type="submit" name="button" value="  $lbl_save_button_label  " ></p>
 		</form>
 
 EOQ;
 
-	$the_form .= get_left_form_footer();
-	$the_form .= get_validate_record_js();
+        $the_form .= get_left_form_footer();
+        $the_form .= get_validate_record_js();
 
-	return $the_form;	
-}
+        return $the_form;	
+    }
 
 function getFormBody($prefix, $mod='',$formname='', $size='30',$script=true) {
 	if(!ACLController::checkAccess('ProspectLists', 'edit', true)){
@@ -162,4 +165,5 @@ EOQ;
 		}
 	}
 }
-?>
+
+// vim: ts=4 sw=4 et

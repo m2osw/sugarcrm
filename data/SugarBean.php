@@ -45,8 +45,9 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * All Rights Reserved.
  *******************************************************************************/
 
-require_once('modules/DynamicFields/DynamicField.php');
-require_once("data/Relationships/RelationshipFactory.php");
+require_once "modules/DynamicFields/DynamicField.php";
+require_once "data/Relationships/RelationshipFactory.php";
+require_once "include/database/DBManagerFactory.php";
 
 
 

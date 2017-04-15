@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -34,6 +34,9 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * technical reasons, the Appropriate Legal Notices must display the words
  * "Powered by SugarCRM".
  ********************************************************************************/
+
+require_once "include/SugarObjects/VardefManager.php";
+require_once "include/SugarObjects/LanguageManager.php";
 
 $dictionary['Meeting'] = array('table' => 'meetings',
 	'unified_search' => true, 'full_text_search' => true, 'unified_search_default_enabled' => true,
@@ -537,4 +540,5 @@ $dictionary['Meeting'] = array('table' => 'meetings',
 
 VardefManager::createVardef('Meetings','Meeting', array('default', 'assignable',
 ));
-?>
+
+// vim: ts=4 sw=4 et

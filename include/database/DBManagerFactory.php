@@ -37,14 +37,14 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
 
 /*********************************************************************************
 
-* Description: This file generates the appropriate manager for the database
-*
-* Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
-* All Rights Reserved.
-* Contributor(s): ______________________________________..
-********************************************************************************/
+ * Description: This file generates the appropriate manager for the database
+ *
+ * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
+ * All Rights Reserved.
+ ********************************************************************************/
 
-require_once('include/database/DBManager.php');
+require_once "include/database/DBManager.php";
+require_once "include/TimeDate.php";
 
 /**
  * Database driver factory

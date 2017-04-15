@@ -1,6 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
-
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -37,15 +36,18 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  ********************************************************************************/
 
 
+require_once "modules/MergeRecords/MergeRecord.php";
 
- class ConnectorRecord extends MergeRecord{
-	var $object_name = 'ConnectorRecord';
+class ConnectorRecord extends MergeRecord
+{
+    var $object_name = 'ConnectorRecord';
     var $module_dir = 'Connector'; 
-    
-    
-    function ConnectorRecord($merge_module = '', $merge_id = '') {
-       parent::MergeRecord($merge_module, $merge_id);
+
+    function ConnectorRecord($merge_module = '', $merge_id = '')
+    {
+        parent::MergeRecord($merge_module, $merge_id);
     }
 
- }
-?>
+}
+
+// vim: ts=4 sw=4 et

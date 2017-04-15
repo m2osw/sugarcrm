@@ -421,4 +421,5 @@ $ss->assign("DIV_JAVASCRIPT", $divScript);
 
 $ss->display('modules/Campaigns/WizardEmailSetup.html');
 
-?>
+
+// vim: ts=4 sw=4 et

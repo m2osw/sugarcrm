@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,11 +35,13 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+require_once "include/SugarPHPMailer.php";
+require_once "include/upload_file.php";
+require_once "data/SugarBean.php";
 
-require_once('include/SugarPHPMailer.php');
-require_once 'include/upload_file.php';
 
-class Email extends SugarBean {
+class Email extends SugarBean
+{
 	/* SugarBean schema */
 	var $id;
 	var $date_entered;
@@ -52,14 +54,14 @@ class Email extends SugarBean {
 	var $from_addr;
 	var $reply_to_addr;
 	var $to_addrs;
-    var $cc_addrs;
-    var $bcc_addrs;
+	var $cc_addrs;
+	var $bcc_addrs;
 	var $message_id;
 
 	/* Bean Attributes */
 	var $name;
-    var $type = 'archived';
-    var $date_sent;
+	var $type = 'archived';
+	var $date_sent;
 	var $status;
 	var $intent;
 	var $mailbox_id;
@@ -83,8 +85,8 @@ class Email extends SugarBean {
 	var $time_start; // legacy
 	var $from_addr_name;
 	var $to_addrs_arr;
-    var $cc_addrs_arr;
-    var $bcc_addrs_arr;
+	var $cc_addrs_arr;
+	var $bcc_addrs_arr;
 	var $to_addrs_ids;
 	var $to_addrs_names;
 	var $to_addrs_emails;
@@ -105,7 +107,7 @@ class Email extends SugarBean {
 	var $new_schema = true;
 	var $table_name = 'emails';
 	var $module_dir = 'Emails';
-    var $module_name = 'Emails';
+	var $module_name = 'Emails';
 	var $object_name = 'Email';
 	var $db;
 
@@ -130,34 +132,34 @@ class Email extends SugarBean {
 	var $seen;
 	var $draft;
 	var $relationshipMap = array(
-		'Contacts'	=> 'emails_contacts_rel',
-		'Accounts'	=> 'emails_accounts_rel',
-		'Leads'		=> 'emails_leads_rel',
-		'Users'		=> 'emails_users_rel',
-		'Prospects'	=> 'emails_prospects_rel',
-	);
+			'Contacts'	=> 'emails_contacts_rel',
+			'Accounts'	=> 'emails_accounts_rel',
+			'Leads'		=> 'emails_leads_rel',
+			'Users'		=> 'emails_users_rel',
+			'Prospects'	=> 'emails_prospects_rel',
+			);
 
 	/* public */
 	var $et;		// EmailUI object
 	// prefix to use when importing inlinge images in emails
 	public $imagePrefix;
 
-    /**
-     * Used for keeping track of field defs that have been modified
-     *
-     * @var array
-     */
-    public $modifiedFieldDefs = array();
+	/**
+	 * Used for keeping track of field defs that have been modified
+	 *
+	 * @var array
+	 */
+	public $modifiedFieldDefs = array();
 
-    public $attachment_image;
+	public $attachment_image;
 
 	/**
 	 * sole constructor
 	 */
 	function Email()
 	{
-	    global $current_user;
-	    $this->cachePath = sugar_cached('modules/Emails');
+		global $current_user;
+		$this->cachePath = sugar_cached('modules/Emails');
 		parent::SugarBean();
 
 		$this->emailAddress = new SugarEmailAddress();
@@ -185,30 +187,30 @@ class Email extends SugarBean {
 	 */
 	public function email2saveAttachment()
 	{
-        $email_uploads = "modules/Emails/{$GLOBALS['current_user']->id}";
-	    $upload = new UploadFile('email_attachment');
+		$email_uploads = "modules/Emails/{$GLOBALS['current_user']->id}";
+		$upload = new UploadFile('email_attachment');
 		if(!$upload->confirm_upload()) {
-		    $err = $upload->get_upload_error();
-   		    if($err) {
-   		        $GLOBALS['log']->error("Email Attachment could not be attached due to error: $err");
-   		    }
-   		    return array();
+			$err = $upload->get_upload_error();
+			if($err) {
+				$GLOBALS['log']->error("Email Attachment could not be attached due to error: $err");
+			}
+			return array();
 		}
 
 		$guid = create_guid();
 		$fileName = $upload->create_stored_filename();
-        $GLOBALS['log']->debug("Email Attachment [$fileName]");
-        if($upload->final_move($guid)) {
-        	copy("upload://$guid", sugar_cached("$email_uploads/$guid"));
+		$GLOBALS['log']->debug("Email Attachment [$fileName]");
+		if($upload->final_move($guid)) {
+			copy("upload://$guid", sugar_cached("$email_uploads/$guid"));
 			return array(
 					'guid' => $guid,
 					'name' => $GLOBALS['db']->quote($fileName),
 					'nameForDisplay' => $fileName
-				);
-        } else {
+					);
+		} else {
 			$GLOBALS['log']->debug("Email Attachment [$fileName] could not be moved to upload dir");
 			return array();
-        }
+		}
 	}
 
 	function safeAttachmentName($filename) {
@@ -243,7 +245,7 @@ class Email extends SugarBean {
 	 */
 	function email2ParseAddresses($addresses) {
 		$addresses = from_html($addresses);
-        $addresses = $this->et->unifyEmailString($addresses);
+		$addresses = $this->et->unifyEmailString($addresses);
 
 		$pattern = '/@.*,/U';
 		preg_match_all($pattern, $addresses, $matchs);
@@ -328,9 +330,9 @@ class Email extends SugarBean {
 	 * @return string MIME-type
 	 */
 	function email2GetMime($fileLocation) {
-	    if(!is_readable($fileLocation)) {
-	        return 'application/octet-stream';
-	    }
+		if(!is_readable($fileLocation)) {
+			return 'application/octet-stream';
+		}
 		if(function_exists('mime_content_type')) {
 			$mime = mime_content_type($fileLocation);
 		} elseif(function_exists('ext2mime')) {
@@ -345,60 +347,60 @@ class Email extends SugarBean {
 	function sendEmailTest($mailserver_url, $port, $ssltls, $smtp_auth_req, $smtp_username, $smtppassword, $fromaddress, $toaddress, $mail_sendtype = 'smtp', $fromname = '') {
 		global $current_user,$app_strings;
 		$mod_strings = return_module_language($GLOBALS['current_language'], 'Emails'); //Called from EmailMan as well.
-	    $mail = new SugarPHPMailer();
+		$mail = new SugarPHPMailer();
 		$mail->Mailer = strtolower($mail_sendtype);
 		if($mail->Mailer == 'smtp')
 		{
-    		$mail->Host = $mailserver_url;
-    		$mail->Port = $port;
-    		if (isset($ssltls) && !empty($ssltls)) {
-    			$mail->protocol = "ssl://";
-    	        if ($ssltls == 1) {
-    	            $mail->SMTPSecure = 'ssl';
-    	        } // if
-    	        if ($ssltls == 2) {
-    	            $mail->SMTPSecure = 'tls';
-    	        } // if
-    		} else {
-    			$mail->protocol = "tcp://";
-    		}
-    		if ($smtp_auth_req) {
-    			$mail->SMTPAuth = TRUE;
-    			$mail->Username = $smtp_username;
-    			$mail->Password = $smtppassword;
-    		}
+			$mail->Host = $mailserver_url;
+			$mail->Port = $port;
+			if (isset($ssltls) && !empty($ssltls)) {
+				$mail->protocol = "ssl://";
+				if ($ssltls == 1) {
+					$mail->SMTPSecure = 'ssl';
+				} // if
+				if ($ssltls == 2) {
+					$mail->SMTPSecure = 'tls';
+				} // if
+			} else {
+				$mail->protocol = "tcp://";
+			}
+			if ($smtp_auth_req) {
+				$mail->SMTPAuth = TRUE;
+				$mail->Username = $smtp_username;
+				$mail->Password = $smtppassword;
+			}
 		}
 		else
-		    $mail->Mailer = 'sendmail';
+			$mail->Mailer = 'sendmail';
 
 		$mail->Subject = from_html($mod_strings['LBL_TEST_EMAIL_SUBJECT']);
 		$mail->From = $fromaddress;
 
-        if ($fromname != '') {
-            $mail->FromName = html_entity_decode($fromname,ENT_QUOTES);
-        } else {
-            $mail->FromName = $current_user->name;
-        }
+		if ($fromname != '') {
+			$mail->FromName = html_entity_decode($fromname,ENT_QUOTES);
+		} else {
+			$mail->FromName = $current_user->name;
+		}
 
-        $mail->Sender = $mail->From;
+		$mail->Sender = $mail->From;
 		$mail->AddAddress($toaddress);
 		$mail->Body = $mod_strings['LBL_TEST_EMAIL_BODY'];
 
 		$return = array();
 
 		if(!$mail->Send()) {
-	        ob_clean();
-	        $return['status'] = false;
-	        $return['errorMessage'] = $app_strings['LBL_EMAIL_ERROR_PREPEND']. $mail->ErrorInfo;
-	        return $return;
+			ob_clean();
+			$return['status'] = false;
+			$return['errorMessage'] = $app_strings['LBL_EMAIL_ERROR_PREPEND']. $mail->ErrorInfo;
+			return $return;
 		} // if
 		$return['status'] = true;
-        return $return;
+		return $return;
 	} // fn
 
 	function decodeDuringSend($htmlData) {
-	    $htmlData = str_replace("sugarLessThan", "&lt;", $htmlData);
-	    $htmlData = str_replace("sugarGreaterThan", "&gt;", $htmlData);
+		$htmlData = str_replace("sugarLessThan", "&lt;", $htmlData);
+		$htmlData = str_replace("sugarGreaterThan", "&gt;", $htmlData);
 		return $htmlData;
 	}
 
@@ -410,7 +412,7 @@ class Email extends SugarBean {
 	 */
 	function isDraftEmail($request)
 	{
-	    return ( isset($request['saveDraft']) || ($this->type == 'draft' && $this->status == 'draft') );
+		return ( isset($request['saveDraft']) || ($this->type == 'draft' && $this->status == 'draft') );
 	}
 
 	/**
@@ -425,7 +427,7 @@ class Email extends SugarBean {
 		global $timedate;
 		global $beanList;
 		global $beanFiles;
-        $OBCharset = $locale->getPrecedentPreference('default_email_charset');
+		$OBCharset = $locale->getPrecedentPreference('default_email_charset');
 
 		/**********************************************************************
 		 * Sugar Email PREP
@@ -453,14 +455,14 @@ class Email extends SugarBean {
 		$mail = $this->setMailer($mail, '', $_REQUEST['fromAccount']);
 		if (empty($mail->Host) && !$this->isDraftEmail($request))
 		{
-            $this->status = 'send_error';
+			$this->status = 'send_error';
 
-            if ($mail->oe->type == 'system')
-            	echo($app_strings['LBL_EMAIL_ERROR_PREPEND']. $app_strings['LBL_EMAIL_INVALID_SYSTEM_OUTBOUND']);
-             else
-            	echo($app_strings['LBL_EMAIL_ERROR_PREPEND']. $app_strings['LBL_EMAIL_INVALID_PERSONAL_OUTBOUND']);
+			if ($mail->oe->type == 'system')
+				echo($app_strings['LBL_EMAIL_ERROR_PREPEND']. $app_strings['LBL_EMAIL_INVALID_SYSTEM_OUTBOUND']);
+			else
+				echo($app_strings['LBL_EMAIL_ERROR_PREPEND']. $app_strings['LBL_EMAIL_INVALID_PERSONAL_OUTBOUND']);
 
-            return false;
+			return false;
 		}
 
 		$subject = $this->name;
@@ -479,9 +481,9 @@ class Email extends SugarBean {
 		if ( $this->isDraftEmail($request) )
 		{
 			if($this->type != 'draft' && $this->status != 'draft') {
-	        	$this->id = create_guid();
-	        	$this->new_with_id = true;
-	        	$this->date_entered = "";
+				$this->id = create_guid();
+				$this->new_with_id = true;
+				$this->date_entered = "";
 			} // if
 			$q1 = "update emails_email_addr_rel set deleted = 1 WHERE email_id = '{$this->id}'";
 			$r1 = $this->db->query($q1);
@@ -494,28 +496,28 @@ class Email extends SugarBean {
 		} else {
 			/* Apply Email Templates */
 			// do not parse email templates if the email is being saved as draft....
-		    $toAddresses = $this->email2ParseAddresses($_REQUEST['sendTo']);
-	        $sea = new SugarEmailAddress();
-	        $object_arr = array();
+			$toAddresses = $this->email2ParseAddresses($_REQUEST['sendTo']);
+			$sea = new SugarEmailAddress();
+			$object_arr = array();
 
 			if( isset($_REQUEST['parent_type']) && !empty($_REQUEST['parent_type']) &&
-				isset($_REQUEST['parent_id']) && !empty($_REQUEST['parent_id']) &&
-				($_REQUEST['parent_type'] == 'Accounts' ||
-				$_REQUEST['parent_type'] == 'Contacts' ||
-				$_REQUEST['parent_type'] == 'Leads' ||
-				$_REQUEST['parent_type'] == 'Users' ||
-				$_REQUEST['parent_type'] == 'Prospects')) {
-					if(isset($beanList[$_REQUEST['parent_type']]) && !empty($beanList[$_REQUEST['parent_type']])) {
-						$className = $beanList[$_REQUEST['parent_type']];
-						if(isset($beanFiles[$className]) && !empty($beanFiles[$className])) {
-							if(!class_exists($className)) {
-								require_once($beanFiles[$className]);
-							}
-							$bean = new $className();
-							$bean->retrieve($_REQUEST['parent_id']);
-	                		$object_arr[$bean->module_dir] = $bean->id;
-						} // if
+					isset($_REQUEST['parent_id']) && !empty($_REQUEST['parent_id']) &&
+					($_REQUEST['parent_type'] == 'Accounts' ||
+					 $_REQUEST['parent_type'] == 'Contacts' ||
+					 $_REQUEST['parent_type'] == 'Leads' ||
+					 $_REQUEST['parent_type'] == 'Users' ||
+					 $_REQUEST['parent_type'] == 'Prospects')) {
+				if(isset($beanList[$_REQUEST['parent_type']]) && !empty($beanList[$_REQUEST['parent_type']])) {
+					$className = $beanList[$_REQUEST['parent_type']];
+					if(isset($beanFiles[$className]) && !empty($beanFiles[$className])) {
+						if(!class_exists($className)) {
+							require_once($beanFiles[$className]);
+						}
+						$bean = new $className();
+						$bean->retrieve($_REQUEST['parent_id']);
+						$object_arr[$bean->module_dir] = $bean->id;
 					} // if
+				} // if
 			}
 			foreach($toAddresses as $addrMeta) {
 				$addr = $addrMeta['email'];
@@ -527,36 +529,36 @@ class Email extends SugarBean {
 				}
 			}
 
-	        /* template parsing */
-	        if (empty($object_arr)) {
-	          $object_arr= array('Contacts' => '123');
-	        }
-	        $object_arr['Users'] = $current_user->id;
-	        $this->description_html = EmailTemplate::parse_template($this->description_html, $object_arr);
-	        $this->name = EmailTemplate::parse_template($this->name, $object_arr);
-	        $this->description = EmailTemplate::parse_template($this->description, $object_arr);
-	        $this->description = html_entity_decode($this->description,ENT_COMPAT,'UTF-8');
-			if($this->type != 'draft' && $this->status != 'draft') {
-	        	$this->id = create_guid();
-	        	$this->date_entered = "";
-	        	$this->new_with_id = true;
-		        $this->type = 'out';
-		        $this->status = 'sent';
+			/* template parsing */
+			if (empty($object_arr)) {
+				$object_arr= array('Contacts' => '123');
 			}
-        }
+			$object_arr['Users'] = $current_user->id;
+			$this->description_html = EmailTemplate::parse_template($this->description_html, $object_arr);
+			$this->name = EmailTemplate::parse_template($this->name, $object_arr);
+			$this->description = EmailTemplate::parse_template($this->description, $object_arr);
+			$this->description = html_entity_decode($this->description,ENT_COMPAT,'UTF-8');
+			if($this->type != 'draft' && $this->status != 'draft') {
+				$this->id = create_guid();
+				$this->date_entered = "";
+				$this->new_with_id = true;
+				$this->type = 'out';
+				$this->status = 'sent';
+			}
+		}
 
-        if(isset($_REQUEST['parent_type']) && empty($_REQUEST['parent_type']) &&
-			isset($_REQUEST['parent_id']) && empty($_REQUEST['parent_id']) ) {
-				$this->parent_id = "";
-				$this->parent_type = "";
+		if(isset($_REQUEST['parent_type']) && empty($_REQUEST['parent_type']) &&
+				isset($_REQUEST['parent_id']) && empty($_REQUEST['parent_id']) ) {
+			$this->parent_id = "";
+			$this->parent_type = "";
 		} // if
 
 
-        $mail->Subject = $this->name;
-        $mail = $this->handleBody($mail);
-        $mail->Subject = $this->name;
-        $this->description_html = from_html($this->description_html);
-        $this->description_html = $this->decodeDuringSend($this->description_html);
+		$mail->Subject = $this->name;
+		$mail = $this->handleBody($mail);
+		$mail->Subject = $this->name;
+		$this->description_html = from_html($this->description_html);
+		$this->description_html = $this->decodeDuringSend($this->description_html);
 		$this->description = $this->decodeDuringSend($this->description);
 
 		/* from account */
@@ -617,7 +619,7 @@ class Email extends SugarBean {
 		} else {
 			$mail->AddReplyTo($mail->From,$locale->translateCharsetMIME(trim( $mail->FromName), 'UTF-8', $OBCharset));
 		} // else
-        $emailAddressCollection = array(); // used in linking to beans below
+		$emailAddressCollection = array(); // used in linking to beans below
 		// handle to/cc/bcc
 		foreach($this->email2ParseAddresses($request['sendTo']) as $addr_arr) {
 			if(empty($addr_arr['email'])) continue;
@@ -663,13 +665,16 @@ class Email extends SugarBean {
 		}
 
 		/* handle attachments */
-		if(!empty($request['attachments'])) {
+		if(!empty($request['attachments']))
+		{
 			$exAttachments = explode("::", $request['attachments']);
 
-			foreach($exAttachments as $file) {
+			foreach($exAttachments as $file)
+			{
 				$file = trim(from_html($file));
 				$file = str_replace("\\", "", $file);
-				if(!empty($file)) {
+				if(!empty($file))
+				{
 					//$fileLocation = $this->et->userCacheDir."/{$file}";
 					$fileGUID = preg_replace('/[^a-z0-9\-]/', "", substr($file, 0, 36));
 					$fileLocation = $this->et->userCacheDir."/{$fileGUID}";
@@ -679,7 +684,9 @@ class Email extends SugarBean {
 					//$mail->AddAttachment($fileLocation, $filename, 'base64');
 
 					// only save attachments if we're archiving or drafting
-					if((($this->type == 'draft') && !empty($this->id)) || (isset($request['saveToSugar']) && $request['saveToSugar'] == 1)) {
+					if((($this->type == 'draft') && !empty($this->id))
+					|| (isset($request['saveToSugar']) && $request['saveToSugar'] == 1))
+					{
 						$note = new Note();
 						$note->id = create_guid();
 						$note->new_with_id = true; // duplicating the note with files
@@ -688,8 +695,9 @@ class Email extends SugarBean {
 						$note->name = $filename;
 						$note->filename = $filename;
 						$note->file_mime_type = $this->email2GetMime($fileLocation);
-                        $dest = "upload://{$note->id}";
-						if(!copy($fileLocation, $dest)) {
+						$dest = "upload://{$note->id}";
+						if(!copy($fileLocation, $dest))
+						{
 							$GLOBALS['log']->debug("EMAIL 2.0: could not copy attachment file to $fileLocation => $dest");
 						}
 
@@ -727,7 +735,7 @@ class Email extends SugarBean {
 						$note->name = $filename;
 						$note->filename = $filename;
 						$note->file_mime_type = $mime_type;
-                        $dest = "upload://{$note->id}";
+						$dest = "upload://{$note->id}";
 						if(!copy($fileLocation, $dest)) {
 							$GLOBALS['log']->debug("EMAIL 2.0: could not copy SugarDocument revision file $fileLocation => $dest");
 						}
@@ -758,7 +766,7 @@ class Email extends SugarBean {
 							if((($this->type == 'draft') && !empty($this->id)) || (isset($request['saveToSugar']) && $request['saveToSugar'] == 1)) {
 
 								if ($note->parent_id != $this->id)
-								    $this->saveTempNoteAttachments($filename,$fileLocation, $mime_type);
+									$this->saveTempNoteAttachments($filename,$fileLocation, $mime_type);
 							} // if
 
 						} // if
@@ -773,11 +781,11 @@ class Email extends SugarBean {
 
 						//If we are saving an email we were going to forward we need to save the attachments as well.
 						if( (($this->type == 'draft') && !empty($this->id))
-						      || (isset($request['saveToSugar']) && $request['saveToSugar'] == 1))
-						  {
-						      $mimeType = $this->email2GetMime($fileLocation);
-						      $this->saveTempNoteAttachments($filename,$fileLocation, $mimeType);
-						 } // if
+								|| (isset($request['saveToSugar']) && $request['saveToSugar'] == 1))
+						{
+							$mimeType = $this->email2GetMime($fileLocation);
+							$this->saveTempNoteAttachments($filename,$fileLocation, $mimeType);
+						} // if
 					}
 				}
 			}
@@ -802,24 +810,24 @@ class Email extends SugarBean {
 			$forceSave = true;
 		}
 
-		      /**********************************************************************
-         * SEND EMAIL (finally!)
-         */
-        $mailSent = false;
-        if ($this->type != 'draft') {
-            $mail->prepForOutbound();
-            $mail->Body = $this->decodeDuringSend($mail->Body);
-            $mail->AltBody = $this->decodeDuringSend($mail->AltBody);
-            if (!$mail->Send()) {
-                $this->status = 'send_error';
-                ob_clean();
-                echo($app_strings['LBL_EMAIL_ERROR_PREPEND']. $mail->ErrorInfo);
-                return false;
-            }
-        }
+		/**********************************************************************
+		 * SEND EMAIL (finally!)
+		 */
+		$mailSent = false;
+		if ($this->type != 'draft') {
+			$mail->prepForOutbound();
+			$mail->Body = $this->decodeDuringSend($mail->Body);
+			$mail->AltBody = $this->decodeDuringSend($mail->AltBody);
+			if (!$mail->Send()) {
+				$this->status = 'send_error';
+				ob_clean();
+				echo($app_strings['LBL_EMAIL_ERROR_PREPEND']. $mail->ErrorInfo);
+				return false;
+			}
+		}
 
 		if ((!(empty($orignialId) || isset($request['saveDraft']) || ($this->type == 'draft' && $this->status == 'draft'))) &&
-			(($_REQUEST['composeType'] == 'reply') || ($_REQUEST['composeType'] == 'replyAll') || ($_REQUEST['composeType'] == 'replyCase')) && ($orignialId != $this->id)) {
+				(($_REQUEST['composeType'] == 'reply') || ($_REQUEST['composeType'] == 'replyAll') || ($_REQUEST['composeType'] == 'replyCase')) && ($orignialId != $this->id)) {
 			$originalEmail = new Email();
 			$originalEmail->retrieve($orignialId);
 			$originalEmail->reply_to_status = 1;
@@ -846,8 +854,8 @@ class Email extends SugarBean {
 
 
 		if(	$forceSave ||
-			$this->type == 'draft' ||
-			(isset($request['saveToSugar']) && $request['saveToSugar'] == 1)) {
+				$this->type == 'draft' ||
+				(isset($request['saveToSugar']) && $request['saveToSugar'] == 1)) {
 
 			// saving a draft OR saving a sent email
 			$decodedFromName = mb_decode_mimeheader($mail->FromName);
@@ -866,47 +874,47 @@ class Email extends SugarBean {
 			////	LINK EMAIL TO SUGARBEANS BASED ON EMAIL ADDY
 
 			if( isset($_REQUEST['parent_type']) && !empty($_REQUEST['parent_type']) &&
-				isset($_REQUEST['parent_id']) && !empty($_REQUEST['parent_id']) ) {
-	                $this->parent_id = $_REQUEST['parent_id'];
-	                $this->parent_type = $_REQUEST['parent_type'];
-					$q = "SELECT count(*) c FROM emails_beans WHERE  email_id = '{$this->id}' AND bean_id = '{$_REQUEST['parent_id']}' AND bean_module = '{$_REQUEST['parent_type']}'";
-					$r = $this->db->query($q);
-					$a = $this->db->fetchByAssoc($r);
-					if($a['c'] <= 0) {
-						if(isset($beanList[$_REQUEST['parent_type']]) && !empty($beanList[$_REQUEST['parent_type']])) {
-							$className = $beanList[$_REQUEST['parent_type']];
-							if(isset($beanFiles[$className]) && !empty($beanFiles[$className])) {
-								if(!class_exists($className)) {
-									require_once($beanFiles[$className]);
-								}
-								$bean = new $className();
-								$bean->retrieve($_REQUEST['parent_id']);
-								if($bean->load_relationship('emails')) {
-									$bean->emails->add($this->id);
-								} // if
-
+					isset($_REQUEST['parent_id']) && !empty($_REQUEST['parent_id']) ) {
+				$this->parent_id = $_REQUEST['parent_id'];
+				$this->parent_type = $_REQUEST['parent_type'];
+				$q = "SELECT count(*) c FROM emails_beans WHERE  email_id = '{$this->id}' AND bean_id = '{$_REQUEST['parent_id']}' AND bean_module = '{$_REQUEST['parent_type']}'";
+				$r = $this->db->query($q);
+				$a = $this->db->fetchByAssoc($r);
+				if($a['c'] <= 0) {
+					if(isset($beanList[$_REQUEST['parent_type']]) && !empty($beanList[$_REQUEST['parent_type']])) {
+						$className = $beanList[$_REQUEST['parent_type']];
+						if(isset($beanFiles[$className]) && !empty($beanFiles[$className])) {
+							if(!class_exists($className)) {
+								require_once($beanFiles[$className]);
+							}
+							$bean = new $className();
+							$bean->retrieve($_REQUEST['parent_id']);
+							if($bean->load_relationship('emails')) {
+								$bean->emails->add($this->id);
 							} // if
 
 						} // if
 
 					} // if
 
-				} else {
-					if(!class_exists('aCase')) {
+				} // if
 
-					}
-					else{
-						$c = new aCase();
-						if($caseId = InboundEmail::getCaseIdFromCaseNumber($mail->Subject, $c)) {
-							$c->retrieve($caseId);
-							$c->load_relationship('emails');
-							$c->emails->add($this->id);
-							$this->parent_type = "Cases";
-							$this->parent_id = $caseId;
-						} // if
-					}
+			} else {
+				if(!class_exists('aCase')) {
 
-				} // else
+				}
+				else{
+					$c = new aCase();
+					if($caseId = InboundEmail::getCaseIdFromCaseNumber($mail->Subject, $c)) {
+						$c->retrieve($caseId);
+						$c->load_relationship('emails');
+						$c->emails->add($this->id);
+						$this->parent_type = "Cases";
+						$this->parent_id = $caseId;
+					} // if
+				}
+
+			} // else
 
 			////	LINK EMAIL TO SUGARBEANS BASED ON EMAIL ADDY
 			///////////////////////////////////////////////////////////////////
@@ -936,87 +944,87 @@ class Email extends SugarBean {
 		return true;
 	} // end email2send
 
-    /**
-     * Generates a config-specified separated name and addresses to be used in compose email screen for
-     * contacts or leads from listview
-     * By default, use comma, but allow for non-standard delimiters as specified in email_address_separator
-     *
-     * @param $module string module name
-     * @param $idsArray array of record ids to get the email address for
-     * @return string (config-specified) delimited list of email addresses
-     */
-    public function getNamePlusEmailAddressesForCompose($module, $idsArray)
-    {
-        global $locale;
-        $result = array();
+	/**
+	 * Generates a config-specified separated name and addresses to be used in compose email screen for
+	 * contacts or leads from listview
+	 * By default, use comma, but allow for non-standard delimiters as specified in email_address_separator
+	 *
+	 * @param $module string module name
+	 * @param $idsArray array of record ids to get the email address for
+	 * @return string (config-specified) delimited list of email addresses
+	 */
+	public function getNamePlusEmailAddressesForCompose($module, $idsArray)
+	{
+		global $locale;
+		$result = array();
 
-        foreach ($idsArray as $id)
-        {
-            // Load bean
-            $bean = BeanFactory::getBean($module, $id);
+		foreach ($idsArray as $id)
+		{
+			// Load bean
+			$bean = BeanFactory::getBean($module, $id);
 
-            // Got a bean
-            if (!empty($bean))
-            {
-                // For CE, just get primary e-mail address
-                $emailAddress = $bean->email1;
+			// Got a bean
+			if (!empty($bean))
+			{
+				// For CE, just get primary e-mail address
+				$emailAddress = $bean->email1;
 
 
-                // If we have an e-mail address loaded
-                if (!empty($emailAddress))
-                {
-                    // Use bean name by default
-                    $fullName = $bean->name;
+				// If we have an e-mail address loaded
+				if (!empty($emailAddress))
+				{
+					// Use bean name by default
+					$fullName = $bean->name;
 
-                    // Depending on module, format the name
-                    if (in_array($module, array('Users', 'Employees')))
-                    {
-                        $fullName = from_html(
-                            $locale->getLocaleFormattedName(
-                                $bean->first_name,
-                                $bean->last_name,
-                                '',
-                                $bean->title
-                            )
-                        );
-                    }
-                    else if (SugarModule::get($module)->moduleImplements('Person'))
-                    {
-                        $fullName = from_html(
-                            $locale->getLocaleFormattedName(
-                                $bean->first_name,
-                                $bean->last_name,
-                                $bean->salutation,
-                                $bean->title
-                            )
-                        );
-                    }
+					// Depending on module, format the name
+					if (in_array($module, array('Users', 'Employees')))
+					{
+						$fullName = from_html(
+								$locale->getLocaleFormattedName(
+									$bean->first_name,
+									$bean->last_name,
+									'',
+									$bean->title
+									)
+								);
+					}
+					else if (SugarModule::get($module)->moduleImplements('Person'))
+					{
+						$fullName = from_html(
+								$locale->getLocaleFormattedName(
+									$bean->first_name,
+									$bean->last_name,
+									$bean->salutation,
+									$bean->title
+									)
+								);
+					}
 
-                    // Make e-mail address in format "Name <@email>"
-                    $result[$bean->id] = $fullName . " <" . from_html($emailAddress) . ">";
-                }
-            }
-        }
+					// Make e-mail address in format "Name <@email>"
+					$result[$bean->id] = $fullName . " <" . from_html($emailAddress) . ">";
+				}
+			}
+		}
 
-        // Broken out of method to facilitate unit testing
-        return $this->_arrayToDelimitedString($result);
-    }
+		// Broken out of method to facilitate unit testing
+		return $this->_arrayToDelimitedString($result);
+	}
 
-    /**
-     * @param Array $arr - list of strings
-     * @return string the list of strings delimited by email_address_separator
-     */
-    function _arrayToDelimitedString($arr)
-    {
-        // bug 51804: outlook does not respect the correct email address separator (',') , so let
-        // clients override the default.
-        $separator = (isset($GLOBALS['sugar_config']['email_address_separator']) &&
-                        !empty($GLOBALS['sugar_config']['email_address_separator'])) ?
-                     $GLOBALS['sugar_config']['email_address_separator'] :
-                     ',';
+	/**
+	 * @param Array $arr - list of strings
+	 * @return string the list of strings delimited by email_address_separator
+	 */
+	function _arrayToDelimitedString($arr)
+	{
+		// bug 51804: outlook does not respect the correct email address separator (',') , so let
+		// clients override the default.
+		$separator = (isset($GLOBALS['sugar_config']['email_address_separator']) &&
+				!empty($GLOBALS['sugar_config']['email_address_separator'])) ?
+			$GLOBALS['sugar_config']['email_address_separator'] :
+			',';
 
 		return join($separator, array_values($arr));
-    }
+	}
 
 	/**
 	 * Overrides
@@ -1024,7 +1032,7 @@ class Email extends SugarBean {
 	///////////////////////////////////////////////////////////////////////////
 	////	SAVERS
 	function save($check_notify = false) {
-        global $current_user;
+		global $current_user;
 
 		if($this->isDuplicate) {
 			$GLOBALS['log']->debug("EMAIL - tried to save a duplicate Email record");
@@ -1040,8 +1048,8 @@ class Email extends SugarBean {
 			$this->bcc_addrs_names = $this->cleanEmails($this->bcc_addrs_names);
 			$this->reply_to_addr = $this->cleanEmails($this->reply_to_addr);
 			$this->description = SugarCleaner::cleanHtml($this->description);
-            $this->description_html = SugarCleaner::cleanHtml($this->description_html, true);
-            $this->raw_source = SugarCleaner::cleanHtml($this->raw_source, true);
+			$this->description_html = SugarCleaner::cleanHtml($this->description_html, true);
+			$this->raw_source = SugarCleaner::cleanHtml($this->raw_source, true);
 			$this->saveEmailText();
 			$this->saveEmailAddresses();
 
@@ -1049,31 +1057,31 @@ class Email extends SugarBean {
 
 			// handle legacy concatenation of date and time fields
 			//Bug 39503 - SugarBean is not setting date_sent when seconds missing
- 			if(empty($this->date_sent)) {
+			if(empty($this->date_sent)) {
 				global $timedate;
 				$date_sent_obj = $timedate->fromUser($timedate->merge_date_time($this->date_start, $this->time_start), $current_user);
-                 if (!empty($date_sent_obj) && ($date_sent_obj instanceof SugarDateTime)) {
- 				    $this->date_sent = $date_sent_obj->asDb();
-                 }
+				if (!empty($date_sent_obj) && ($date_sent_obj instanceof SugarDateTime)) {
+					$this->date_sent = $date_sent_obj->asDb();
+				}
 			}
 
 			parent::save($check_notify);
 
 			if(!empty($this->parent_type) && !empty($this->parent_id)) {
-                if(!empty($this->fetched_row) && !empty($this->fetched_row['parent_id']) && !empty($this->fetched_row['parent_type'])) {
-                    if($this->fetched_row['parent_id'] != $this->parent_id || $this->fetched_row['parent_type'] != $this->parent_type) {
-                        $mod = strtolower($this->fetched_row['parent_type']);
-                        $rel = array_key_exists($mod, $this->field_defs) ? $mod : $mod . "_activities_emails"; //Custom modules rel name
-                        if($this->load_relationship($rel) ) {
-                            $this->$rel->delete($this->id, $this->fetched_row['parent_id']);
-                        }
-                    }
-                }
-                $mod = strtolower($this->parent_type);
-                $rel = array_key_exists($mod, $this->field_defs) ? $mod : $mod . "_activities_emails"; //Custom modules rel name
-                if($this->load_relationship($rel) ) {
-                    $this->$rel->add($this->parent_id);
-                }
+				if(!empty($this->fetched_row) && !empty($this->fetched_row['parent_id']) && !empty($this->fetched_row['parent_type'])) {
+					if($this->fetched_row['parent_id'] != $this->parent_id || $this->fetched_row['parent_type'] != $this->parent_type) {
+						$mod = strtolower($this->fetched_row['parent_type']);
+						$rel = array_key_exists($mod, $this->field_defs) ? $mod : $mod . "_activities_emails"; //Custom modules rel name
+						if($this->load_relationship($rel) ) {
+							$this->$rel->delete($this->id, $this->fetched_row['parent_id']);
+						}
+					}
+				}
+				$mod = strtolower($this->parent_type);
+				$rel = array_key_exists($mod, $this->field_defs) ? $mod : $mod . "_activities_emails"; //Custom modules rel name
+				if($this->load_relationship($rel) ) {
+					$this->$rel->add($this->parent_id);
+				}
 			}
 		}
 		$GLOBALS['log']->debug('-------------------------------> Email save() done');
@@ -1088,19 +1096,19 @@ class Email extends SugarBean {
 	 */
 	function saveTempNoteAttachments($filename,$fileLocation, $mimeType)
 	{
-	    $tmpNote = new Note();
-	    $tmpNote->id = create_guid();
-	    $tmpNote->new_with_id = true;
-	    $tmpNote->parent_id = $this->id;
-	    $tmpNote->parent_type = $this->module_dir;
-	    $tmpNote->name = $filename;
-	    $tmpNote->filename = $filename;
-	    $tmpNote->file_mime_type = $mimeType;
-	    $noteFile = "upload://{$tmpNote->id}";
-	    if(!copy($fileLocation, $noteFile)) {
-    	    $GLOBALS['log']->fatal("EMAIL 2.0: could not copy SugarDocument revision file $fileLocation => $noteFile");
-	    }
-	    $tmpNote->save();
+		$tmpNote = new Note();
+		$tmpNote->id = create_guid();
+		$tmpNote->new_with_id = true;
+		$tmpNote->parent_id = $this->id;
+		$tmpNote->parent_type = $this->module_dir;
+		$tmpNote->name = $filename;
+		$tmpNote->filename = $filename;
+		$tmpNote->file_mime_type = $mimeType;
+		$noteFile = "upload://{$tmpNote->id}";
+		if(!copy($fileLocation, $noteFile)) {
+			$GLOBALS['log']->fatal("EMAIL 2.0: could not copy SugarDocument revision file $fileLocation => $noteFile");
+		}
+		$tmpNote->save();
 	}
 	/**
 	 * Handles normalization of Email Addressess
@@ -1108,9 +1116,9 @@ class Email extends SugarBean {
 	function saveEmailAddresses() {
 		// from, single address
 		$fromId = $this->emailAddress->getEmailGUID(from_html($this->from_addr));
-        if(!empty($fromId)){
-		  $this->linkEmailToAddress($fromId, 'from');
-        }
+		if(!empty($fromId)){
+			$this->linkEmailToAddress($fromId, 'from');
+		}
 
 		// to, multiple
 		$replace = array(",",";");
@@ -1172,49 +1180,49 @@ class Email extends SugarBean {
 		return $guid;
 	}
 
-    protected $email_to_text = array(
-        "email_id" => "id",
-        "description" => "description",
-        "description_html" => "description_html",
-        "raw_source" => "raw_source",
-        "from_addr" => "from_addr_name",
-        "reply_to_addr" => "reply_to_addr",
-    	"to_addrs" => "to_addrs_names",
-        "cc_addrs" => "cc_addrs_names",
-        "bcc_addrs" => "bcc_addrs_names",
-    );
+	protected $email_to_text = array(
+			"email_id" => "id",
+			"description" => "description",
+			"description_html" => "description_html",
+			"raw_source" => "raw_source",
+			"from_addr" => "from_addr_name",
+			"reply_to_addr" => "reply_to_addr",
+			"to_addrs" => "to_addrs_names",
+			"cc_addrs" => "cc_addrs_names",
+			"bcc_addrs" => "bcc_addrs_names",
+			);
 
 	function cleanEmails($emails)
 	{
-	    if(empty($emails)) return '';
+		if(empty($emails)) return '';
 		$emails = str_replace(array(",",";"), "::", from_html($emails));
 		$addrs = explode("::", $emails);
 		$res = array();
 		foreach($addrs as $addr) {
-            $parts = $this->emailAddress->splitEmailAddress($addr);
-            if(empty($parts["email"])) {
-                continue;
-            }
-            if(!empty($parts["name"])) {
-                $res[] = "{$parts['name']} <{$parts['email']}>";
-            } else {
-                $res[] .= $parts["email"];
-            }
+			$parts = $this->emailAddress->splitEmailAddress($addr);
+			if(empty($parts["email"])) {
+				continue;
+			}
+			if(!empty($parts["name"])) {
+				$res[] = "{$parts['name']} <{$parts['email']}>";
+			} else {
+				$res[] .= $parts["email"];
+			}
 		}
 		return join(", ", $res);
 	}
 
 	protected function saveEmailText()
 	{
-        $text = SugarModule::get("EmailText")->loadBean();
-        foreach($this->email_to_text as $textfield=>$mailfield) {
-            $text->$textfield = $this->$mailfield;
-        }
-        $text->email_id = $this->id;
+		$text = SugarModule::get("EmailText")->loadBean();
+		foreach($this->email_to_text as $textfield=>$mailfield) {
+			$text->$textfield = $this->$mailfield;
+		}
+		$text->email_id = $this->id;
 		if(!$this->new_with_id) {
-            $this->db->update($text);
+			$this->db->update($text);
 		} else {
-		    $this->db->insert($text);
+			$this->db->insert($text);
 		}
 	}
 
@@ -1226,18 +1234,18 @@ class Email extends SugarBean {
 
 		if($ret) {
 			$ret->retrieveEmailText();
-            //$ret->raw_source = SugarCleaner::cleanHtml($ret->raw_source);
+			//$ret->raw_source = SugarCleaner::cleanHtml($ret->raw_source);
 			$ret->description = to_html($ret->description);
-            //$ret->description_html = SugarCleaner::cleanHtml($ret->description_html);
+			//$ret->description_html = SugarCleaner::cleanHtml($ret->description_html);
 			$ret->retrieveEmailAddresses();
 
 			$ret->date_start = '';
 			$ret->time_start = '';
 			$dateSent = explode(' ', $ret->date_sent);
 			if (!empty($dateSent)) {
-			    $ret->date_start = $dateSent[0];
-			    if ( isset($dateSent[1]) )
-			        $ret->time_start = $dateSent[1];
+				$ret->date_start = $dateSent[0];
+				if ( isset($dateSent[1]) )
+					$ret->time_start = $dateSent[1];
 			}
 			// for Email 2.0
 			foreach($ret as $k => $v) {
@@ -1255,9 +1263,9 @@ class Email extends SugarBean {
 		$return = array();
 
 		$q = "SELECT email_address, address_type
-				FROM emails_email_addr_rel eam
-				JOIN email_addresses ea ON ea.id = eam.email_address_id
-				WHERE eam.email_id = '{$this->id}' AND eam.deleted=0";
+			FROM emails_email_addr_rel eam
+			JOIN email_addresses ea ON ea.id = eam.email_address_id
+			WHERE eam.email_id = '{$this->id}' AND eam.deleted=0";
 		$r = $this->db->query($q);
 
 		while($a = $this->db->fetchByAssoc($r)) {
@@ -1305,16 +1313,16 @@ class Email extends SugarBean {
 		if(empty($id))
 			$id = $this->id;
 
-        $id = $this->db->quote($id);
+		$id = $this->db->quote($id);
 
 		$q  = "UPDATE emails SET deleted = 1 WHERE id = '{$id}'";
 		$qt = "UPDATE emails_text SET deleted = 1 WHERE email_id = '{$id}'";
 		$qf = "UPDATE folders_rel SET deleted = 1 WHERE polymorphic_id = '{$id}' AND polymorphic_module = 'Emails'";
-        $qn = "UPDATE notes SET deleted = 1 WHERE parent_id = '{$id}' AND parent_type = 'Emails'";
-        $this->db->query($q);
-        $this->db->query($qt);
-        $this->db->query($qf);
-        $this->db->query($qn);
+		$qn = "UPDATE notes SET deleted = 1 WHERE parent_id = '{$id}' AND parent_type = 'Emails'";
+		$this->db->query($q);
+		$this->db->query($qt);
+		$this->db->query($qf);
+		$this->db->query($qn);
 	}
 
 	/**
@@ -1340,36 +1348,36 @@ class Email extends SugarBean {
 		//return from_html($ret);
 	}
 
-    /**
-     * retrieves Notes that belong to this Email and stuffs them into the "attachments" attribute
-     */
-    function getNotes($id, $duplicate=false) {
-        if(!class_exists('Note')) {
+	/**
+	 * retrieves Notes that belong to this Email and stuffs them into the "attachments" attribute
+	 */
+	function getNotes($id, $duplicate=false) {
+		if(!class_exists('Note')) {
 
-        }
+		}
 
-        $exRemoved = array();
+		$exRemoved = array();
 		if(isset($_REQUEST['removeAttachment'])) {
 			$exRemoved = explode('::', $_REQUEST['removeAttachment']);
 		}
 
-        $noteArray = array();
-        $q = "SELECT id FROM notes WHERE parent_id = '".$id."'";
-        $r = $this->db->query($q);
+		$noteArray = array();
+		$q = "SELECT id FROM notes WHERE parent_id = '".$id."'";
+		$r = $this->db->query($q);
 
-        while($a = $this->db->fetchByAssoc($r)) {
-        	if(!in_array($a['id'], $exRemoved)) {
-	            $note = new Note();
-	            $note->retrieve($a['id']);
+		while($a = $this->db->fetchByAssoc($r)) {
+			if(!in_array($a['id'], $exRemoved)) {
+				$note = new Note();
+				$note->retrieve($a['id']);
 
-	            // duplicate actual file when creating forwards
-		        if($duplicate) {
-		        	if(!class_exists('UploadFile')) {
-		        		require_once('include/upload_file.php');
-		        	}
-		        	// save a brand new Note
-		        	$noteDupe->id = create_guid();
-		        	$noteDupe->new_with_id = true;
+				// duplicate actual file when creating forwards
+				if($duplicate) {
+					if(!class_exists('UploadFile')) {
+						require_once('include/upload_file.php');
+					}
+					// save a brand new Note
+					$noteDupe->id = create_guid();
+					$noteDupe->new_with_id = true;
 					$noteDupe->parent_id = $this->id;
 					$noteDupe->parent_type = $this->module_dir;
 
@@ -1377,12 +1385,12 @@ class Email extends SugarBean {
 					$noteFile->duplicate_file($a['id'], $note->id, $note->filename);
 
 					$note->save();
-		        }
-		        // add Note to attachments array
-	            $this->attachments[] = $note;
-        	}
-        }
-    }
+				}
+				// add Note to attachments array
+				$this->attachments[] = $note;
+			}
+		}
+	}
 
 	/**
 	 * creates the standard "Reply" info at the top of the forwarded message
@@ -1464,10 +1472,10 @@ class Email extends SugarBean {
 			return false;
 		}
 		if(empty($mail_fromname)) {
-	  		return false;
+			return false;
 		}
 
-    	$send_type = $current_user->getPreference('mail_sendtype') ;
+		$send_type = $current_user->getPreference('mail_sendtype') ;
 		if (!empty($send_type) && $send_type == "SMTP") {
 			$mail_smtpserver = $current_user->getPreference('mail_smtpserver');
 			$mail_smtpport = $current_user->getPreference('mail_smtpport');
@@ -1475,9 +1483,9 @@ class Email extends SugarBean {
 			$mail_smtpuser = $current_user->getPreference('mail_smtpuser');
 			$mail_smtppass = $current_user->getPreference('mail_smtppass');
 			if (empty($mail_smtpserver) ||
-				empty($mail_smtpport) ||
-                (!empty($mail_smtpauth_req) && ( empty($mail_smtpuser) || empty($mail_smtppass)))
-			) {
+					empty($mail_smtpport) ||
+					(!empty($mail_smtpauth_req) && ( empty($mail_smtpuser) || empty($mail_smtppass)))
+			   ) {
 				return false;
 			}
 		}
@@ -1490,7 +1498,7 @@ class Email extends SugarBean {
 	function js_set_archived() {
 		global $mod_strings;
 		$script = '
-		<script type="text/javascript" language="JavaScript"><!-- Begin
+			<script type="text/javascript" language="JavaScript"><!-- Begin
 			function setArchived() {
 				var form = document.getElementById("MassUpdate");
 				var status = document.getElementById("mass_status");
@@ -1539,7 +1547,7 @@ class Email extends SugarBean {
 		if(!empty($assigned_user_id)) { $uAssigned_user_id = '&assigned_user_id='.$assigned_user_id; }
 
 		$the_script = '
-		<script type="text/javascript" language="JavaScript"><!-- Begin
+			<script type="text/javascript" language="JavaScript"><!-- Begin
 			function clear_form(form) {
 				var newLoc = "index.php?action=" + form.action.value + "&module=" + form.module.value + "&query=true&clear_query=true'.$uType.$uGroup.$uAssigned_user_id.'";
 				if(typeof(form.advanced) != "undefined"){
@@ -1555,11 +1563,11 @@ class Email extends SugarBean {
 		global $theme;
 		global $mod_strings;
 		$out = '<div><input	title="'.$mod_strings['LBL_BUTTON_GRAB_TITLE'].'"
-						class="button"
-						type="button" name="button"
-						onClick="window.location=\'index.php?module=Emails&action=Grab\';"
-						style="margin-bottom:2px"
-						value="  '.$mod_strings['LBL_BUTTON_GRAB'].'  "></div>';
+			class="button"
+			type="button" name="button"
+			onClick="window.location=\'index.php?module=Emails&action=Grab\';"
+			style="margin-bottom:2px"
+			value="  '.$mod_strings['LBL_BUTTON_GRAB'].'  "></div>';
 		return $out;
 	}
 
@@ -1640,7 +1648,7 @@ class Email extends SugarBean {
 
 				//// only trigger a "displayName" <email@address> when necessary
 				if(isset($addrs_names_arr[$i])){
-						$recipient['display'] = $addrs_names_arr[$i];
+					$recipient['display'] = $addrs_names_arr[$i];
 				}
 				else if(!empty($display)) {
 					$recipient['display'] = $display;
@@ -1678,35 +1686,35 @@ class Email extends SugarBean {
 
 		global $mod_strings;
 
-        ///////////////////////////////////////////////////////////////////////////
-        ////    ATTACHMENTS FROM DRAFTS
-        if(($this->type == 'out' || $this->type == 'draft') && $this->status == 'draft' && isset($_REQUEST['record'])) {
-            $this->getNotes($_REQUEST['record']); // cn: get notes from OLD email for use in new email
-        }
-        ////    END ATTACHMENTS FROM DRAFTS
-        ///////////////////////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////////////////////////
+		////    ATTACHMENTS FROM DRAFTS
+		if(($this->type == 'out' || $this->type == 'draft') && $this->status == 'draft' && isset($_REQUEST['record'])) {
+			$this->getNotes($_REQUEST['record']); // cn: get notes from OLD email for use in new email
+		}
+		////    END ATTACHMENTS FROM DRAFTS
+		///////////////////////////////////////////////////////////////////////////
 
-        ///////////////////////////////////////////////////////////////////////////
-        ////    ATTACHMENTS FROM FORWARDS
-        // Bug 8034 Jenny - Need the check for type 'draft' here to handle cases where we want to save
-        // forwarded messages as drafts.  We still need to save the original message's attachments.
-        if(($this->type == 'out' || $this->type == 'draft') &&
-        	isset($_REQUEST['origType']) && $_REQUEST['origType'] == 'forward' &&
-        	isset($_REQUEST['return_id']) && !empty($_REQUEST['return_id'])
-        ) {
-            $this->getNotes($_REQUEST['return_id'], true);
-        }
+		///////////////////////////////////////////////////////////////////////////
+		////    ATTACHMENTS FROM FORWARDS
+		// Bug 8034 Jenny - Need the check for type 'draft' here to handle cases where we want to save
+		// forwarded messages as drafts.  We still need to save the original message's attachments.
+		if(($this->type == 'out' || $this->type == 'draft') &&
+				isset($_REQUEST['origType']) && $_REQUEST['origType'] == 'forward' &&
+				isset($_REQUEST['return_id']) && !empty($_REQUEST['return_id'])
+		  ) {
+			$this->getNotes($_REQUEST['return_id'], true);
+		}
 
-        // cn: bug 8034 - attachments from forward/replies lost when saving in draft
-        if(isset($_REQUEST['prior_attachments']) && !empty($_REQUEST['prior_attachments']) && $this->new_with_id == true) {
-        	$exIds = explode(",", $_REQUEST['prior_attachments']);
-        	if(!isset($_REQUEST['template_attachment'])) {
-        		$_REQUEST['template_attachment'] = array();
-        	}
-        	$_REQUEST['template_attachment'] = array_merge($_REQUEST['template_attachment'], $exIds);
-        }
-        ////    END ATTACHMENTS FROM FORWARDS
-        ///////////////////////////////////////////////////////////////////////////
+		// cn: bug 8034 - attachments from forward/replies lost when saving in draft
+		if(isset($_REQUEST['prior_attachments']) && !empty($_REQUEST['prior_attachments']) && $this->new_with_id == true) {
+			$exIds = explode(",", $_REQUEST['prior_attachments']);
+			if(!isset($_REQUEST['template_attachment'])) {
+				$_REQUEST['template_attachment'] = array();
+			}
+			$_REQUEST['template_attachment'] = array_merge($_REQUEST['template_attachment'], $exIds);
+		}
+		////    END ATTACHMENTS FROM FORWARDS
+		///////////////////////////////////////////////////////////////////////////
 
 		///////////////////////////////////////////////////////////////////////////
 		////	ATTACHMENTS FROM TEMPLATES
@@ -1746,28 +1754,28 @@ class Email extends SugarBean {
 		///////////////////////////////////////////////////////////////////////////
 		////	ADDING NEW ATTACHMENTS
 		$max_files_upload = 10;
-        // Jenny - Bug 8211 Since attachments for drafts have already been processed,
-        // we don't need to re-process them.
-        if($this->status != "draft") {
-    		$notes_list = array();
-    		if(!empty($this->id) && !$this->new_with_id) {
-    			$note = new Note();
-    			$where = "notes.parent_id='{$this->id}'";
-    			$notes_list = $note->get_full_list("", $where, true);
-    		}
-    		$this->attachments = array_merge($this->attachments, $notes_list);
-        }
+		// Jenny - Bug 8211 Since attachments for drafts have already been processed,
+		// we don't need to re-process them.
+		if($this->status != "draft") {
+			$notes_list = array();
+			if(!empty($this->id) && !$this->new_with_id) {
+				$note = new Note();
+				$where = "notes.parent_id='{$this->id}'";
+				$notes_list = $note->get_full_list("", $where, true);
+			}
+			$this->attachments = array_merge($this->attachments, $notes_list);
+		}
 		// cn: Bug 5995 - rudimentary error checking
 		$filesError = array(
-			0 => 'UPLOAD_ERR_OK - There is no error, the file uploaded with success.',
-			1 => 'UPLOAD_ERR_INI_SIZE - The uploaded file exceeds the upload_max_filesize directive in php.ini.',
-			2 => 'UPLOAD_ERR_FORM_SIZE - The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.',
-			3 => 'UPLOAD_ERR_PARTIAL - The uploaded file was only partially uploaded.',
-			4 => 'UPLOAD_ERR_NO_FILE - No file was uploaded.',
-			5 => 'UNKNOWN ERROR',
-			6 => 'UPLOAD_ERR_NO_TMP_DIR - Missing a temporary folder. Introduced in PHP 4.3.10 and PHP 5.0.3.',
-			7 => 'UPLOAD_ERR_CANT_WRITE - Failed to write file to disk. Introduced in PHP 5.1.0.',
-		);
+				0 => 'UPLOAD_ERR_OK - There is no error, the file uploaded with success.',
+				1 => 'UPLOAD_ERR_INI_SIZE - The uploaded file exceeds the upload_max_filesize directive in php.ini.',
+				2 => 'UPLOAD_ERR_FORM_SIZE - The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.',
+				3 => 'UPLOAD_ERR_PARTIAL - The uploaded file was only partially uploaded.',
+				4 => 'UPLOAD_ERR_NO_FILE - No file was uploaded.',
+				5 => 'UNKNOWN ERROR',
+				6 => 'UPLOAD_ERR_NO_TMP_DIR - Missing a temporary folder. Introduced in PHP 4.3.10 and PHP 5.0.3.',
+				7 => 'UPLOAD_ERR_CANT_WRITE - Failed to write file to disk. Introduced in PHP 5.1.0.',
+				);
 
 		for($i = 0; $i < $max_files_upload; $i++) {
 			// cn: Bug 5995 - rudimentary error checking
@@ -1849,21 +1857,21 @@ class Email extends SugarBean {
 
 		///////////////////////////////////////////////////////////////////////////
 		////	REMOVE ATTACHMENTS
-        if(isset($_REQUEST['remove_attachment']) && !empty($_REQUEST['remove_attachment'])) {
-            foreach($_REQUEST['remove_attachment'] as $noteId) {
-                $q = 'UPDATE notes SET deleted = 1 WHERE id = \''.$noteId.'\'';
-                $this->db->query($q);
-            }
-        }
+		if(isset($_REQUEST['remove_attachment']) && !empty($_REQUEST['remove_attachment'])) {
+			foreach($_REQUEST['remove_attachment'] as $noteId) {
+				$q = 'UPDATE notes SET deleted = 1 WHERE id = \''.$noteId.'\'';
+				$this->db->query($q);
+			}
+		}
 
-        //this will remove attachments that have been selected to be removed from drafts.
-        if(isset($_REQUEST['removeAttachment']) && !empty($_REQUEST['removeAttachment'])) {
-            $exRemoved = explode('::', $_REQUEST['removeAttachment']);
-            foreach($exRemoved as $noteId) {
-                $q = 'UPDATE notes SET deleted = 1 WHERE id = \''.$noteId.'\'';
-                $this->db->query($q);
-            }
-        }
+		//this will remove attachments that have been selected to be removed from drafts.
+		if(isset($_REQUEST['removeAttachment']) && !empty($_REQUEST['removeAttachment'])) {
+			$exRemoved = explode('::', $_REQUEST['removeAttachment']);
+			foreach($exRemoved as $noteId) {
+				$q = 'UPDATE notes SET deleted = 1 WHERE id = \''.$noteId.'\'';
+				$this->db->query($q);
+			}
+		}
 		////	END REMOVE ATTACHMENTS
 		///////////////////////////////////////////////////////////////////////////
 	}
@@ -1948,26 +1956,26 @@ class Email extends SugarBean {
 
 		// ssl or tcp - keeping outside isSMTP b/c a default may inadvertantly set ssl://
 		$mail->protocol = ($oe->mail_smtpssl) ? "ssl://" : "tcp://";
-        if($oe->mail_sendtype == "SMTP")
-        {
-    		//Set mail send type information
-    		$mail->Mailer = "smtp";
-    		$mail->Host = $oe->mail_smtpserver;
-    		$mail->Port = $oe->mail_smtpport;
-            if ($oe->mail_smtpssl == 1) {
-                $mail->SMTPSecure = 'ssl';
-            } // if
-            if ($oe->mail_smtpssl == 2) {
-                $mail->SMTPSecure = 'tls';
-            } // if
+		if($oe->mail_sendtype == "SMTP")
+		{
+			//Set mail send type information
+			$mail->Mailer = "smtp";
+			$mail->Host = $oe->mail_smtpserver;
+			$mail->Port = $oe->mail_smtpport;
+			if ($oe->mail_smtpssl == 1) {
+				$mail->SMTPSecure = 'ssl';
+			} // if
+			if ($oe->mail_smtpssl == 2) {
+				$mail->SMTPSecure = 'tls';
+			} // if
 
-    		if($oe->mail_smtpauth_req) {
-    			$mail->SMTPAuth = TRUE;
-    			$mail->Username = $oe->mail_smtpuser;
-    			$mail->Password = $oe->mail_smtppass;
-    		}
-        }
-        else
+			if($oe->mail_smtpauth_req) {
+				$mail->SMTPAuth = TRUE;
+				$mail->Username = $oe->mail_smtpuser;
+				$mail->Password = $oe->mail_smtppass;
+			}
+		}
+		else
 			$mail->Mailer = "sendmail";
 
 		$mail->oe = $oe;
@@ -1986,12 +1994,12 @@ class Email extends SugarBean {
 		// the if() below is HIGHLY dependent on the Javascript unchecking the Send HTML Email box
 		// HTML email
 		if( (isset($_REQUEST['setEditor']) /* from Email EditView navigation */
-			&& $_REQUEST['setEditor'] == 1
-			&& trim($_REQUEST['description_html']) != '')
-			|| trim($this->description_html) != '' /* from email templates */
-            && $current_user->getPreference('email_editor_option', 'global') !== 'plain' //user preference is not set to plain text
-		) {
-		    $this->handleBodyInHTMLformat($mail);
+					&& $_REQUEST['setEditor'] == 1
+					&& trim($_REQUEST['description_html']) != '')
+				|| trim($this->description_html) != '' /* from email templates */
+				&& $current_user->getPreference('email_editor_option', 'global') !== 'plain' //user preference is not set to plain text
+		  ) {
+			$this->handleBodyInHTMLformat($mail);
 		} else {
 			// plain text only
 			$this->description_html = '';
@@ -2001,7 +2009,7 @@ class Email extends SugarBean {
 			$plainText = str_replace("</p>", "</p><br />", $plainText);
 			$plainText = strip_tags(br2nl($plainText));
 			$plainText = str_replace("&amp;", "&", $plainText);
-            $plainText = str_replace("&#39;", "'", $plainText);
+			$plainText = str_replace("&#39;", "'", $plainText);
 			$mail->Body = wordwrap($plainText, 996);
 			$mail->Body = $this->decodeDuringSend($mail->Body);
 			$this->description = $mail->Body;
@@ -2057,7 +2065,7 @@ class Email extends SugarBean {
 		global $current_user;
 		global $sugar_config;
 		global $locale;
-        $OBCharset = $locale->getPrecedentPreference('default_email_charset');
+		$OBCharset = $locale->getPrecedentPreference('default_email_charset');
 		$mail = new SugarPHPMailer();
 
 		foreach ($this->to_addrs_arr as $addr_arr) {
@@ -2142,18 +2150,18 @@ class Email extends SugarBean {
 
 			// strip out the "Email attachment label if exists
 			$filename = str_replace($mod_strings['LBL_EMAIL_ATTACHMENT'].': ', '', $filename);
-            $file_ext = pathinfo($filename, PATHINFO_EXTENSION);
+			$file_ext = pathinfo($filename, PATHINFO_EXTENSION);
 			//is attachment in our list of bad files extensions?  If so, append .txt to file location
 			//check to see if this is a file with extension located in "badext"
 			foreach($sugar_config['upload_badext'] as $badExt) {
-		       	if(strtolower($file_ext) == strtolower($badExt)) {
-			       	//if found, then append with .txt to filename and break out of lookup
-			       	//this will make sure that the file goes out with right extension, but is stored
-			       	//as a text in db.
-			        $file_location = $file_location . ".txt";
-			        break; // no need to look for more
-		       	}
-	        }
+				if(strtolower($file_ext) == strtolower($badExt)) {
+					//if found, then append with .txt to filename and break out of lookup
+					//this will make sure that the file goes out with right extension, but is stored
+					//as a text in db.
+					$file_location = $file_location . ".txt";
+					break; // no need to look for more
+				}
+			}
 			$mail->AddAttachment($file_location,$locale->translateCharsetMIME(trim($filename), 'UTF-8', $OBCharset), 'base64', $mime_type);
 
 			// embedded Images
@@ -2188,9 +2196,9 @@ class Email extends SugarBean {
 			$GLOBALS['log']->debug(' --------------------- buh bye -- sent successful');
 			////	END INBOUND EMAIL HANDLING
 			///////////////////////////////////////////////////////////////////
-  			return true;
+			return true;
 		}
-	    $GLOBALS['log']->debug($app_strings['LBL_EMAIL_ERROR_PREPEND'].$mail->ErrorInfo);
+		$GLOBALS['log']->debug($app_strings['LBL_EMAIL_ERROR_PREPEND'].$mail->ErrorInfo);
 		return false;
 	}
 
@@ -2241,40 +2249,40 @@ class Email extends SugarBean {
 	}
 
 
-    function create_new_list_query(
-				$order_by,
-				$where,
-				$filter = array(),
-				$params = array(),
-				$show_deleted = 0,
-				$join_type = '',
-				$return_array = false,
-				$parentbean = null,
-				$singleSelect = false,
-				$ifListForExport = false)
+	function create_new_list_query(
+			$order_by,
+			$where,
+			$filter = array(),
+			$params = array(),
+			$show_deleted = 0,
+			$join_type = '',
+			$return_array = false,
+			$parentbean = null,
+			$singleSelect = false,
+			$ifListForExport = false)
 	{
 		if($return_array)
 		{
 			return parent::create_new_list_query($order_by, $where,$filter,$params, $show_deleted,$join_type, $return_array,$parentbean, $singleSelect, $ifListForExport);
 		}
-        $custom_join = $this->getCustomJoin();
+		$custom_join = $this->getCustomJoin();
 
 		$query = "SELECT ".$this->table_name.".*, users.user_name as assigned_user_name\n";
 
-        $query .= $custom_join['select'];
-    	$query .= " FROM emails\n";
-    	if($where != "" && (strpos($where, "contacts.first_name") > 0))
+		$query .= $custom_join['select'];
+		$query .= " FROM emails\n";
+		if($where != "" && (strpos($where, "contacts.first_name") > 0))
 		{
 			$query .= " LEFT JOIN emails_beans ON emails.id = emails_beans.email_id\n";
-    	}
+		}
 
-    	$query .= " LEFT JOIN users ON emails.assigned_user_id=users.id \n";
-    	if ($where != "" && (strpos($where, "contacts.first_name") > 0))  {
+		$query .= " LEFT JOIN users ON emails.assigned_user_id=users.id \n";
+		if ($where != "" && (strpos($where, "contacts.first_name") > 0))  {
 
-        $query .= " JOIN contacts ON contacts.id= emails_beans.bean_id AND emails_beans.bean_module='Contacts' and contacts.deleted=0 \n";
-    	}
+			$query .= " JOIN contacts ON contacts.id= emails_beans.bean_id AND emails_beans.bean_module='Contacts' and contacts.deleted=0 \n";
+		}
 
-        $query .= $custom_join['join'];
+		$query .= $custom_join['join'];
 
 		if($show_deleted == 0) {
 			$where_auto = " emails.deleted=0 \n";
@@ -2282,7 +2290,7 @@ class Email extends SugarBean {
 			$where_auto = " emails.deleted=1 \n";
 		}
 
-        if($where != "")
+		if($where != "")
 			$query .= "WHERE $where AND ".$where_auto;
 		else
 			$query .= "WHERE ".$where_auto;
@@ -2293,7 +2301,7 @@ class Email extends SugarBean {
 			$query .= " ORDER BY date_sent DESC";
 
 		return $query;
-    } // fn
+	} // fn
 
 
 	function fill_in_additional_list_fields() {
@@ -2308,18 +2316,18 @@ class Email extends SugarBean {
 
 		$row = $this->db->fetchByAssoc($result);
 
-        if ($row) {
-            $this->attachment_image = SugarThemeRegistry::current()->getImage(
-                'attachment',
-                '',
-                null,
-                null,
-                '.gif',
-                translate('LBL_ATTACHMENT', 'Emails')
-            );
-        } else {
-            $this->attachment_image = '';
-        }
+		if ($row) {
+			$this->attachment_image = SugarThemeRegistry::current()->getImage(
+					'attachment',
+					'',
+					null,
+					null,
+					'.gif',
+					translate('LBL_ATTACHMENT', 'Emails')
+					);
+		} else {
+			$this->attachment_image = '';
+		}
 
 		///////////////////////////////////////////////////////////////////////
 		if(empty($this->contact_id) && !empty($this->parent_id) && !empty($this->parent_type) && $this->parent_type === 'Contacts' && !empty($this->parent_name) ){
@@ -2333,45 +2341,45 @@ class Email extends SugarBean {
 		// Fill in the assigned_user_name
 		$this->assigned_user_name = get_assigned_user_name($this->assigned_user_id, '');
 		//if ($this->parent_type == 'Contacts') {
-			$query  = "SELECT contacts.first_name, contacts.last_name, contacts.phone_work, contacts.id, contacts.assigned_user_id contact_name_owner, 'Contacts' contact_name_mod FROM contacts, emails_beans ";
-			$query .= "WHERE emails_beans.email_id='$this->id' AND emails_beans.bean_id=contacts.id AND emails_beans.bean_module = 'Contacts' AND emails_beans.deleted=0 AND contacts.deleted=0";
-			if(!empty($this->parent_id)){
-				$query .= " AND contacts.id= '".$this->parent_id."' ";
-			}else if(!empty($_REQUEST['record'])){
-				$query .= " AND contacts.id= '".$_REQUEST['record']."' ";
-			}
-			$result =$this->db->query($query,true," Error filling in additional detail fields: ");
+		$query  = "SELECT contacts.first_name, contacts.last_name, contacts.phone_work, contacts.id, contacts.assigned_user_id contact_name_owner, 'Contacts' contact_name_mod FROM contacts, emails_beans ";
+		$query .= "WHERE emails_beans.email_id='$this->id' AND emails_beans.bean_id=contacts.id AND emails_beans.bean_module = 'Contacts' AND emails_beans.deleted=0 AND contacts.deleted=0";
+		if(!empty($this->parent_id)){
+			$query .= " AND contacts.id= '".$this->parent_id."' ";
+		}else if(!empty($_REQUEST['record'])){
+			$query .= " AND contacts.id= '".$_REQUEST['record']."' ";
+		}
+		$result =$this->db->query($query,true," Error filling in additional detail fields: ");
 
-			// Get the id and the name.
-			$row = $this->db->fetchByAssoc($result);
-			if($row != null)
-			{
+		// Get the id and the name.
+		$row = $this->db->fetchByAssoc($result);
+		if($row != null)
+		{
 
-				$contact = new Contact();
-				$contact->retrieve($row['id']);
-				$this->contact_name = $contact->full_name;
-				$this->contact_phone = $row['phone_work'];
-				$this->contact_id = $row['id'];
-				$this->contact_email = $contact->emailAddress->getPrimaryAddress($contact);
-				$this->contact_name_owner = $row['contact_name_owner'];
-				$this->contact_name_mod = $row['contact_name_mod'];
-				$GLOBALS['log']->debug("Call($this->id): contact_name = $this->contact_name");
-				$GLOBALS['log']->debug("Call($this->id): contact_phone = $this->contact_phone");
-				$GLOBALS['log']->debug("Call($this->id): contact_id = $this->contact_id");
-				$GLOBALS['log']->debug("Call($this->id): contact_email1 = $this->contact_email");
-			}
-			else {
-				$this->contact_name = '';
-				$this->contact_phone = '';
-				$this->contact_id = '';
-				$this->contact_email = '';
-				$this->contact_name_owner = '';
-				$this->contact_name_mod = '';
-				$GLOBALS['log']->debug("Call($this->id): contact_name = $this->contact_name");
-				$GLOBALS['log']->debug("Call($this->id): contact_phone = $this->contact_phone");
-				$GLOBALS['log']->debug("Call($this->id): contact_id = $this->contact_id");
-				$GLOBALS['log']->debug("Call($this->id): contact_email1 = $this->contact_email");
-			}
+			$contact = new Contact();
+			$contact->retrieve($row['id']);
+			$this->contact_name = $contact->full_name;
+			$this->contact_phone = $row['phone_work'];
+			$this->contact_id = $row['id'];
+			$this->contact_email = $contact->emailAddress->getPrimaryAddress($contact);
+			$this->contact_name_owner = $row['contact_name_owner'];
+			$this->contact_name_mod = $row['contact_name_mod'];
+			$GLOBALS['log']->debug("Call($this->id): contact_name = $this->contact_name");
+			$GLOBALS['log']->debug("Call($this->id): contact_phone = $this->contact_phone");
+			$GLOBALS['log']->debug("Call($this->id): contact_id = $this->contact_id");
+			$GLOBALS['log']->debug("Call($this->id): contact_email1 = $this->contact_email");
+		}
+		else {
+			$this->contact_name = '';
+			$this->contact_phone = '';
+			$this->contact_id = '';
+			$this->contact_email = '';
+			$this->contact_name_owner = '';
+			$this->contact_name_mod = '';
+			$GLOBALS['log']->debug("Call($this->id): contact_name = $this->contact_name");
+			$GLOBALS['log']->debug("Call($this->id): contact_phone = $this->contact_phone");
+			$GLOBALS['log']->debug("Call($this->id): contact_id = $this->contact_id");
+			$GLOBALS['log']->debug("Call($this->id): contact_email1 = $this->contact_email");
+		}
 		//}
 		$this->created_by_name = get_assigned_user_name($this->created_by);
 		$this->modified_by_name = get_assigned_user_name($this->modified_user_id);
@@ -2405,37 +2413,37 @@ class Email extends SugarBean {
 
 
 	function create_export_query(&$order_by, &$where, $relate_link_join = '')
-    {
+	{
 		$contact_required = stristr($where, "contacts");
 		$custom_join = $this->getCustomJoin(true, true, $where);
 
 		if($contact_required) {
 			$query = "SELECT emails.*, contacts.first_name, contacts.last_name";
-            $query .= $custom_join['select'];
+			$query .= $custom_join['select'];
 
 			$query .= " FROM contacts, emails, emails_contacts ";
 			$where_auto = "emails_contacts.contact_id = contacts.id AND emails_contacts.email_id = emails.id AND emails.deleted=0 AND contacts.deleted=0";
 		} else {
 			$query = 'SELECT emails.*';
-            $query .= $custom_join['select'];
+			$query .= $custom_join['select'];
 
-            $query .= ' FROM emails ';
-            $where_auto = "emails.deleted=0";
+			$query .= ' FROM emails ';
+			$where_auto = "emails.deleted=0";
 		}
 
-        $query .= $custom_join['join'];
+		$query .= $custom_join['join'];
 
 		if($where != "")
 			$query .= "where $where AND ".$where_auto;
-        else
+		else
 			$query .= "where ".$where_auto;
 
-        if($order_by != "")
+		if($order_by != "")
 			$query .= " ORDER BY $order_by";
-        else
+		else
 			$query .= " ORDER BY emails.name";
-        return $query;
-    }
+		return $query;
+	}
 
 	function get_list_view_data() {
 		global $app_list_strings;
@@ -2461,36 +2469,36 @@ class Email extends SugarBean {
 			switch($this->intent) {
 				case 'support':
 					$email_fields['CREATE_RELATED'] = '<a href="index.php?module=Cases&action=EditView&inbound_email_id='.$this->id.'" >' . SugarThemeRegistry::current()->getImage('CreateCases', 'border="0"', null, null, ".gif", $mod_strings['LBL_CREATE_CASES']).$mod_strings['LBL_CREATE_CASE'].'</a>';
-				break;
+					break;
 
 				case 'sales':
 					$email_fields['CREATE_RELATED'] = '<a href="index.php?module=Leads&action=EditView&inbound_email_id='.$this->id.'" >'.SugarThemeRegistry::current()->getImage('CreateLeads', 'border="0"', null, null, ".gif", $mod_strings['LBL_CREATE_LEADS']).$mod_strings['LBL_CREATE_LEAD'].'</a>';
-				break;
+					break;
 
 				case 'contact':
 					$email_fields['CREATE_RELATED'] = '<a href="index.php?module=Contacts&action=EditView&inbound_email_id='.$this->id.'" >'.SugarThemeRegistry::current()->getImage('CreateContacts', 'border="0"', null, null, ".gif", $mod_strings['LBL_CREATE_CONTACTS']).$mod_strings['LBL_CREATE_CONTACT'].'</a>';
-				break;
+					break;
 
 				case 'bug':
 					$email_fields['CREATE_RELATED'] = '<a href="index.php?module=Bugs&action=EditView&inbound_email_id='.$this->id.'" >'.SugarThemeRegistry::current()->getImage('CreateBugs', 'border="0"', null, null, ".gif", $mod_strings['LBL_CREATE_BUGS']).$mod_strings['LBL_CREATE_BUG'].'</a>';
-				break;
+					break;
 
 				case 'task':
 					$email_fields['CREATE_RELATED'] = '<a href="index.php?module=Tasks&action=EditView&inbound_email_id='.$this->id.'" >'.SugarThemeRegistry::current()->getImage('CreateTasks', 'border="0"', null, null, ".gif", $mod_strings['LBL_CREATE_TASKS']).$mod_strings['LBL_CREATE_TASK'].'</a>';
-				break;
+					break;
 
 				case 'bounce':
-				break;
+					break;
 
 				case 'pick':
-				// break;
+					// break;
 
 				case 'info':
-				//break;
+					//break;
 
 				default:
 					$email_fields['CREATE_RELATED'] = $this->quickCreateForm();
-				break;
+					break;
 			}
 
 		}
@@ -2501,28 +2509,28 @@ class Email extends SugarBean {
 		$email_fields['ATTACHMENT_IMAGE']	= $this->attachment_image;
 		$email_fields['LINK_ACTION']		= $this->link_action;
 
-    	if(isset($this->type_name))
-	      	$email_fields['TYPE_NAME'] = $this->type_name;
+		if(isset($this->type_name))
+			$email_fields['TYPE_NAME'] = $this->type_name;
 
 		return $email_fields;
 	}
 
-    function quickCreateForm() {
-        global $mod_strings, $app_strings, $currentModule, $current_language;
+	function quickCreateForm() {
+		global $mod_strings, $app_strings, $currentModule, $current_language;
 
-        // Coming from the home page via Dashlets
-        if($currentModule != 'Email')
-        	$mod_strings = return_module_language($current_language, 'Emails');
-        return $mod_strings['LBL_QUICK_CREATE']."&nbsp;<a id='$this->id' onclick='return quick_create_overlib(\"{$this->id}\", \"".SugarThemeRegistry::current()->__toString()."\", this);' href=\"#\" >".SugarThemeRegistry::current()->getImage("advanced_search","border='0' align='absmiddle'", null,null,'.gif',$mod_strings['LBL_QUICK_CREATE'])."</a>";
-    }
+		// Coming from the home page via Dashlets
+		if($currentModule != 'Email')
+			$mod_strings = return_module_language($current_language, 'Emails');
+		return $mod_strings['LBL_QUICK_CREATE']."&nbsp;<a id='$this->id' onclick='return quick_create_overlib(\"{$this->id}\", \"".SugarThemeRegistry::current()->__toString()."\", this);' href=\"#\" >".SugarThemeRegistry::current()->getImage("advanced_search","border='0' align='absmiddle'", null,null,'.gif',$mod_strings['LBL_QUICK_CREATE'])."</a>";
+	}
 
-    /**
-     * Searches all imported emails and returns the result set as an array.
-     *
-     */
-    function searchImportedEmails($sort = '', $direction='')
-    {
-       	require_once('include/TimeDate.php');
+	/**
+	 * Searches all imported emails and returns the result set as an array.
+	 *
+	 */
+	function searchImportedEmails($sort = '', $direction='')
+	{
+		require_once('include/TimeDate.php');
 		global $timedate;
 		global $current_user;
 		global $beanList;
@@ -2533,46 +2541,46 @@ class Email extends SugarBean {
 		// cn: default to a low number until user specifies otherwise
 		if(empty($emailSettings['showNumInList']))
 			$pageSize = 20;
-        else
-            $pageSize = $emailSettings['showNumInList'];
+		else
+			$pageSize = $emailSettings['showNumInList'];
 
-        if( isset($_REQUEST['start']) && isset($_REQUEST['limit']) )
-	       $page = ceil($_REQUEST['start'] / $_REQUEST['limit']) + 1;
-	    else
-	       $page = 1;
+		if( isset($_REQUEST['start']) && isset($_REQUEST['limit']) )
+			$page = ceil($_REQUEST['start'] / $_REQUEST['limit']) + 1;
+		else
+			$page = 1;
 
-	     //Determine sort ordering
+		//Determine sort ordering
 
-	     //Sort ordering parameters in the request do not coincide with actual column names
-	     //so we need to remap them.
-	     $hrSortLocal = array(
-            'flagged' => 'type',
-            'status'  => 'reply_to_status',
-            'from'    => 'emails_text.from_addr',
-            'subject' => 'name',
-            'date'    => 'date_sent',
-            'AssignedTo' => 'assigned_user_id',
-            'flagged' => 'flagged'
-        );
+		//Sort ordering parameters in the request do not coincide with actual column names
+		//so we need to remap them.
+		$hrSortLocal = array(
+				'flagged' => 'type',
+				'status'  => 'reply_to_status',
+				'from'    => 'emails_text.from_addr',
+				'subject' => 'name',
+				'date'    => 'date_sent',
+				'AssignedTo' => 'assigned_user_id',
+				'flagged' => 'flagged'
+				);
 
-	     $sort = !empty($_REQUEST['sort']) ? $this->db->getValidDBName($_REQUEST['sort']) : "";
-         $direction = !empty($_REQUEST['dir'])  && in_array(strtolower($_REQUEST['dir']), array("asc", "desc")) ? $_REQUEST['dir'] : "";
+		$sort = !empty($_REQUEST['sort']) ? $this->db->getValidDBName($_REQUEST['sort']) : "";
+		$direction = !empty($_REQUEST['dir'])  && in_array(strtolower($_REQUEST['dir']), array("asc", "desc")) ? $_REQUEST['dir'] : "";
 
-         $order = ( !empty($sort) && !empty($direction) ) ? " ORDER BY {$hrSortLocal[$sort]} {$direction}" : "";
+		$order = ( !empty($sort) && !empty($direction) ) ? " ORDER BY {$hrSortLocal[$sort]} {$direction}" : "";
 
-         //Get our main query.
+		//Get our main query.
 		$fullQuery = $this->_genereateSearchImportedEmailsQuery();
 
 		//Perform a count query needed for pagination.
 		$countQuery = $this->create_list_count_query($fullQuery);
-		
+
 		$count_rs = $this->db->query($countQuery, false, 'Error executing count query for imported emails search');
 		$count_row = $this->db->fetchByAssoc($count_rs);
 		$total_count = ($count_row != null) ? $count_row['c'] : 0;
 
-        $start = ($page - 1) * $pageSize;
+		$start = ($page - 1) * $pageSize;
 
-        //Execute the query
+		//Execute the query
 		$rs = $this->db->limitQuery($fullQuery . $order, $start, $pageSize);
 
 		$return = array();
@@ -2596,12 +2604,12 @@ class Email extends SugarBean {
 			$temp['from']	= preg_replace('/[\x00-\x08\x0B-\x1F]/', '', $a['from_addr']);
 			if( empty($temp['from']) || empty($temp['to_addrs']) )
 			{
-    			//Retrieve email addresses seperatly.
-    			$tmpEmail = new Email();
-    			$tmpEmail->id = $a['id'];
-    			$tmpEmail->retrieveEmailAddresses();
-    			$temp['from'] = $tmpEmail->from_addr;
-    			$temp['to_addrs'] = $tmpEmail->to_addrs;
+				//Retrieve email addresses seperatly.
+				$tmpEmail = new Email();
+				$tmpEmail->id = $a['id'];
+				$tmpEmail->retrieveEmailAddresses();
+				$temp['from'] = $tmpEmail->from_addr;
+				$temp['to_addrs'] = $tmpEmail->to_addrs;
 			}
 
 			$return[] = $temp;
@@ -2612,142 +2620,142 @@ class Email extends SugarBean {
 		$metadata['out'] = $return;
 
 		return $metadata;
-    }
-
-    /**
-     * Determine if an imported email has an attachment by examining the relationship to notes.
-     *
-     * @param string $id
-     * @return boolean
-     */
-    function doesImportedEmailHaveAttachment($id)
-	{
-	   $hasAttachment = FALSE;
-	   $query = "SELECT id FROM notes where parent_id='$id' AND parent_type='Emails' AND file_mime_type is not null AND deleted=0";
-	   $rs = $this->db->limitQuery($query, 0, 1);
-	   $row = $this->db->fetchByAssoc($rs);
-	   if( !empty($row['id']) )
-	       $hasAttachment = TRUE;
-
-	   return (int) $hasAttachment;
 	}
 
-    /**
-     * Generate the query used for searching imported emails.
-     *
-     * @return String Query to be executed.
-     */
-    function _genereateSearchImportedEmailsQuery()
-    {
+	/**
+	 * Determine if an imported email has an attachment by examining the relationship to notes.
+	 *
+	 * @param string $id
+	 * @return boolean
+	 */
+	function doesImportedEmailHaveAttachment($id)
+	{
+		$hasAttachment = FALSE;
+		$query = "SELECT id FROM notes where parent_id='$id' AND parent_type='Emails' AND file_mime_type is not null AND deleted=0";
+		$rs = $this->db->limitQuery($query, 0, 1);
+		$row = $this->db->fetchByAssoc($rs);
+		if( !empty($row['id']) )
+			$hasAttachment = TRUE;
+
+		return (int) $hasAttachment;
+	}
+
+	/**
+	 * Generate the query used for searching imported emails.
+	 *
+	 * @return String Query to be executed.
+	 */
+	function _genereateSearchImportedEmailsQuery()
+	{
 		global $timedate;
 
-        $additionalWhereClause = $this->_generateSearchImportWhereClause();
+		$additionalWhereClause = $this->_generateSearchImportWhereClause();
 
-        $query = array();
-        $fullQuery = "";
-        $query['select'] = "emails.id , emails.mailbox_id, emails.name, emails.date_sent, emails.status, emails.type, emails.flagged, emails.reply_to_status,
-		                      emails_text.from_addr, emails_text.to_addrs  FROM emails ";
+		$query = array();
+		$fullQuery = "";
+		$query['select'] = "emails.id , emails.mailbox_id, emails.name, emails.date_sent, emails.status, emails.type, emails.flagged, emails.reply_to_status,
+			emails_text.from_addr, emails_text.to_addrs  FROM emails ";
 
-        $query['joins'] = " JOIN emails_text on emails.id = emails_text.email_id ";
+		$query['joins'] = " JOIN emails_text on emails.id = emails_text.email_id ";
 
-        //Handle from and to addr joins
-        if( !empty($_REQUEST['from_addr']) )
-        {
-            $from_addr = $this->db->quote(strtolower($_REQUEST['from_addr']));
-            $query['joins'] .= "INNER JOIN emails_email_addr_rel er_from ON er_from.email_id = emails.id AND er_from.deleted = 0 INNER JOIN email_addresses ea_from ON ea_from.id = er_from.email_address_id
-                                AND er_from.address_type='from' AND emails_text.from_addr LIKE '%" . $from_addr . "%'";
-        }
+		//Handle from and to addr joins
+		if( !empty($_REQUEST['from_addr']) )
+		{
+			$from_addr = $this->db->quote(strtolower($_REQUEST['from_addr']));
+			$query['joins'] .= "INNER JOIN emails_email_addr_rel er_from ON er_from.email_id = emails.id AND er_from.deleted = 0 INNER JOIN email_addresses ea_from ON ea_from.id = er_from.email_address_id
+				AND er_from.address_type='from' AND emails_text.from_addr LIKE '%" . $from_addr . "%'";
+		}
 
-        if( !empty($_REQUEST['to_addrs'])  )
-        {
-            $to_addrs = $this->db->quote(strtolower($_REQUEST['to_addrs']));
-            $query['joins'] .= "INNER JOIN emails_email_addr_rel er_to ON er_to.email_id = emails.id AND er_to.deleted = 0 INNER JOIN email_addresses ea_to ON ea_to.id = er_to.email_address_id
-                                    AND er_to.address_type='to' AND ea_to.email_address LIKE '%" . $to_addrs . "%'";
-        }
+		if( !empty($_REQUEST['to_addrs'])  )
+		{
+			$to_addrs = $this->db->quote(strtolower($_REQUEST['to_addrs']));
+			$query['joins'] .= "INNER JOIN emails_email_addr_rel er_to ON er_to.email_id = emails.id AND er_to.deleted = 0 INNER JOIN email_addresses ea_to ON ea_to.id = er_to.email_address_id
+				AND er_to.address_type='to' AND ea_to.email_address LIKE '%" . $to_addrs . "%'";
+		}
 
-        $query['where'] = " WHERE (emails.type= 'inbound' OR emails.type='archived' OR emails.type='out') AND emails.deleted = 0 ";
+		$query['where'] = " WHERE (emails.type= 'inbound' OR emails.type='archived' OR emails.type='out') AND emails.deleted = 0 ";
 		if( !empty($additionalWhereClause) )
-    	    $query['where'] .= "AND $additionalWhereClause";
+			$query['where'] .= "AND $additionalWhereClause";
 
-    	//If we are explicitly looking for attachments.  Do not use a distinct query as the to_addr is defined
-    	//as a text which equals clob in oracle and the distinct query can not be executed correctly.
-    	$addDistinctKeyword = "";
-        if( !empty($_REQUEST['attachmentsSearch']) &&  $_REQUEST['attachmentsSearch'] == 1) //1 indicates yes
-            $query['where'] .= " AND EXISTS ( SELECT id FROM notes n WHERE n.parent_id = emails.id AND n.deleted = 0 AND n.filename is not null )";
-        else if( !empty($_REQUEST['attachmentsSearch']) &&  $_REQUEST['attachmentsSearch'] == 2 )
-             $query['where'] .= " AND NOT EXISTS ( SELECT id FROM notes n WHERE n.parent_id = emails.id AND n.deleted = 0 AND n.filename is not null )";
+		//If we are explicitly looking for attachments.  Do not use a distinct query as the to_addr is defined
+		//as a text which equals clob in oracle and the distinct query can not be executed correctly.
+		$addDistinctKeyword = "";
+		if( !empty($_REQUEST['attachmentsSearch']) &&  $_REQUEST['attachmentsSearch'] == 1) //1 indicates yes
+			$query['where'] .= " AND EXISTS ( SELECT id FROM notes n WHERE n.parent_id = emails.id AND n.deleted = 0 AND n.filename is not null )";
+		else if( !empty($_REQUEST['attachmentsSearch']) &&  $_REQUEST['attachmentsSearch'] == 2 )
+			$query['where'] .= " AND NOT EXISTS ( SELECT id FROM notes n WHERE n.parent_id = emails.id AND n.deleted = 0 AND n.filename is not null )";
 
-        $fullQuery = "SELECT " . $query['select'] . " " . $query['joins'] . " " . $query['where'];
-        
-        return $fullQuery;
-    }
-        /**
-     * Generate the where clause for searching imported emails.
-     *
-     */
-    function _generateSearchImportWhereClause()
-    {
-        global $timedate;
+		$fullQuery = "SELECT " . $query['select'] . " " . $query['joins'] . " " . $query['where'];
 
-        //The clear button was removed so if a user removes the asisgned user name, do not process the id.
-        if( empty($_REQUEST['assigned_user_name']) && !empty($_REQUEST['assigned_user_id'])  )
-            unset($_REQUEST['assigned_user_id']);
+		return $fullQuery;
+	}
+	/**
+	 * Generate the where clause for searching imported emails.
+	 *
+	 */
+	function _generateSearchImportWhereClause()
+	{
+		global $timedate;
 
-        $availableSearchParam = array('name' => array('table_name' =>'emails'),
-                                      'data_parent_id_search' => array('table_name' =>'emails','db_key' => 'parent_id','opp' => '='),
-                                      'assigned_user_id' => array('table_name' => 'emails', 'opp' => '=') );
+		//The clear button was removed so if a user removes the asisgned user name, do not process the id.
+		if( empty($_REQUEST['assigned_user_name']) && !empty($_REQUEST['assigned_user_id'])  )
+			unset($_REQUEST['assigned_user_id']);
+
+		$availableSearchParam = array('name' => array('table_name' =>'emails'),
+				'data_parent_id_search' => array('table_name' =>'emails','db_key' => 'parent_id','opp' => '='),
+				'assigned_user_id' => array('table_name' => 'emails', 'opp' => '=') );
 
 		$additionalWhereClause = array();
 		foreach ($availableSearchParam as $key => $properties)
 		{
-		      if( !empty($_REQUEST[$key]) )
-		      {
-		          $db_key =  isset($properties['db_key']) ? $properties['db_key'] : $key;
-                  $searchValue = $this->db->quote($_REQUEST[$key]);
+			if( !empty($_REQUEST[$key]) )
+			{
+				$db_key =  isset($properties['db_key']) ? $properties['db_key'] : $key;
+				$searchValue = $this->db->quote($_REQUEST[$key]);
 
-		          $opp = isset($properties['opp']) ? $properties['opp'] : 'like';
-		          if($opp == 'like')
-		              $searchValue = "%" . $searchValue . "%";
+				$opp = isset($properties['opp']) ? $properties['opp'] : 'like';
+				if($opp == 'like')
+					$searchValue = "%" . $searchValue . "%";
 
-		          $additionalWhereClause[] = "{$properties['table_name']}.$db_key $opp '$searchValue' ";
-		      }
-        }
-        
-        
+				$additionalWhereClause[] = "{$properties['table_name']}.$db_key $opp '$searchValue' ";
+			}
+		}
 
-        $isDateFromSearchSet = !empty($_REQUEST['searchDateFrom']);
-        $isdateToSearchSet = !empty($_REQUEST['searchDateTo']);
-        $bothDateRangesSet = $isDateFromSearchSet & $isdateToSearchSet;
 
-        //Hanlde date from and to separately
-        if($bothDateRangesSet)
-        {
-            $dbFormatDateFrom = $timedate->to_db_date($_REQUEST['searchDateFrom'], false);
-            $dbFormatDateFrom = db_convert("'" . $dbFormatDateFrom . "'",'datetime');
 
-            $dbFormatDateTo = $timedate->to_db_date($_REQUEST['searchDateTo'], false);
-            $dbFormatDateTo = db_convert("'" . $dbFormatDateTo . "'",'datetime');
+		$isDateFromSearchSet = !empty($_REQUEST['searchDateFrom']);
+		$isdateToSearchSet = !empty($_REQUEST['searchDateTo']);
+		$bothDateRangesSet = $isDateFromSearchSet & $isdateToSearchSet;
 
-            $additionalWhereClause[] = "( emails.date_sent >= $dbFormatDateFrom AND
-                                          emails.date_sent <= $dbFormatDateTo )";
-        }
-        elseif ($isdateToSearchSet)
-        {
-            $dbFormatDateTo = $timedate->to_db_date($_REQUEST['searchDateTo'], false);
-            $dbFormatDateTo = db_convert("'" . $dbFormatDateTo . "'",'datetime');
-            $additionalWhereClause[] = "emails.date_sent <= $dbFormatDateTo ";
-        }
-        elseif ($isDateFromSearchSet)
-        {
-            $dbFormatDateFrom = $timedate->to_db_date($_REQUEST['searchDateFrom'], false);
-            $dbFormatDateFrom = db_convert("'" . $dbFormatDateFrom . "'",'datetime');
-            $additionalWhereClause[] = "emails.date_sent >= $dbFormatDateFrom ";
-        }
+		//Hanlde date from and to separately
+		if($bothDateRangesSet)
+		{
+			$dbFormatDateFrom = $timedate->to_db_date($_REQUEST['searchDateFrom'], false);
+			$dbFormatDateFrom = db_convert("'" . $dbFormatDateFrom . "'",'datetime');
 
-        $additionalWhereClause = implode(" AND ", $additionalWhereClause);
+			$dbFormatDateTo = $timedate->to_db_date($_REQUEST['searchDateTo'], false);
+			$dbFormatDateTo = db_convert("'" . $dbFormatDateTo . "'",'datetime');
 
-        return $additionalWhereClause;
-    }
+			$additionalWhereClause[] = "( emails.date_sent >= $dbFormatDateFrom AND
+				emails.date_sent <= $dbFormatDateTo )";
+		}
+		elseif ($isdateToSearchSet)
+		{
+			$dbFormatDateTo = $timedate->to_db_date($_REQUEST['searchDateTo'], false);
+			$dbFormatDateTo = db_convert("'" . $dbFormatDateTo . "'",'datetime');
+			$additionalWhereClause[] = "emails.date_sent <= $dbFormatDateTo ";
+		}
+		elseif ($isDateFromSearchSet)
+		{
+			$dbFormatDateFrom = $timedate->to_db_date($_REQUEST['searchDateFrom'], false);
+			$dbFormatDateFrom = db_convert("'" . $dbFormatDateFrom . "'",'datetime');
+			$additionalWhereClause[] = "emails.date_sent >= $dbFormatDateFrom ";
+		}
+
+		$additionalWhereClause = implode(" AND ", $additionalWhereClause);
+
+		return $additionalWhereClause;
+	}
 
 
 
@@ -2773,7 +2781,8 @@ class Email extends SugarBean {
 
 
 
-	function distributionForm($where) {
+	function distributionForm($where)
+	{
 		global $app_list_strings;
 		global $app_strings;
 		global $mod_strings;
@@ -2786,129 +2795,129 @@ class Email extends SugarBean {
 
 		$out = '<form name="Distribute" id="Distribute">';
 		$out .= get_form_header($mod_strings['LBL_DIST_TITLE'], '', false);
-		$out .=<<<eoq
-		<script>
+		$out .= <<<eoq
+			<script>
 			enableQS(true);
 		</script>
 eoq;
 		$out .= '
-		<table cellpadding="0" cellspacing="0" width="100%" border="0">
+			<table cellpadding="0" cellspacing="0" width="100%" border="0">
 			<tr>
-				<td>
-					<script type="text/javascript">
+			<td>
+			<script type="text/javascript">
 
 
-						function checkDeps(form) {
-							return;
+			function checkDeps(form) {
+				return;
+			}
+
+		function mySubmit() {
+			var assform = document.getElementById("Distribute");
+			var select = document.getElementById("userSelect");
+			var assign1 = assform.r1.checked;
+			var assign2 = assform.r2.checked;
+			var dist = assform.dm.value;
+			var assign = false;
+			var users = false;
+			var rules = false;
+			var warn1 = "'.$mod_strings['LBL_WARN_NO_USERS'].'";
+			var warn2 = "";
+
+			if(assign1 || assign2) {
+				assign = true;
+
+			}
+
+			for(i=0; i<select.options.length; i++) {
+				if(select.options[i].selected == true) {
+					users = true;
+					warn1 = "";
+				}
+			}
+
+			if(dist != "") {
+				rules = true;
+			} else {
+				warn2 = "'.$mod_strings['LBL_WARN_NO_DIST'].'";
+			}
+
+			if(assign && users && rules) {
+
+				if(document.getElementById("r1").checked) {
+					var mu = document.getElementById("MassUpdate");
+					var grabbed = "";
+
+					for(i=0; i<mu.elements.length; i++) {
+						if(mu.elements[i].type == "checkbox" && mu.elements[i].checked && mu.elements[i].name.value != "massall") {
+							if(grabbed != "") { grabbed += "::"; }
+							grabbed += mu.elements[i].value;
 						}
+					}
+					var formgrab = document.getElementById("grabbed");
+					formgrab.value = grabbed;
+				}
+				assform.submit();
+			} else {
+				alert("'.$mod_strings['LBL_ASSIGN_WARN'].'" + "\n" + warn1 + "\n" + warn2);
+			}
+		}
 
-						function mySubmit() {
-							var assform = document.getElementById("Distribute");
-							var select = document.getElementById("userSelect");
-							var assign1 = assform.r1.checked;
-							var assign2 = assform.r2.checked;
-							var dist = assform.dm.value;
-							var assign = false;
-							var users = false;
-							var rules = false;
-							var warn1 = "'.$mod_strings['LBL_WARN_NO_USERS'].'";
-							var warn2 = "";
+		function submitDelete() {
+			if(document.getElementById("r1").checked) {
+				var mu = document.getElementById("MassUpdate");
+				var grabbed = "";
 
-							if(assign1 || assign2) {
-								assign = true;
+				for(i=0; i<mu.elements.length; i++) {
+					if(mu.elements[i].type == "checkbox" && mu.elements[i].checked && mu.elements[i].name != "massall") {
+						if(grabbed != "") { grabbed += "::"; }
+						grabbed += mu.elements[i].value;
+					}
+				}
+				var formgrab = document.getElementById("grabbed");
+				formgrab.value = grabbed;
+			}
+			if(grabbed == "") {
+				alert("'.$mod_strings['LBL_MASS_DELETE_ERROR'].'");
+			} else {
+				document.getElementById("Distribute").submit();
+			}
+		}
 
-							}
+		</script>
+			<input type="hidden" name="module" value="Emails">
+			<input type="hidden" name="action" id="action">
+			<input type="hidden" name="grabbed" id="grabbed">
 
-							for(i=0; i<select.options.length; i++) {
-								if(select.options[i].selected == true) {
-									users = true;
-									warn1 = "";
-								}
-							}
-
-							if(dist != "") {
-								rules = true;
-							} else {
-								warn2 = "'.$mod_strings['LBL_WARN_NO_DIST'].'";
-							}
-
-							if(assign && users && rules) {
-
-								if(document.getElementById("r1").checked) {
-									var mu = document.getElementById("MassUpdate");
-									var grabbed = "";
-
-									for(i=0; i<mu.elements.length; i++) {
-										if(mu.elements[i].type == "checkbox" && mu.elements[i].checked && mu.elements[i].name.value != "massall") {
-											if(grabbed != "") { grabbed += "::"; }
-											grabbed += mu.elements[i].value;
-										}
-									}
-									var formgrab = document.getElementById("grabbed");
-									formgrab.value = grabbed;
-								}
-								assform.submit();
-							} else {
-								alert("'.$mod_strings['LBL_ASSIGN_WARN'].'" + "\n" + warn1 + "\n" + warn2);
-							}
-						}
-
-						function submitDelete() {
-							if(document.getElementById("r1").checked) {
-								var mu = document.getElementById("MassUpdate");
-								var grabbed = "";
-
-								for(i=0; i<mu.elements.length; i++) {
-									if(mu.elements[i].type == "checkbox" && mu.elements[i].checked && mu.elements[i].name != "massall") {
-										if(grabbed != "") { grabbed += "::"; }
-										grabbed += mu.elements[i].value;
-									}
-								}
-								var formgrab = document.getElementById("grabbed");
-								formgrab.value = grabbed;
-							}
-							if(grabbed == "") {
-								alert("'.$mod_strings['LBL_MASS_DELETE_ERROR'].'");
-							} else {
-								document.getElementById("Distribute").submit();
-							}
-						}
-
-					</script>
-						<input type="hidden" name="module" value="Emails">
-						<input type="hidden" name="action" id="action">
-						<input type="hidden" name="grabbed" id="grabbed">
-
-					<table cellpadding="1" cellspacing="0" width="100%" border="0" class="edit view">
-						<tr height="20">
-							<td scope="col" scope="row" NOWRAP align="center">
-								&nbsp;'.$mod_strings['LBL_ASSIGN_SELECTED_RESULTS_TO'].'&nbsp;';
-					$out .= $this->userSelectTable();
-					$out .=	'</td>
-							<td scope="col" scope="row" NOWRAP align="left">
-								&nbsp;'.$mod_strings['LBL_USING_RULES'].'&nbsp;
-								<select name="distribute_method" id="dm" onChange="checkDeps(this.form);">'.$distribution.'</select>
-							</td>';
+			<table cellpadding="1" cellspacing="0" width="100%" border="0" class="edit view">
+			<tr height="20">
+			<td scope="col" scope="row" NOWRAP align="center">
+			&nbsp;'.$mod_strings['LBL_ASSIGN_SELECTED_RESULTS_TO'].'&nbsp;';
+		$out .= $this->userSelectTable();
+		$out .=	'</td>
+			<td scope="col" scope="row" NOWRAP align="left">
+			&nbsp;'.$mod_strings['LBL_USING_RULES'].'&nbsp;
+		<select name="distribute_method" id="dm" onChange="checkDeps(this.form);">'.$distribution.'</select>
+			</td>';
 
 
-					$out .= '</td>
-							</tr>';
+		$out .= '</td>
+			</tr>';
 
 
-					$out .= '<tr>
-								<td scope="col" width="50%" scope="row" NOWRAP align="right" colspan="2">
-								<input title="'.$mod_strings['LBL_BUTTON_DISTRIBUTE_TITLE'].'"
-									id="dist_button"
-									class="button" onClick="AjaxObject.detailView.handleAssignmentDialogAssignAction();"
-									type="button" name="button"
-									value="  '.$mod_strings['LBL_BUTTON_DISTRIBUTE'].'  ">';
-					$out .= '</tr>
-					</table>
-				</td>
+		$out .= '<tr>
+			<td scope="col" width="50%" scope="row" NOWRAP align="right" colspan="2">
+			<input title="'.$mod_strings['LBL_BUTTON_DISTRIBUTE_TITLE'].'"
+			id="dist_button"
+			class="button" onClick="AjaxObject.detailView.handleAssignmentDialogAssignAction();"
+			type="button" name="button"
+			value="  '.$mod_strings['LBL_BUTTON_DISTRIBUTE'].'  ">';
+		$out .= '</tr>
+			</table>
+			</td>
 			</tr>
-		</table>
-		</form>';
-	return $out;
+			</table>
+			</form>';
+		return $out;
 	}
 
 	function userSelectTable() {
@@ -2936,71 +2945,71 @@ eoq;
 		$out  = '<script type="text/javascript">';
 		$out .= $setTeamUserFunction;
 		$out .= '
-					function setCheckMark() {
-						var select = document.getElementById("userSelect");
+			function setCheckMark() {
+				var select = document.getElementById("userSelect");
 
-						for(i=0 ; i<select.options.length; i++) {
-							if(select.options[i].selected == true) {
-								document.getElementById("checkMark").style.display="";
-								return;
-							}
-						}
-
-						document.getElementById("checkMark").style.display="none";
+				for(i=0 ; i<select.options.length; i++) {
+					if(select.options[i].selected == true) {
+						document.getElementById("checkMark").style.display="";
 						return;
 					}
+				}
 
-					function showUserSelect() {
-						var targetTable = document.getElementById("user_select");
-						targetTable.style.visibility="visible";
-						var userSelectTable = document.getElementById("userSelect");
-						userSelectTable.style.visibility="visible";
-						return;
-					}
-					function hideUserSelect() {
-						var targetTable = document.getElementById("user_select");
-						targetTable.style.visibility="hidden";
-						var userSelectTable = document.getElementById("userSelect");
-						userSelectTable.style.visibility="hidden";
-						return;
-					}
-					function toggleAll(toggle) {
-						if(toggle.checked) {
-							var stat = true;
-						} else {
-							var stat = false;
-						}
-						var form = document.getElementById("userSelect");
-						for(i=0; i<form.options.length; i++) {
-							form.options[i].selected = stat;
-						}
-					}
+				document.getElementById("checkMark").style.display="none";
+				return;
+			}
+
+		function showUserSelect() {
+			var targetTable = document.getElementById("user_select");
+			targetTable.style.visibility="visible";
+			var userSelectTable = document.getElementById("userSelect");
+			userSelectTable.style.visibility="visible";
+			return;
+		}
+		function hideUserSelect() {
+			var targetTable = document.getElementById("user_select");
+			targetTable.style.visibility="hidden";
+			var userSelectTable = document.getElementById("userSelect");
+			userSelectTable.style.visibility="hidden";
+			return;
+		}
+		function toggleAll(toggle) {
+			if(toggle.checked) {
+				var stat = true;
+			} else {
+				var stat = false;
+			}
+			var form = document.getElementById("userSelect");
+			for(i=0; i<form.options.length; i++) {
+				form.options[i].selected = stat;
+			}
+		}
 
 
-				</script>
+		</script>
 			<span id="showUsersDiv" style="position:relative;">
-				<a href="#" id="showUsers" onClick="javascript:showUserSelect();">
-					'.SugarThemeRegistry::current()->getImage('Users', '', null, null, ".gif", $mod_strings['LBL_USERS']).'</a>&nbsp;
-				<a href="#" id="showUsers" onClick="javascript:showUserSelect();">
-					<span style="display:none;" id="checkMark">'.SugarThemeRegistry::current()->getImage('check_inline', 'border="0"', null, null, ".gif", $mod_strings['LBL_CHECK_INLINE']).'</span>
-				</a>
+			<a href="#" id="showUsers" onClick="javascript:showUserSelect();">
+			'.SugarThemeRegistry::current()->getImage('Users', '', null, null, ".gif", $mod_strings['LBL_USERS']).'</a>&nbsp;
+		<a href="#" id="showUsers" onClick="javascript:showUserSelect();">
+			<span style="display:none;" id="checkMark">'.SugarThemeRegistry::current()->getImage('check_inline', 'border="0"', null, null, ".gif", $mod_strings['LBL_CHECK_INLINE']).'</span>
+			</a>
 
 
-				<div id="user_select" style="width:200px;position:absolute;left:2;top:2;visibility:hidden;z-index:1000;">
-				<table cellpadding="0" cellspacing="0" border="0" class="list view">
-					<tr height="20">
-						<td  colspan="'.$colspan.'" id="hiddenhead" onClick="hideUserSelect();" onMouseOver="this.style.border = \'outset red 1px\';" onMouseOut="this.style.border = \'inset white 0px\';this.style.borderBottom = \'inset red 1px\';">
-							<a href="#" onClick="javascript:hideUserSelect();">'.SugarThemeRegistry::current()->getImage('close', 'border="0"', null, null, ".gif", $mod_strings['LBL_CLOSE']).'</a>
-							'.$mod_strings['LBL_USER_SELECT'].'
-						</td>
-					</tr>
-					<tr>';
-//<td valign="middle" height="30"  colspan="'.$colspan.'" id="hiddenhead" onClick="hideUserSelect();" onMouseOver="this.style.border = \'outset red 1px\';" onMouseOut="this.style.border = \'inset white 0px\';this.style.borderBottom = \'inset red 1px\';">
+			<div id="user_select" style="width:200px;position:absolute;left:2;top:2;visibility:hidden;z-index:1000;">
+			<table cellpadding="0" cellspacing="0" border="0" class="list view">
+			<tr height="20">
+			<td  colspan="'.$colspan.'" id="hiddenhead" onClick="hideUserSelect();" onMouseOver="this.style.border = \'outset red 1px\';" onMouseOut="this.style.border = \'inset white 0px\';this.style.borderBottom = \'inset red 1px\';">
+			<a href="#" onClick="javascript:hideUserSelect();">'.SugarThemeRegistry::current()->getImage('close', 'border="0"', null, null, ".gif", $mod_strings['LBL_CLOSE']).'</a>
+			'.$mod_strings['LBL_USER_SELECT'].'
+			</td>
+			</tr>
+			<tr>';
+		//<td valign="middle" height="30"  colspan="'.$colspan.'" id="hiddenhead" onClick="hideUserSelect();" onMouseOver="this.style.border = \'outset red 1px\';" onMouseOut="this.style.border = \'inset white 0px\';this.style.borderBottom = \'inset red 1px\';">
 		$out .=	'		<td style="padding:5px" class="oddListRowS1" bgcolor="#fdfdfd" valign="top" align="left" style="left:0;top:0;">
-							'.$userTable.'
-						</td>
-					</tr>
-				</table></div>
+			'.$userTable.'
+			</td>
+			</tr>
+			</table></div>
 			</span>';
 		return $out;
 	}
@@ -3009,129 +3018,129 @@ eoq;
 		global $theme;
 		global $mod_strings;
 		$out = '<div><input	title="'.$mod_strings['LBL_BUTTON_CHECK_TITLE'].'"
-						class="button"
-						type="button" name="button"
-						onClick="window.location=\'index.php?module=Emails&action=Check&type='.$type.'\';"
-						style="margin-bottom:2px"
-						value="  '.$mod_strings['LBL_BUTTON_CHECK'].'  "></div>';
+			class="button"
+			type="button" name="button"
+			onClick="window.location=\'index.php?module=Emails&action=Check&type='.$type.'\';"
+			style="margin-bottom:2px"
+			value="  '.$mod_strings['LBL_BUTTON_CHECK'].'  "></div>';
 		return $out;
 	}
 
-        /**
-         * Guesses Primary Parent id from From: email address.  Cascades guesses from Accounts to Contacts to Leads to
-         * Users.  This will not affect the many-to-many relationships already constructed as this is, at best,
-         * informational linking.
-         */
-        function fillPrimaryParentFields() {
-                if(empty($this->from_addr))
-                        return;
+	/**
+	 * Guesses Primary Parent id from From: email address.  Cascades guesses from Accounts to Contacts to Leads to
+	 * Users.  This will not affect the many-to-many relationships already constructed as this is, at best,
+	 * informational linking.
+	 */
+	function fillPrimaryParentFields() {
+		if(empty($this->from_addr))
+			return;
 
-                $GLOBALS['log']->debug("*** Email trying to guess Primary Parent from address [ {$this->from_addr} ]");
+		$GLOBALS['log']->debug("*** Email trying to guess Primary Parent from address [ {$this->from_addr} ]");
 
-                $tables = array('accounts');
-                $ret = array();
-                // loop through types to get hits
-                foreach($tables as $table) {
-                        $q = "SELECT name, id FROM {$table} WHERE email1 = '{$this->from_addr}' OR email2 = '{$this->from_addr}' AND deleted = 0";
-                        $r = $this->db->query($q);
-                        while($a = $this->db->fetchByAssoc($r)) {
-                                if(!empty($a['name']) && !empty($a['id'])) {
-                                        $this->parent_type      = ucwords($table);
-                                        $this->parent_id        = $a['id'];
-                                        $this->parent_name      = $a['name'];
-                                        return;
-                                }
-                        }
-                }
-        }
-
-        /**
-         * Convert reference to inline image (stored as Note) to URL link
-         * Enter description here ...
-         * @param string $note ID of the note
-         * @param string $ext type of the note
-         */
-        public function cid2Link($noteId, $noteType)
-        {
-            if(empty($this->description_html)) return;
-			list($type, $subtype) = explode('/', $noteType);
-			if(strtolower($type) != 'image') {
-			    return;
+		$tables = array('accounts');
+		$ret = array();
+		// loop through types to get hits
+		foreach($tables as $table) {
+			$q = "SELECT name, id FROM {$table} WHERE email1 = '{$this->from_addr}' OR email2 = '{$this->from_addr}' AND deleted = 0";
+			$r = $this->db->query($q);
+			while($a = $this->db->fetchByAssoc($r)) {
+				if(!empty($a['name']) && !empty($a['id'])) {
+					$this->parent_type      = ucwords($table);
+					$this->parent_id        = $a['id'];
+					$this->parent_name      = $a['name'];
+					return;
+				}
 			}
-            $upload = new UploadFile();
-			$this->description_html = preg_replace("#class=\"image\" src=\"cid:$noteId\.(.+?)\"#", "class=\"image\" src=\"{$this->imagePrefix}{$noteId}.\\1\"", $this->description_html);
-	        // ensure the image is in the cache
-			$imgfilename = sugar_cached("images/")."$noteId.".strtolower($subtype);
-			$src = "upload://$noteId";
-			if(!file_exists($imgfilename) && file_exists($src)) {
-				copy($src, $imgfilename);
+		}
+	}
+
+	/**
+	 * Convert reference to inline image (stored as Note) to URL link
+	 * Enter description here ...
+	 * @param string $note ID of the note
+	 * @param string $ext type of the note
+	 */
+	public function cid2Link($noteId, $noteType)
+	{
+		if(empty($this->description_html)) return;
+		list($type, $subtype) = explode('/', $noteType);
+		if(strtolower($type) != 'image') {
+			return;
+		}
+		$upload = new UploadFile();
+		$this->description_html = preg_replace("#class=\"image\" src=\"cid:$noteId\.(.+?)\"#", "class=\"image\" src=\"{$this->imagePrefix}{$noteId}.\\1\"", $this->description_html);
+		// ensure the image is in the cache
+		$imgfilename = sugar_cached("images/")."$noteId.".strtolower($subtype);
+		$src = "upload://$noteId";
+		if(!file_exists($imgfilename) && file_exists($src)) {
+			copy($src, $imgfilename);
+		}
+	}
+
+	/**
+	 * Convert all cid: links in this email into URLs
+	 */
+	function cids2Links()
+	{
+		if(empty($this->description_html)) return;
+		$q = "SELECT id, file_mime_type FROM notes WHERE parent_id = '{$this->id}' AND deleted = 0";
+		$r = $this->db->query($q);
+		while($a = $this->db->fetchByAssoc($r)) {
+			$this->cid2Link($a['id'], $a['file_mime_type']);
+		}
+	}
+
+	/**
+	 * Bugs 50972, 50973
+	 * Sets the field def for a field to allow null values
+	 *
+	 * @todo Consider moving to SugarBean to allow other models to set fields to NULL
+	 * @param string $field The field name to modify
+	 * @return void
+	 */
+	public function setFieldNullable($field)
+	{
+		if (isset($this->field_defs[$field]) && is_array($this->field_defs[$field]))
+		{
+			if (empty($this->modifiedFieldDefs[$field]))
+			{
+				if (
+						isset($this->field_defs[$field]['isnull']) &&
+						(strtolower($this->field_defs[$field]['isnull']) == 'false' || $this->field_defs[$field]['isnull'] === false)
+				   )
+				{
+					$this->modifiedFieldDefs[$field]['isnull'] = $this->field_defs[$field]['isnull'];
+					unset($this->field_defs[$field]['isnull']);
+				}
+
+				if (isset($this->field_defs[$field]['dbType']) && $this->field_defs[$field]['dbType'] == 'id')
+				{
+					$this->modifiedFieldDefs[$field]['dbType'] = $this->field_defs[$field]['dbType'];
+					unset($this->field_defs[$field]['dbType']);
+				}
 			}
-        }
+		}
+	}
 
-        /**
-         * Convert all cid: links in this email into URLs
-         */
-    	function cids2Links()
-    	{
-            if(empty($this->description_html)) return;
-    	    $q = "SELECT id, file_mime_type FROM notes WHERE parent_id = '{$this->id}' AND deleted = 0";
-    		$r = $this->db->query($q);
-            while($a = $this->db->fetchByAssoc($r)) {
-                $this->cid2Link($a['id'], $a['file_mime_type']);
-            }
-    	}
+	/**
+	 * Bugs 50972, 50973
+	 * Set the field def back to the way it was prior to modification
+	 *
+	 * @param $field
+	 * @return void
+	 */
+	public function revertFieldNullable($field)
+	{
+		if (!empty($this->modifiedFieldDefs[$field]) && is_array($this->modifiedFieldDefs[$field]))
+		{
+			foreach ($this->modifiedFieldDefs[$field] as $k => $v)
+			{
+				$this->field_defs[$field][$k] = $v;
+			}
 
-    /**
-     * Bugs 50972, 50973
-     * Sets the field def for a field to allow null values
-     *
-     * @todo Consider moving to SugarBean to allow other models to set fields to NULL
-     * @param string $field The field name to modify
-     * @return void
-     */
-    public function setFieldNullable($field)
-    {
-        if (isset($this->field_defs[$field]) && is_array($this->field_defs[$field]))
-        {
-            if (empty($this->modifiedFieldDefs[$field]))
-            {
-                if (
-                    isset($this->field_defs[$field]['isnull']) &&
-                    (strtolower($this->field_defs[$field]['isnull']) == 'false' || $this->field_defs[$field]['isnull'] === false)
-                )
-                {
-                    $this->modifiedFieldDefs[$field]['isnull'] = $this->field_defs[$field]['isnull'];
-                    unset($this->field_defs[$field]['isnull']);
-                }
+			unset($this->modifiedFieldDefs[$field]);
+		}
+	}
+}
 
-                if (isset($this->field_defs[$field]['dbType']) && $this->field_defs[$field]['dbType'] == 'id')
-                {
-                    $this->modifiedFieldDefs[$field]['dbType'] = $this->field_defs[$field]['dbType'];
-                    unset($this->field_defs[$field]['dbType']);
-                }
-            }
-        }
-    }
-
-    /**
-     * Bugs 50972, 50973
-     * Set the field def back to the way it was prior to modification
-     *
-     * @param $field
-     * @return void
-     */
-    public function revertFieldNullable($field)
-    {
-        if (!empty($this->modifiedFieldDefs[$field]) && is_array($this->modifiedFieldDefs[$field]))
-        {
-            foreach ($this->modifiedFieldDefs[$field] as $k => $v)
-            {
-                $this->field_defs[$field][$k] = $v;
-            }
-
-            unset($this->modifiedFieldDefs[$field]);
-            }
-    	}
-} // end class def
-
-// vim: ts=4 sw=4
+// vim: ts=4 sw=4 et

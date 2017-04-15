@@ -36,7 +36,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  ********************************************************************************/
 
  
- class ListCurrency{
+class ListCurrency
+{
 	var $focus = null;
 	var $list = null;
 	var $javascript = '<script>';
@@ -241,4 +242,5 @@ EOQ;
 //echo '<select>'. $lc->getSelectOptions() . '</select>';
 //echo $lc->getTable();
 
-?>
+
+// vim: ts=4 sw=4 et

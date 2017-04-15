@@ -36,11 +36,14 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  ********************************************************************************/
 
 
-if($_REQUEST['submodule'] == 'Roles'){
-	require_once('modules/ACL/Roles/ListView.php');
+if($_REQUEST['submodule'] == 'Roles')
+{
+    require_once('modules/ACL/Roles/ListView.php');
 }
-if($_REQUEST['submodule'] == 'Users'){
-	require_once('modules/ACL/Roles/ListUsers.php');
+if($_REQUEST['submodule'] == 'Users')
+{
+    require_once('modules/ACL/Roles/ListUsers.php');
 }
 
-?>
+
+// vim: ts=4 sw=4 et

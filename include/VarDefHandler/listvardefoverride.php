@@ -97,3 +97,5 @@ if (isset($this->field_defs['modified_user_id']))
         )
     );
 }
+
+// vim: ts=4 sw=4 et

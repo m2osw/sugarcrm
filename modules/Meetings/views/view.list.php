@@ -1,6 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
-
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -36,6 +35,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+require_once "include/MVC/View/views/view.list.php";
 
 class MeetingsViewList extends ViewList
 {
@@ -44,7 +44,8 @@ class MeetingsViewList extends ViewList
         $this->processSearchForm();
         $this->lv->searchColumns = $this->searchForm->searchColumns;
 
-        if (!$this->headers) {
+        if(!$this->headers)
+        {
             return;
         }
         if (empty($_REQUEST['search_form_only']) || $_REQUEST['search_form_only'] == false) {
@@ -58,3 +59,5 @@ class MeetingsViewList extends ViewList
         }
     }
 }
+
+// vim: ts=4 sw=4 et

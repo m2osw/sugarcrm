@@ -198,4 +198,5 @@ EOHTML;
 		insert_popup_footer();
     }
 } // end of class Popup_Picker
-?>
+
+// vim: ts=4 sw=4 et

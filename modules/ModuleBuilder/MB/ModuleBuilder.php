@@ -100,26 +100,27 @@ class ModuleBuilder
         return $this->packages [ $package ]->modules [ $module ] ;
     }
 
-    function save ()
+    function save()
     {
-        $packages = array_keys ( $this->packages ) ;
-        foreach ( $packages as $package )
+        $packages = array_keys($this->packages);
+        foreach($packages as $package)
         {
-            $this->packages [ $package ]->save () ;
+            $this->packages[$package]->save();
         }
     }
 
-    function build ()
+    function build()
     {
-        $packages = array_keys ( $this->packages ) ;
-        foreach ( $packages as $package )
+        $packages = array_keys($this->packages);
+        foreach($packages as $package)
         {
-            if (count ( $packages ) == 1)
+            if(count($packages) == 1)
             {
-                $this->packages [ $package ]->build ( true ) ;
-            } else
+                $this->packages[$package]->build(true);
+            }
+	    else
             {
-                $this->packages [ $package ]->build ( false ) ;
+                $this->packages[$package]->build(false);
             }
         }
     }

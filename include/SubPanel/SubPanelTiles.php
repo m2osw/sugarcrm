@@ -129,7 +129,7 @@ class SubPanelTiles
      * @param string $selectedGroup	The requested tab group
      * @return array Visible tabs
      */
-    function getTabs($showTabs = true, $selectedGroup='')
+    function getTabs($showTabs = true, $selectedGroup = '')
     {
         global $current_user;
 
@@ -141,10 +141,10 @@ class SubPanelTiles
             // Bug #44344 : Custom relationships under same module only show once in subpanel tabs
             // use object property instead new object to have ability run unit test (can override subpanel_definitions)
             $objSubPanelTilesTabs = new SubPanelTilesTabs($this->focus);
-            $tabs = $objSubPanelTilesTabs->getTabs($tabs, $showTabs, $selectedGroup);
+            $tabs = $objSubPanelTilesTabs->getPanelTabs($tabs, $showTabs, $selectedGroup);
             unset($objSubPanelTilesTabs);
             return $tabs;
-	    }
+        }
         else
         {
             // see if user current user has custom subpanel layout
@@ -155,26 +155,32 @@ class SubPanelTiles
              * we aren't going to render anything.
              */
             $subpanelLinksPref = $current_user->getPreference('subpanel_links');
-            if(!isset($subpanelLinksPref)) $subpanelLinksPref = $GLOBALS['sugar_config']['default_subpanel_links'];
+            if(!isset($subpanelLinksPref))
+            {
+                $subpanelLinksPref = $GLOBALS['sugar_config']['default_subpanel_links'];
+            }
 
-            if($showTabs && $subpanelLinksPref){
-               require_once('include/SubPanel/SugarTab.php');
-               $sugarTab = new SugarTab();
+            if($showTabs && $subpanelLinksPref)
+            {
+                require_once('include/SubPanel/SugarTab.php');
+                $sugarTab = new SugarTab();
 
-               $displayTabs = array();
+                $displayTabs = array();
 
-               foreach($tabs as $tab){
-    	           $displayTabs []= array('key'=>$tab, 'label'=>translate($this->subpanel_definitions->layout_defs['subpanel_setup'][$tab]['title_key']));
-    	           //echo '<td nowrap="nowrap"><a class="subTabLink" href="#' . $tab . '">' .  translate($this->subpanel_definitions->layout_defs['subpanel_setup'][$tab]['title_key']) .  '</a></td><td> | </td>';
-    	       }
-               $sugarTab->setup(array(),array(),$displayTabs);
-               $sugarTab->display();
+                foreach($tabs as $tab)
+                {
+                    $displayTabs []= array('key'=>$tab, 'label'=>translate($this->subpanel_definitions->layout_defs['subpanel_setup'][$tab]['title_key']));
+                    //echo '<td nowrap="nowrap"><a class="subTabLink" href="#' . $tab . '">' .  translate($this->subpanel_definitions->layout_defs['subpanel_setup'][$tab]['title_key']) .  '</a></td><td> | </td>';
+                }
+                $sugarTab->setup(array(),array(),$displayTabs);
+                $sugarTab->display();
             }
             //echo '<td width="100%">&nbsp;</td></tr></table>';
         }
-	    return $tabs;
+        return $tabs;
 
-	}
+    }
+
 	function display($showContainer = true, $forceTabless = false)
 	{
 		global $layout_edit_mode, $sugar_version, $sugar_config, $current_user, $app_strings;
@@ -237,7 +243,7 @@ if(document.DetailView != null &&
 
             if(!empty($usersLayout))
             {
-                $availableTabs = $tabs ;
+                $availableTabs = $tabs;
                 $tabs = array_intersect ( $usersLayout , $availableTabs ) ; // remove any tabs that have been removed since the user's layout was saved
                 foreach (array_diff ( $availableTabs , $usersLayout ) as $tab)
                     $tabs [] = $tab ;
@@ -503,4 +509,5 @@ EOQ;
         return $widget_contents;
 	}
 }
-?>
+
+// vim: ts=4 sw=4 et

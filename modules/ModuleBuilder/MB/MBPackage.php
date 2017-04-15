@@ -36,7 +36,8 @@
 
 require_once('modules/ModuleBuilder/MB/MBModule.php');
 
-class MBPackage{
+class MBPackage
+{
     var $name;
     var $is_uninstallable = true;
     var $description = '';
@@ -1036,4 +1037,4 @@ function buildInstall($path){
 
 }
 
-?>
+// vim: ts=4 sw=4 et

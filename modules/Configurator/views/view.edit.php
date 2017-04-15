@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -39,7 +39,6 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
 
  * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
  * All Rights Reserved.
- * Contributor(s): ______________________________________..
  ********************************************************************************/
 
 require_once('modules/Configurator/Forms.php');
@@ -47,6 +46,8 @@ require_once('modules/Administration/Forms.php');
 require_once('modules/Configurator/Configurator.php');
 require_once('include/SugarLogger/SugarLogger.php');
 require_once('modules/Leads/Lead.php');
+require_once "include/MVC/View/views/view.edit.php";
+
 
 class ConfiguratorViewEdit extends ViewEdit
 {
@@ -56,25 +57,25 @@ class ConfiguratorViewEdit extends ViewEdit
     protected $configurator;
 
     /**
-	 * @see SugarView::preDisplay()
-	 */
-	public function preDisplay()
+     * @see SugarView::preDisplay()
+     */
+    public function preDisplay()
     {
         if(!is_admin($GLOBALS['current_user']))
             sugar_die($GLOBALS['app_strings']['ERR_NOT_ADMIN']); 
     }
-    
+
     /**
-	 * @see SugarView::_getModuleTitleParams()
-	 */
-	protected function _getModuleTitleParams($browserTitle = false)
-	{
-	    global $mod_strings;
-	    
-    	return array(
-    	   "<a href='index.php?module=Administration&action=index'>".translate('LBL_MODULE_NAME','Administration')."</a>",
-    	   $mod_strings['LBL_SYSTEM_SETTINGS']
-    	   );
+     * @see SugarView::_getModuleTitleParams()
+     */
+    protected function _getModuleTitleParams($browserTitle = false)
+    {
+        global $mod_strings;
+
+        return array(
+                "<a href='index.php?module=Administration&action=index'>".translate('LBL_MODULE_NAME','Administration')."</a>",
+                $mod_strings['LBL_SYSTEM_SETTINGS']
+                );
     }
 
     public function __construct()
@@ -92,24 +93,24 @@ class ConfiguratorViewEdit extends ViewEdit
 
         return parent::process();
     }
-    
-	/**
-	 * @see SugarView::display()
-	 */
-	public function display()
-	{
-	    global $current_user, $mod_strings, $app_strings, $app_list_strings, $sugar_config, $locale;
-	    
-	    $configurator = $this->configurator;
+
+    /**
+     * @see SugarView::display()
+     */
+    public function display()
+    {
+        global $current_user, $mod_strings, $app_strings, $app_list_strings, $sugar_config, $locale;
+
+        $configurator = $this->configurator;
         $sugarConfig = SugarConfig::getInstance();
         $focus = new Administration();
         $configurator->parseLoggerSettings();
-        
+
         $focus->retrieveSettings();
         if(!empty($_POST['restore'])){
             $configurator->restoreConfig();
         }
-        
+
         $this->ss->assign('MOD', $mod_strings);
         $this->ss->assign('APP', $app_strings);
         $this->ss->assign('APP_LIST', $app_list_strings);
@@ -154,9 +155,9 @@ class ConfiguratorViewEdit extends ViewEdit
         }
 
         echo $this->getModuleTitle(false);
-        
+
         $this->ss->display('modules/Configurator/tpls/EditView.tpl');
-        
+
         $javascript = new javascript();
         $javascript->setFormName("ConfigureSettings");
         $javascript->addFieldGeneric("notify_fromaddress", "email", $mod_strings['LBL_NOTIFY_FROMADDRESS'], TRUE, "");
@@ -166,5 +167,7 @@ class ConfiguratorViewEdit extends ViewEdit
         $javascript->addFieldGeneric("proxy_password", "varchar", $mod_strings['LBL_PROXY_PASSWORD'], TRUE, "");
         $javascript->addFieldGeneric("proxy_username", "varchar", $mod_strings['LBL_PROXY_USERNAME'], TRUE, "");
         echo $javascript->getScript();
-	}
+    }
 }
+
+// vim: ts=4 sw=4 et

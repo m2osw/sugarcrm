@@ -389,4 +389,5 @@ $stepRecheck	= $_REQUEST['step'];
 
 $_SESSION['step'][$steps['files'][$_REQUEST['step']]] = ($stop) ? 'failed' : 'success';
 
-?>
+
+// vim: ts=4 sw=4 et

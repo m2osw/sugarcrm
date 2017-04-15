@@ -34,12 +34,15 @@
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-
 require_once('include/MVC/Controller/SugarController.php');
-class CampaignsController extends SugarController{
 
-    function action_newsletterlist(){
+
+class CampaignsController extends SugarController
+{
+    function action_newsletterlist()
+    {
         $this->view = 'newsletterlist';
     }
 }
-?>
+
+// vim: ts=4 sw=4 et

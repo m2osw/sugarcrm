@@ -1,6 +1,5 @@
 <?php
-if (! defined ( 'sugarEntry' ) || ! sugarEntry)
-    die ( 'Not A Valid Entry Point'.__FILE__ ) ;
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -36,10 +35,9 @@ if (! defined ( 'sugarEntry' ) || ! sugarEntry)
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-
-
 require_once ('modules/ModuleBuilder/views/view.listview.php') ;
 require_once 'modules/ModuleBuilder/parsers/constants.php' ;
+
 
 class ViewPopupview extends ViewListView
 {
@@ -74,9 +72,8 @@ class ViewPopupview extends ViewListView
     /*
      * Pseudo-constructor to enable subclasses to call a parent's constructor without knowing the parent in PHP4
      */
-    function init()
+    function init($bean = NULL, $view_object_map = array())
     {
-
     }
 
     function preDisplay()

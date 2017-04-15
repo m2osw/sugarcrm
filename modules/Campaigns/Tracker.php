@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -40,8 +40,10 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * Description:  Defines the English language pack for the base application.
  * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
  * All Rights Reserved.
- * Contributor(s): ______________________________________..
  ********************************************************************************/
+
+require_once('modules/Campaigns/utils.php');
+
 
 // logic will be added here at a later date to track campaigns
 // this script; currently forwards to site_URL variable of $sugar_config
@@ -50,7 +52,6 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
 // additionally, another script using fopen will be used to call this
 // script externally
 
-require_once('modules/Campaigns/utils.php');
 
 $GLOBALS['log'] = LoggerManager::getLogger('Campaign Tracker v2');
 
@@ -89,4 +90,5 @@ else
 	sugar_cleanup();
 }
 exit;
-?>
+
+// vim: ts=4 sw=4 et

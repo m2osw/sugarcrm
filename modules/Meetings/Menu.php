@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -37,18 +37,35 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
 
 /*********************************************************************************
 
- * Description:  TODO To be written.
+ * Description:
  * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
  * All Rights Reserved.
- * Contributor(s): ______________________________________..
  ********************************************************************************/
+
+require_once "modules/ACL/ACLController.php";
 
 
 global $mod_strings,$app_strings;
-if(ACLController::checkAccess('Meetings', 'edit', true))$module_menu[]=Array("index.php?module=Meetings&action=EditView&return_module=Meetings&return_action=DetailView", $mod_strings['LNK_NEW_MEETING'],"CreateMeetings");
-if(ACLController::checkAccess('Meetings', 'list', true))$module_menu[]=Array("index.php?module=Meetings&action=index&return_module=Meetings&return_action=DetailView", $mod_strings['LNK_MEETING_LIST'],"Meetings");
-if(ACLController::checkAccess('Meetings', 'import', true))$module_menu[]=Array("index.php?module=Import&action=Step1&import_module=Meetings&return_module=Meetings&return_action=index", $mod_strings['LNK_IMPORT_MEETINGS'],"Import", 'Meetings');
+if(ACLController::checkAccess('Meetings', 'edit', true))
+{
+    $module_menu[] = array(
+            "index.php?module=Meetings&action=EditView&return_module=Meetings&return_action=DetailView",
+            $mod_strings['LNK_NEW_MEETING'],
+            "CreateMeetings");
+}
+if(ACLController::checkAccess('Meetings', 'list', true))
+{
+    $module_menu[] = array(
+            "index.php?module=Meetings&action=index&return_module=Meetings&return_action=DetailView",
+            $mod_strings['LNK_MEETING_LIST'],
+            "Meetings");
+}
+if(ACLController::checkAccess('Meetings', 'import', true))
+{
+    $module_menu[] = array(
+            "index.php?module=Import&action=Step1&import_module=Meetings&return_module=Meetings&return_action=index",
+            $mod_strings['LNK_IMPORT_MEETINGS'],
+            "Import", 'Meetings');
+}
 
-
-
-?>
+// vim: ts=4 sw=4 et

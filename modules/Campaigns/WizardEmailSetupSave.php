@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -108,22 +108,27 @@ if(isset($_REQUEST['wiz_new_mbox']) && ($_REQUEST['wiz_new_mbox']=='1')){
  * which does not expect the prefix, and still use the generic create summary functionality in wizard, which
  * does expect the prefix.  
  */
-function clean_up_post($prefix){
-
-    foreach ($_REQUEST as $key => $val) {
-              if((strstr($key, $prefix )) && (strpos($key, $prefix )== 0)){
-              $newkey  =substr($key, strlen($prefix)) ;
-              $_REQUEST[$newkey] = $val;
-         }               
+function clean_up_post($prefix)
+{
+    foreach ($_REQUEST as $key => $val)
+    {
+        if((strstr($key, $prefix )) && (strpos($key, $prefix )== 0))
+        {
+            $newkey  =substr($key, strlen($prefix)) ;
+            $_REQUEST[$newkey] = $val;
+        }               
     }
 
-    foreach ($_POST as $key => $val) {
-              if((strstr($key, $prefix )) && (strpos($key, $prefix )== 0)){
-              $newkey  =substr($key, strlen($prefix)) ;
-              $_POST[$newkey] = $val;
-              
-         }               
+    foreach ($_POST as $key => $val)
+    {
+        if((strstr($key, $prefix )) && (strpos($key, $prefix )== 0))
+        {
+            $newkey  =substr($key, strlen($prefix)) ;
+            $_POST[$newkey] = $val;
+
+        }               
     }
 }
 
-?>
+
+// vim: ts=4 sw=4 et

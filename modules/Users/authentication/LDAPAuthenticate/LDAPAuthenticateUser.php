@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -58,8 +58,8 @@ class LDAPAuthenticateUser extends SugarAuthenticateUser{
 	 *
 	 * Contributions by Erik Mitchell erikm@logicpd.com
 	 */
-	function authenticateUser($name, $password) {
-
+	function authenticateUser($name, $password, $fallback = false)
+	{
 		$server = $GLOBALS['ldap_config']->settings['ldap_hostname'];
 		$port = $GLOBALS['ldap_config']->settings['ldap_port'];
 		if(!$port)
@@ -281,8 +281,8 @@ class LDAPAuthenticateUser extends SugarAuthenticateUser{
 	 * @param STRING $password
 	 * @return boolean
 	 */
-	function loadUserOnLogin($name, $password) {
-
+	function loadUserOnLogin($name, $password, $fallback = false, $params = array())
+	{
 	    global $mod_strings;
 
 	    // Check if the LDAP extensions are loaded
@@ -300,7 +300,7 @@ class LDAPAuthenticateUser extends SugarAuthenticateUser{
 		if(empty($name) || empty($password)) return false;
 		checkAuthUserStatus();
 
-		$user_id = $this->authenticateUser($name, $password);
+		$user_id = $this->authenticateUser($name, $password, $fallback);
 		if(empty($user_id)) {
 			//check if the user can login as a normal sugar user
 			$GLOBALS['log']->fatal('SECURITY: User authentication for '.$name.' failed');

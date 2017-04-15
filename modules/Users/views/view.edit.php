@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -36,11 +36,14 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  ********************************************************************************/
 
 
-require_once('modules/Users/UserViewHelper.php');
+require_once "modules/Users/UserViewHelper.php";
+require_once "include/MVC/View/views/view.edit.php";
 
 
-class UsersViewEdit extends ViewEdit {
-var $useForSubpanel = true;
+class UsersViewEdit extends ViewEdit
+{
+    var $useForSubpanel = true;
+
  	function UsersViewEdit(){
  		parent::ViewEdit();
  	}
@@ -255,3 +258,5 @@ EOHTML;
         return $theTitle;
     }
 }
+
+// vim: ts=4 sw=4 et

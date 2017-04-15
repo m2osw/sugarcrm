@@ -10,6 +10,9 @@
  * Copyright (C) SugarCRM Inc. All rights reserved.
  */
 
+require_once "include/MVC/View/SugarView.php";
+
+
 class ImportViewAuthenticatedSources extends SugarView
 {
     /** {@inheritdoc} */
@@ -26,3 +29,5 @@ class ImportViewAuthenticatedSources extends SugarView
         return ExternalAPIFactory::getModuleDropDown('Import', false, false);
     }
 }
+
+// vim: ts=4 sw=4 et

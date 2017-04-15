@@ -34,12 +34,14 @@
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+require_once "include/MVC/Controller/SugarController.php";
+
 
 class EmailManController extends SugarController
 {
-	function action_Save(){
+    function action_Save(){
 
-        
+
         require_once('include/OutboundEmail/OutboundEmail.php');
         require_once('modules/Configurator/Configurator.php');
 
@@ -49,7 +51,7 @@ class EmailManController extends SugarController
         if ( !is_admin($current_user)
                 && !is_admin_for_module($GLOBALS['current_user'],'Emails')
                 && !is_admin_for_module($GLOBALS['current_user'],'Campaigns') ){
-        sugar_die("Unauthorized access to administration.");
+            sugar_die("Unauthorized access to administration.");
         }
 
         //Do not allow users to spoof for sendmail if the config flag is not set.
@@ -77,9 +79,9 @@ class EmailManController extends SugarController
         if( !isset($_POST['mail_smtpauth_req']) )
         {
             $_POST['mail_smtpauth_req'] = 0;
-		if (empty($_POST['campaignConfig'])) {
-			$_POST['notify_allow_default_outbound'] = 0; // If smtp auth is disabled ensure outbound is disabled.
-		}
+            if (empty($_POST['campaignConfig'])) {
+                $_POST['notify_allow_default_outbound'] = 0; // If smtp auth is disabled ensure outbound is disabled.
+            }
         }
 
         if( !empty($_POST['notify_allow_default_outbound']) )
@@ -95,7 +97,7 @@ class EmailManController extends SugarController
         $configurator->config['email_default_delete_attachments'] = (isset($_REQUEST['email_default_delete_attachments'])) ? true : false;
 
         ///////////////////////////////////////////////////////////////////////////////
-        ////	SECURITY
+        //// SECURITY
         $security = array();
         if(isset($_REQUEST['applet'])) $security['applet'] = 'applet';
         if(isset($_REQUEST['base'])) $security['base'] = 'base';
@@ -114,15 +116,13 @@ class EmailManController extends SugarController
 
         $configurator->config['email_xss'] = base64_encode(serialize($security));
 
-        ////	SECURITY
+        //// SECURITY
         ///////////////////////////////////////////////////////////////////////////////
 
         ksort($sugar_config);
 
         $configurator->handleOverride();
-
-
     }
-
 }
-?>
+
+// vim: ts=4 sw=4 et

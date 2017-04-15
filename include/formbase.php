@@ -75,7 +75,9 @@ function populateFromPost($prefix, &$focus, $skipRetrieve = false, $checkACL = f
 	global $current_user;
 
 	if(!empty($_REQUEST[$prefix.'record']) && !$skipRetrieve)
+    {
 		$focus->retrieve($_REQUEST[$prefix.'record']);
+    }
 
 	if(!empty($_POST['assigned_user_id']) && 
 	    ($focus->assigned_user_id != $_POST['assigned_user_id']) && 
@@ -109,9 +111,12 @@ function populateFromPost($prefix, &$focus, $skipRetrieve = false, $checkACL = f
 
 	    $type = !empty($def['custom_type']) ? $def['custom_type'] : $def['type'];
 		$sf = $sfh->getSugarField($type);
-        if($sf != null){
+        if($sf != null)
+        {
             $sf->save($focus, $_POST, $field, $def, $prefix);
-        } else {
+        }
+        else
+        {
             $GLOBALS['log']->fatal("Field '$field' does not have a SugarField handler");
         }
 
@@ -157,8 +162,8 @@ function populateFromPost($prefix, &$focus, $skipRetrieve = false, $checkACL = f
 	return $focus;
 }
 
-function add_hidden_elements($key, $value) {
-
+function add_hidden_elements($key, $value)
+{
     $elements = '';
 
     // if it's an array, we need to loop into the array and use square brackets []
@@ -176,115 +181,117 @@ function add_hidden_elements($key, $value) {
 
 function getPostToForm($ignore='', $isRegularExpression=false)
 {
-	$fields = '';
-	if(!empty($ignore) && $isRegularExpression) {
-		foreach ($_POST as $key=>$value){
-			if(!preg_match($ignore, $key)) {
-                                $fields .= add_hidden_elements($key, $value);
-			}
-		}	
-	} else {
-		foreach ($_POST as $key=>$value){
-			if($key != $ignore) {
-                                $fields .= add_hidden_elements($key, $value);
-			}
-		}
-	}
-	return $fields;
+    $fields = '';
+    if(!empty($ignore) && $isRegularExpression) {
+        foreach ($_POST as $key=>$value){
+            if(!preg_match($ignore, $key)) {
+                $fields .= add_hidden_elements($key, $value);
+            }
+        }	
+    } else {
+        foreach ($_POST as $key=>$value){
+            if($key != $ignore) {
+                $fields .= add_hidden_elements($key, $value);
+            }
+        }
+    }
+    return $fields;
 }
+
 
 function getGetToForm($ignore='', $usePostAsAuthority = false)
 {
-	$fields = '';
-	foreach ($_GET as $key=>$value)
-	{
-		if($key != $ignore){
-			if(!$usePostAsAuthority || !isset($_POST[$key])){
-				$fields.= "<input type='hidden' name='$key' value='$value'>";
-			}
-		}
-	}
-	return $fields;
-
+    $fields = '';
+    foreach ($_GET as $key=>$value)
+    {
+        if($key != $ignore){
+            if(!$usePostAsAuthority || !isset($_POST[$key])){
+                $fields.= "<input type='hidden' name='$key' value='$value'>";
+            }
+        }
+    }
+    return $fields;
 }
+
+
 function getAnyToForm($ignore='', $usePostAsAuthority = false)
 {
-	$fields = getPostToForm($ignore);
-	$fields .= getGetToForm($ignore, $usePostAsAuthority);
-	return $fields;
+    $fields = getPostToForm($ignore);
+    $fields .= getGetToForm($ignore, $usePostAsAuthority);
+    return $fields;
 
 }
 
 function handleRedirect($return_id='', $return_module='', $additionalFlags = false)
 {
-	if(isset($_REQUEST['return_url']) && $_REQUEST['return_url'] != "")
-	{
-		header("Location: ". $_REQUEST['return_url']);
-		exit;
-	}
+    if(isset($_REQUEST['return_url']) && $_REQUEST['return_url'] != "")
+    {
+        header("Location: ". $_REQUEST['return_url']);
+        exit;
+    }
 
-	$url = buildRedirectURL($return_id, $return_module);
-	header($url);
-	exit;	
+    $url = buildRedirectURL($return_id, $return_module);
+    header($url);
+    exit;	
 }
 
 //eggsurplus: abstract to simplify unit testing
 function buildRedirectURL($return_id='', $return_module='') 
 {
     if(isset($_REQUEST['return_module']) && $_REQUEST['return_module'] != "")
-	{
-		$return_module = $_REQUEST['return_module'];
-	}
-	else
-	{
-		$return_module = $return_module;
-	}
-	if(isset($_REQUEST['return_action']) && $_REQUEST['return_action'] != "")
-	{
-	    
-	   //if we are doing a "Close and Create New"
+    {
+        $return_module = $_REQUEST['return_module'];
+    }
+    else
+    {
+        $return_module = $return_module;
+    }
+    if(isset($_REQUEST['return_action']) && $_REQUEST['return_action'] != "")
+    {
+
+        //if we are doing a "Close and Create New"
         if(isCloseAndCreateNewPressed())
         {
             $return_action = "EditView";    
             $isDuplicate = "true";        
             $status = "";
-            
+
             // Meeting Integration
             if(isset($_REQUEST['meetingIntegrationFlag']) && $_REQUEST['meetingIntegrationFlag'] == 1) {
-            	$additionalFlags = array('meetingIntegrationShowForm' => '1');
+                $additionalFlags = array('meetingIntegrationShowForm' => '1');
             }
             // END Meeting Integration
         } 
-		// if we create a new record "Save", we want to redirect to the DetailView
-		else if(isset($_REQUEST['action']) && $_REQUEST['action'] == "Save" 
-			&& $_REQUEST['return_module'] != 'Activities'
-			&& $_REQUEST['return_module'] != 'Home' 
-			&& $_REQUEST['return_module'] != 'Forecasts' 
-			&& $_REQUEST['return_module'] != 'Calendar'
-			&& $_REQUEST['return_module'] != 'MailMerge'
-			) 
-			{
-			    $return_action = 'DetailView';
-			} elseif($_REQUEST['return_module'] == 'Activities' || $_REQUEST['return_module'] == 'Calendar') {
-			$return_module = $_REQUEST['module'];
-			$return_action = $_REQUEST['return_action']; 
-			// wp: return action needs to be set for one-click close in task list
-		} 
-		else 
-		{
-			// if we "Cancel", we go back to the list view.
-			$return_action = $_REQUEST['return_action'];
-		}
-	}
-	else
-	{
-		$return_action = "DetailView";
-	}
-	
-	if(isset($_REQUEST['return_id']) && $_REQUEST['return_id'] != "")
-	{
-		$return_id = $_REQUEST['return_id'];
-	}
+        // if we create a new record "Save", we want to redirect to the DetailView
+        else if(isset($_REQUEST['action']) && $_REQUEST['action'] == "Save" 
+                && $_REQUEST['return_module'] != 'Activities'
+                && $_REQUEST['return_module'] != 'Home' 
+                && $_REQUEST['return_module'] != 'Forecasts' 
+                && $_REQUEST['return_module'] != 'Calendar'
+                && $_REQUEST['return_module'] != 'MailMerge'
+               ) 
+        {
+            $return_action = 'DetailView';
+        } elseif($_REQUEST['return_module'] == 'Activities' || $_REQUEST['return_module'] == 'Calendar') {
+            $return_module = $_REQUEST['module'];
+            $return_action = $_REQUEST['return_action']; 
+            // wp: return action needs to be set for one-click close in task list
+        } 
+        else 
+        {
+            // if we "Cancel", we go back to the list view.
+            $return_action = $_REQUEST['return_action'];
+        }
+    }
+    else
+    {
+        $return_action = "DetailView";
+    }
+
+    if(isset($_REQUEST['return_id']) && $_REQUEST['return_id'] != "")
+    {
+        $return_id = $_REQUEST['return_id'];
+    }
 
     $add = "";
     if(isset($additionalFlags) && !empty($additionalFlags)) {
@@ -292,7 +299,7 @@ function buildRedirectURL($return_id='', $return_module='')
             $add .= "&{$k}={$v}";
         }
     }
-    
+
     if (!isset($isDuplicate) || !$isDuplicate)
     {
         $url="index.php?action=$return_action&module=$return_module&record=$return_id&return_module=$return_module&return_action=$return_action{$add}";
@@ -302,29 +309,29 @@ function buildRedirectURL($return_id='', $return_module='')
         if(!empty($_REQUEST['ajax_load']))
         {
             $ajax_ret = array(
-                'content' => "<script>SUGAR.ajaxUI.loadContent('$url');</script>\n",
-                'menu' => array(
-                    'module' => $return_module,
-                    'label' => translate($return_module),
-                ),
-            );
+                    'content' => "<script>SUGAR.ajaxUI.loadContent('$url');</script>\n",
+                    'menu' => array(
+                        'module' => $return_module,
+                        'label' => translate($return_module),
+                        ),
+                    );
             $json = getJSONobj();
             echo $json->encode($ajax_ret);
         } else {
             return "Location: $url";
         }
     } else {
-    	$standard = "action=$return_action&module=$return_module&record=$return_id&isDuplicate=true&return_module=$return_module&return_action=$return_action&status=$status";
+        $standard = "action=$return_action&module=$return_module&record=$return_id&isDuplicate=true&return_module=$return_module&return_action=$return_action&status=$status";
         $url="index.php?{$standard}{$add}";
         if(!empty($_REQUEST['ajax_load']))
         {
             $ajax_ret = array(
-                 'content' => "<script>SUGAR.ajaxUI.loadContent('$url');</script>\n",
-                 'menu' => array(
-                     'module' => $return_module,
-                     'label' => translate($return_module),
-                 ),
-            );
+                    'content' => "<script>SUGAR.ajaxUI.loadContent('$url');</script>\n",
+                    'menu' => array(
+                        'module' => $return_module,
+                        'label' => translate($return_module),
+                        ),
+                    );
             $json = getJSONobj();
             echo $json->encode($ajax_ret);
         } else {
@@ -335,30 +342,29 @@ function buildRedirectURL($return_id='', $return_module='')
 
 function getLikeForEachWord($fieldname, $value, $minsize=4)
 {
-	$value = trim($value);
-	$values = explode(' ',$value);
-	$ret = '';
-	foreach($values as $val)
-	{
-		if(strlen($val) >= $minsize)
-		{
-			if(!empty($ret))
-			{
-				$ret .= ' or';
-			}
-			$ret .= ' '. $fieldname . ' LIKE %'.$val.'%';
-		}
+    $value = trim($value);
+    $values = explode(' ',$value);
+    $ret = '';
+    foreach($values as $val)
+    {
+        if(strlen($val) >= $minsize)
+        {
+            if(!empty($ret))
+            {
+                $ret .= ' or';
+            }
+            $ret .= ' '. $fieldname . ' LIKE %'.$val.'%';
+        }
 
-	}
-
-
+    }
 }
 
-function isCloseAndCreateNewPressed() {
+function isCloseAndCreateNewPressed()
+{
     return isset($_REQUEST['action']) && 
-           $_REQUEST['action'] == "Save" &&
-           isset($_REQUEST['isSaveAndNew']) && 
-           $_REQUEST['isSaveAndNew'] == 'true';	
+        $_REQUEST['action'] == "Save" &&
+        isset($_REQUEST['isSaveAndNew']) && 
+        $_REQUEST['isSaveAndNew'] == 'true';	
 }
 
 
@@ -456,7 +462,8 @@ function add_to_prospect_list($query_panel,$parent_module,$parent_type,$parent_i
 }
 
 //Link rows returned by a report to parent record.
-function save_from_report($report_id,$parent_id, $module_name, $relationship_attr_name) {
+function save_from_report($report_id,$parent_id, $module_name, $relationship_attr_name)
+{
     global $beanFiles;
     global $beanList;
 
@@ -499,4 +506,4 @@ function save_from_report($report_id,$parent_id, $module_name, $relationship_att
     }
 }
 
-?>
+// vim: ts=4 sw=4 et

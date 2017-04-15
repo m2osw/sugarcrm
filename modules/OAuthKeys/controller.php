@@ -34,13 +34,19 @@
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+require_once "include/MVC/Controller/SugarController.php";
+
 
 class OAuthKeysController extends SugarController
 {
-	public function process() {
-		if(!is_admin($GLOBALS['current_user'])) {
-			$this->hasAccess = false;
-		}
-		parent::process();
-	}
+    public function process()
+    {
+        if(!is_admin($GLOBALS['current_user']))
+        {
+            $this->hasAccess = false;
+        }
+        parent::process();
+    }
 }
+
+// vim: ts=4 sw=4 et

@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -42,7 +42,10 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * All Rights Reserved.
  * Contributor(s): ______________________________________..
  ********************************************************************************/
-require_once('include/formbase.php');
+
+require_once "include/formbase.php";
+require_once "modules/CampaignTrackers/CampaignTracker.php";
+
 
 $focus = new CampaignTracker();
 
@@ -79,4 +82,5 @@ $focus->save($check_notify);
 $return_id = $focus->id;
 $GLOBALS['log']->debug("Saved record with id of ".$return_id);
 handleRedirect('', '');
-?>
+
+// vim: ts=4 sw=4 et

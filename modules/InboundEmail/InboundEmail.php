@@ -4414,7 +4414,7 @@ class InboundEmail extends SugarBean {
 			'// created: ' . date('Y-m-d H:i:s') . "\n" .
 			'$sugar_config = ' .
 			var_export($sugar_config, true) .
-			";\n?>\n";
+			";\n?\076\n";
 
 		write_array_to_file("sugar_config", $sugar_config, "config.php");
 	}

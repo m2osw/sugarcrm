@@ -1,6 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
-
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -38,6 +37,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
 
 
 require_once('include/SubPanel/SubPanelDefinitions.php');
+require_once "include/MVC/View/SugarView.php";
+
 
 class ConfiguratorViewHistoryContactsEmails extends SugarView
 {
@@ -92,10 +93,10 @@ class ConfiguratorViewHistoryContactsEmails extends SugarView
             foreach ($bean->get_linked_fields() as $fieldName => $fieldDef) {
                 if ($bean->$fieldName->getRelatedModuleName() == 'Contacts') {
                     $modules[$moduleName] = array(
-                        'module' => $moduleName,
-                        'label' => translate($moduleName),
-                        'enabled' => empty($fieldDef['hide_history_contacts_emails'])
-                    );
+                            'module' => $moduleName,
+                            'label' => translate($moduleName),
+                            'enabled' => empty($fieldDef['hide_history_contacts_emails'])
+                            );
                     break;
                 }
             }
@@ -111,3 +112,5 @@ class ConfiguratorViewHistoryContactsEmails extends SugarView
         $this->ss->display('modules/Configurator/tpls/historyContactsEmails.tpl');
     }
 }
+
+// vim: ts=4 sw=4 et

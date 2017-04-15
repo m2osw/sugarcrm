@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -45,7 +45,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  /**Check captcha validation here.
  *
  */
-require_once('include/recaptcha/recaptchalib.php');
+require_once('include/reCaptcha/recaptchalib.php');
 
 $admin=new Administration();
 $admin->retrieveSettings('captcha');
@@ -62,4 +62,5 @@ if(!$response->is_valid){
 }
 else echo("Success");
 
-?>
+
+// vim: ts=4 sw=4 et

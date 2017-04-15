@@ -1,6 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry)
-	die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -36,12 +35,13 @@ if(!defined('sugarEntry') || !sugarEntry)
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-require_once ('include/upload_file.php');
+require_once "include/upload_file.php";
+require_once "data/SugarBean.php";
 
 
 // User is used to store Forecast information.
-class Document extends SugarBean {
-
+class Document extends SugarBean
+{
 	var $id;
 	var $document_name;
 	var $description;

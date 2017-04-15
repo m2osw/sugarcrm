@@ -4112,7 +4112,7 @@ function repair_long_relationship_names($path='')
     $touched = array();
     foreach($GLOBALS['moduleList'] as $module)
     {
-        $relationships = new DeployedRelationships ($module) ;
+        $relationships = new DeployedRelationships($module);
         foreach($relationships->getRelationshipList() as $rel_name)
         {
             if (strlen($rel_name) > 27 && empty($touched[$rel_name]))
@@ -4125,20 +4125,22 @@ function repair_long_relationship_names($path='')
                 $relationships->save();
                 $relationships->add($rel_obj);
                 $relationships->save();
-                $relationships->build () ;
+                $relationships->buildRelationships();
             }
         }
     }
     logThis("End repair_long_relationship_names", $path);
 }
 
-function removeSilentUpgradeVarsCache(){
+function removeSilentUpgradeVarsCache()
+{
     global $silent_upgrade_vars_loaded;
 
     $cacheFileDir = "{$GLOBALS['sugar_config']['cache_dir']}/silentUpgrader";
     $cacheFile = "{$cacheFileDir}/silentUpgradeCache.php";
 
-    if(file_exists($cacheFile)){
+    if(file_exists($cacheFile))
+    {
         unlink($cacheFile);
     }
 
@@ -4147,17 +4149,21 @@ function removeSilentUpgradeVarsCache(){
     return true;
 }
 
-function loadSilentUpgradeVars(){
+function loadSilentUpgradeVars()
+{
     global $silent_upgrade_vars_loaded;
 
-    if(empty($silent_upgrade_vars_loaded)){
+    if(empty($silent_upgrade_vars_loaded))
+    {
         $cacheFile = "{$GLOBALS['sugar_config']['cache_dir']}/silentUpgrader/silentUpgradeCache.php";
         // We have no pre existing vars
-        if(!file_exists($cacheFile)){
+        if(!file_exists($cacheFile))
+	{
             // Set the vars array so it's loaded
             $silent_upgrade_vars_loaded = array('vars' => array());
         }
-        else{
+        else
+	{
             require_once($cacheFile);
             $silent_upgrade_vars_loaded = $silent_upgrade_vars_cache;
         }
@@ -4577,3 +4583,5 @@ function repairUpgradeHistoryTable()
     }
 
 }
+
+// vim: ts=4 sw=4 et

@@ -1,6 +1,5 @@
 <?php
-if (! defined ( 'sugarEntry' ) || ! sugarEntry)
-    die ( 'Not A Valid Entry Point'.__FILE__ ) ;
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -43,18 +42,16 @@ require_once 'modules/ModuleBuilder/parsers/relationships/RelationshipFactory.ph
 
 class UndeployedRelationships extends AbstractRelationships implements RelationshipsInterface
 {
-    
     protected $basepath ; // Base directory for the lhs_module
     protected $packageName ;
     private $activitiesToAdd ; // if we need to add in the composite Activities and History subpanels to the module during the build
 
-    
     /*
      * Constructor
      * Automatically loads in any saved relationships
      * @param string $path  The pathname of the base module directory
      */
-    function __construct ($path)
+    function __construct($path)
     {
         $this->basepath = $path ;
         // pull the module and package names out of the path
@@ -72,10 +69,10 @@ class UndeployedRelationships extends AbstractRelationships implements Relations
      * Find all modules, deployed and undeployed, that can participate in a relationship
      * @return array    Array of [$module][$subpanel]
      */
-    static function findRelatableModules ()
+    static function findRelatableModules($includeActivitiesSubmodules = true)
     {
         // first find all deployed modules that we might participate in a relationship
-        $relatableModules = parent::findRelatableModules ( ) ;
+        $relatableModules = parent::findRelatableModules($includeActivitiesSubmodules);
         
         // now add in the undeployed modules - those in custom/modulebuilder
         // note that if a module exists in both deployed and undeployed forms, the subpanels from the undeployed form are used...  
@@ -102,7 +99,7 @@ class UndeployedRelationships extends AbstractRelationships implements Relations
      * that the admin may move them around or otherwise edit them before the module is deployed
      * @param AbstractRelationship $relationship    The relationship to add
      */
-    function add ($relationship)
+    function add($relationship)
     {
         parent::add ( $relationship ) ;
         $this->addFieldsToUndeployedLayouts ( $relationship ) ; // must come after parent::add as we need the relationship_name in the relationships getFieldsToLayouts() which is called by addFieldsToUndeployedLayouts() 
@@ -113,7 +110,7 @@ class UndeployedRelationships extends AbstractRelationships implements Relations
      * In future, if we need to actually track deleted relationships then just call $relationship->delete() instead
      * @param string $relationshipName  The unique name for this relationship, as returned by $relationship->getName()
      */
-    function delete ($relationshipName)
+    function delete($relationshipName)
     {
         if ($relationship = $this->get ( $relationshipName ))
         {
@@ -125,7 +122,7 @@ class UndeployedRelationships extends AbstractRelationships implements Relations
     /*
      * Load the saved relationship definitions for this module
      */
-    function load ()
+    function load()
     {
         $this->relationships = parent::_load ( $this->basepath ) ;
     }
@@ -133,7 +130,7 @@ class UndeployedRelationships extends AbstractRelationships implements Relations
     /*
      * Save this modules relationship definitions out to a working file
      */
-    function save ()
+    function save()
     {
         parent::_save ( $this->relationships, $this->basepath ) ;
     }
@@ -143,7 +140,7 @@ class UndeployedRelationships extends AbstractRelationships implements Relations
      * @param array definition  The 5.0 relationship definition
      * @return array            The definition updated to 5.1 format
      */
-    protected function _updateRelationshipDefinition ($definition)
+    protected function _updateRelationshipDefinition($definition)
     {
         if (isset ( $definition [ 'relate' ] ))
         {
@@ -168,7 +165,7 @@ class UndeployedRelationships extends AbstractRelationships implements Relations
      * The set of all relevant relationships for undeployed modules is the superset of that for deployed modules and all of the relationships known to ModuleBuilder
      * @return array Set of all relevant relationships
      */
-    protected function getAllRelationships ()
+    protected function getAllRelationships()
     {
         // start with the set of relationships known to this module plus those already deployed
         $allRelationships = array_merge ( $this->relationships, parent::getDeployedRelationships () ) ;
@@ -201,7 +198,7 @@ class UndeployedRelationships extends AbstractRelationships implements Relations
      * This function is called from the view when constructing a new relationship
      * @param AbstractRelationship $relationship The relationship to be enforced
      */
-    public function enforceRelationshipOnly ($relationship)
+    public function enforceRelationshipOnly($relationship)
     {
         // if we already have a relationship between this lhs_module and this rhs_module then set RelationshipOnly flag
         foreach ( $this->relationships as $rel )
@@ -222,9 +219,8 @@ class UndeployedRelationships extends AbstractRelationships implements Relations
      * Translate the set of relationship objects into files that the Module Loader can work with
      * @param $basepath string Pathname of the directory to contain the build
      */
-    function build ($basepath)
+    function buildRelationships($basepath = "custom/Extension/modules")
     {
-        
         // first expand out any reference to Activities to its submodules
         // we do this here rather than in the subcomponents of the build as most of those subcomponents make use of elements of the definition, such
         // as the relationship name, that must be unique
@@ -285,7 +281,7 @@ class UndeployedRelationships extends AbstractRelationships implements Relations
 		}
         
         // use an installDefPrefix of <basepath>/SugarModules for compatibility with the rest of ModuleBuilder
-        $this->installDefs = parent::build ( $basepath, "<basepath>/SugarModules", $relationships ) ;
+        $this->installDefs = $this->build($basepath, "<basepath>/SugarModules", $relationships);
     }
 
     /*

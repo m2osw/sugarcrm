@@ -222,4 +222,5 @@ $out .= <<<EOQ
 EOQ;
 
 echo $out;
-?>
+
+// vim: ts=4 sw=4 et

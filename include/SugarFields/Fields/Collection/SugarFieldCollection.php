@@ -35,33 +35,45 @@
  ********************************************************************************/
 
 require_once('include/SugarFields/Fields/Base/SugarFieldBase.php');
-class SugarFieldCollection extends SugarFieldBase {
-	var $tpl_path;
-	
-	function getDetailViewSmarty($parentFieldArray, $vardef, $displayParams, $tabindex) {
-		$nolink = array('Users');
-		if(in_array($vardef['module'], $nolink)){
-			$displayParams['nolink']=true;
-		}else{
-			$displayParams['nolink']=false;
-		}
-		$json = getJSONobj();
+
+
+class SugarFieldCollection extends SugarFieldBase
+{
+    var $tpl_path;
+
+    function getDetailViewSmarty($parentFieldArray, $vardef, $displayParams, $tabindex)
+    {
+        $nolink = array('Users');
+        if(in_array($vardef['module'], $nolink))
+        {
+            $displayParams['nolink']=true;
+        }
+        else
+        {
+            $displayParams['nolink']=false;
+        }
+        $json = getJSONobj();
         $displayParamsJSON = $json->encode($displayParams);
         $vardefJSON = $json->encode($vardef);
         $this->ss->assign('displayParamsJSON', '{literal}'.$displayParamsJSON.'{/literal}');
         $this->ss->assign('vardefJSON', '{literal}'.$vardefJSON.'{/literal}');
         $this->setup($parentFieldArray, $vardef, $displayParams, $tabindex);
-        if(empty($this->tpl_path)){
-        	$this->tpl_path = $this->findTemplate('DetailView');
+        if(empty($this->tpl_path))
+        {
+            $this->tpl_path = $this->findTemplate('DetailView');
         }
         return $this->fetch($this->tpl_path);
     }
 
-    function getEditViewSmarty($parentFieldArray, $vardef, $displayParams, $tabindex, $searchView = false) {
-        if($searchView){
-        	$form_name = 'search_form';
-        }else{
-    		$form_name = 'EditView';
+    function getEditViewSmarty($parentFieldArray, $vardef, $displayParams, $tabindex, $searchView = false)
+    {
+        if($searchView)
+        {
+            $form_name = 'search_form';
+        }
+        else
+        {
+            $form_name = 'EditView';
         }
         $json = getJSONobj();
         $displayParamsJSON = $json->encode($displayParams);
@@ -79,23 +91,28 @@ class SugarFieldCollection extends SugarFieldBase {
         $displayParams['accessKeyClearTitle'] = $keys['accessKeyClearTitle'];
 
         $this->setup($parentFieldArray, $vardef, $displayParams, $tabindex);
-	    if(!$searchView) {
-	    	if(empty($this->tpl_path)){
-        		$this->tpl_path = $this->findTemplate('EditView');
-        	}
-	    	return $this->fetch($this->tpl_path);
-	    }
+        if(!$searchView)
+        {
+            if(empty($this->tpl_path))
+            {
+                $this->tpl_path = $this->findTemplate('EditView');
+            }
+            return $this->fetch($this->tpl_path);
+        }
     }
 
-	function getSearchViewSmarty($parentFieldArray, $vardef, $displayParams, $tabindex) {
-		$this->getEditViewSmarty($parentFieldArray, $vardef, $displayParams, $tabindex, true);
+    function getSearchViewSmarty($parentFieldArray, $vardef, $displayParams, $tabindex)
+    {
+        $this->getEditViewSmarty($parentFieldArray, $vardef, $displayParams, $tabindex, true);
     }
-     /**
+
+    /**
      * This should be called when the bean is saved. The bean itself will be passed by reference
      * @param SugarBean bean - the bean performing the save
      * @param array params - an array of paramester relevant to the save, most likely will be $_REQUEST
      */
-	public function save(&$bean, $params, $field, $properties, $prefix = ''){
+    public function save($bean, $params, $field, $properties, $prefix = '')
+    {
         if(isset($_POST["primary_" . $field . "_collection"])){
             $save = false;
             $value_name = $field . "_values";
@@ -126,8 +143,8 @@ class SugarFieldCollection extends SugarFieldBase {
             // Create or update record and take care of the extra_field
             require('include/modules.php');
             require_once('data/Link.php');
-       	 	$class = load_link_class($bean->field_defs[$field]);
-    		
+            $class = load_link_class($bean->field_defs[$field]);
+
             $link_obj = new $class($bean->field_defs[$field]['relationship'], $bean, $bean->field_defs[$field]);
             $module = $link_obj->getRelatedModuleName();
             $beanName = $beanList[$module];
@@ -226,6 +243,6 @@ class SugarFieldCollection extends SugarFieldBase {
             }
         }
     }
-
 }
-?>
+
+// vim: ts=4 sw=4 et

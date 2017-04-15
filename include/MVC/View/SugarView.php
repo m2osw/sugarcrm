@@ -1621,9 +1621,10 @@ EOHTML;
      * @param $file String path of the file to fetch
      * @return $content String content from resulting Smarty fetch operation on template
      */
-    protected function fetchTemplate($file)
+    protected function fetchTemplate($fv, $file)
     {
-        return $this->ss->fetch($file);
+        return $fv ? $fv->ss->fetch($file)
+	           : $this->ss->fetch($file);
     }
 
     /**

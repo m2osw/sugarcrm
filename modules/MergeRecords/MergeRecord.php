@@ -1,6 +1,5 @@
 <?php
-if (!defined('sugarEntry') || !sugarEntry)
-    die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -44,12 +43,14 @@ if (!defined('sugarEntry') || !sugarEntry)
  * Contributor(s): ______________________________________..
  ********************************************************************************/
 
+require_once "data/SugarBean.php";
 
 
-class MergeRecord extends SugarBean {
+class MergeRecord extends SugarBean
+{
     var $object_name = 'MergeRecord';
     var $module_dir = 'MergeRecords';
-	var $acl_display_only = true;
+    var $acl_display_only = true;
     var $merge_module;
     var $merge_bean_class;
     var $merge_bean_file_path;
@@ -70,22 +71,30 @@ class MergeRecord extends SugarBean {
     //store a copy of the merge bean related strings
     var $merge_bean_strings = Array ();
 
-    function MergeRecord($merge_module = '', $merge_id = '') {
+    function MergeRecord($merge_module = '', $merge_id = '')
+    {
         global $sugar_config;
-       //parent :: SugarBean();
+        //parent :: SugarBean();
 
         if ($merge_module != '')
             $this->load_merge_bean($merge_module, $merge_id);
     }
 
-    function retrieve($id) {
-        if (isset ($_REQUEST['action']) && $_REQUEST['action'] == 'Step2')
+    function retrieve($id = -1, $encode = true, $deleted = true)
+    {
+        if(isset($_REQUEST['action'])
+        && $_REQUEST['action'] == 'Step2')
+        {
             $this->load_merge_bean($this->merge_bean, false, $id);
+        }
         else
-            parent :: retrieve($id);
+        {
+            parent::retrieve($id, $encode, $deleted);
+        }
     }
 
-    function load_merge_bean($merge_module, $load_module_strings = false, $merge_id = '') {
+    function load_merge_bean($merge_module, $load_module_strings = false, $merge_id = '')
+    {
         global $moduleList;
         global $beanList;
         global $beanFiles;
@@ -97,18 +106,24 @@ class MergeRecord extends SugarBean {
 
         require_once ($this->merge_bean_file_path);
         $this->merge_bean = new $this->merge_bean_class();
-        if ($merge_id != '')
+        if($merge_id != '')
+        {
             $this->merge_bean->retrieve($merge_id);
-        
+        }
+
         // Bug 18853 - Disable this view if the user doesn't have edit and delete permissions
-        if ( !$this->merge_bean->ACLAccess('edit') || !$this->merge_bean->ACLAccess('delete') ) {
+        if(!$this->merge_bean->ACLAccess('edit')
+        || !$this->merge_bean->ACLAccess('delete'))
+        {
             ACLController::displayNoAccess();
             sugar_die('');
         }
-        
+
         //load master module strings
-        if ($load_module_strings)
+        if($load_module_strings)
+        {
             $this->merge_bean_strings = return_module_language($current_language, $merge_module);
+        }
     }
 
     // Bug 22994, when the search key words are in other module, there needs to be another merge_bean.
@@ -124,11 +139,15 @@ class MergeRecord extends SugarBean {
 
         require_once ($this->merge_bean_file_path2);
         $this->merge_bean2 = new $this->merge_bean_class2();
-        if ($merge_id != '')
+        if($merge_id != '')
+        {
             $this->merge_bean2->retrieve($merge_id);
+        }
         //load master module strings
-        if ($load_module_strings)
+        if($load_module_strings)
+        {
             $this->merge_bean_strings2 = return_module_language($current_language, $merge_module);
+        }
     }
 
     var $new_schema = true;
@@ -136,8 +155,9 @@ class MergeRecord extends SugarBean {
     //-----------------------------------------------------------------------
     //-------------Wrapping Necessary Merge Bean Calls-----------------------
     //-----------------------------------------------------------------------
-    
-    function fill_in_additional_list_fields() {
+
+    function fill_in_additional_list_fields()
+    {
         return $this->merge_bean->fill_in_additional_list_fields();
     }
 
@@ -157,9 +177,9 @@ class MergeRecord extends SugarBean {
     //-----------------------------------------------------------------------
 
     /**
-    	builds a generic search based on the query string using or
-    	do not include any $this-> because this is called on without having the class instantiated
-    */
+      builds a generic search based on the query string using or
+      do not include any $this-> because this is called on without having the class instantiated
+     */
     function build_generic_where_clause($the_query_string) {
         return $this->merge_bean->build_generic_where_clause($the_query_string);
     }
@@ -172,34 +192,34 @@ class MergeRecord extends SugarBean {
         }
         return false;
     }
-    
+
     function ACLAccess($view,$is_owner='not_set'){
         global $current_user;
 
         //if the module doesn't implement ACLS or is empty  
         if(empty($this->merge_bean) || !$this->merge_bean->bean_implements('ACL'))
         {
-        	return true;
+            return true;
         }
-        
+
         if($is_owner == 'not_set'){
             $is_owner = $this->merge_bean->isOwner($current_user->id);
         }
         return ACLController::checkAccess($this->merge_bean->module_dir,'edit', true);
     }
-    
+
 
     //keep save function to handle anything special on merges
     function save($check_notify = FALSE) {
-            //something here
-    return parent :: save($check_notify);
+        //something here
+        return parent :: save($check_notify);
     }
 
     function populate_search_params($search_params) {
-       foreach ($this->merge_bean->field_defs as $key=>$value) {
+        foreach ($this->merge_bean->field_defs as $key=>$value) {
             $searchFieldString=$key.'SearchField';
             $searchTypeString=$key.'SearchType';
-             
+
             if (isset($search_params[$searchFieldString]) ) {
 
                 if (isset($search_params[$searchFieldString]) == '') {
@@ -215,46 +235,46 @@ class MergeRecord extends SugarBean {
                 //add field_def to the array.
                 $this->field_search_params[$key] = array_merge($value,$this->field_search_params[$key] );
             }
-       }
+        }
     }
-    
+
     function get_inputs_for_search_params($search_params) 
     {
         $returnString = '';
         foreach ($this->merge_bean->field_defs as $key=>$value) {
             $searchFieldString=$key.'SearchField';
             $searchTypeString=$key.'SearchType';
-            
+
             if (isset($search_params[$searchFieldString]) ) {
                 $returnString .= "<input type='hidden' name='$searchFieldString' value='{$search_params[$searchFieldString]}' />\n";
                 $returnString .= "<input type='hidden' name='$searchTypeString' value='{$search_params[$searchTypeString]}' />\n";
             }
         }
-        
+
         return $returnString;
     }
-    
+
     function email_addresses_query($table, $module, $bean_id) {
-    	$query = $table.".id IN (SELECT ear.bean_id FROM email_addresses ea
-									LEFT JOIN email_addr_bean_rel ear ON ea.id = ear.email_address_id 
-									WHERE ear.bean_module = '{$module}'
-									AND ear.bean_id != '{$bean_id}' 
-									AND ear.deleted = 0";
-    	return $query;
+        $query = $table.".id IN (SELECT ear.bean_id FROM email_addresses ea
+            LEFT JOIN email_addr_bean_rel ear ON ea.id = ear.email_address_id 
+            WHERE ear.bean_module = '{$module}'
+            AND ear.bean_id != '{$bean_id}' 
+            AND ear.deleted = 0";
+        return $query;
     }
-    
+
     function release_name_query($search_type, $value) {
-    	$this->load_merge_bean2('Releases');
-    	if($search_type=='like') {
-        	$where = "releases.name LIKE '%".$GLOBALS['db']->quote($value)."%'";
-    	}
-    	elseif($search_type=='start'){
-    	    $where = "releases.name LIKE '".$GLOBALS['db']->quote($value)."%'";
-    	}
-    	else {
-    	    $where = "releases.name = '".$GLOBALS['db']->quote($value)."'";
-    	}
-    	$list=$this->merge_bean2->get_releases(false,'Active',$where);
+        $this->load_merge_bean2('Releases');
+        if($search_type=='like') {
+            $where = "releases.name LIKE '%".$GLOBALS['db']->quote($value)."%'";
+        }
+        elseif($search_type=='start'){
+            $where = "releases.name LIKE '".$GLOBALS['db']->quote($value)."%'";
+        }
+        else {
+            $where = "releases.name = '".$GLOBALS['db']->quote($value)."'";
+        }
+        $list=$this->merge_bean2->get_releases(false,'Active',$where);
         foreach($list as $key => $value){
             $list_to_join[]="'".$GLOBALS['db']->quote($key)."'";
         }
@@ -265,8 +285,8 @@ class MergeRecord extends SugarBean {
     function create_where_statement() {
         $where_clauses = array ();
         foreach ($this->field_search_params as $merge_field => $vDefArray) {
-        	if (isset ($vDefArray['source']) && $vDefArray['source'] == 'custom_fields') {
-        		$table_name = $this->merge_bean->table_name."_cstm";
+            if (isset ($vDefArray['source']) && $vDefArray['source'] == 'custom_fields') {
+                $table_name = $this->merge_bean->table_name."_cstm";
             } else {
                 $table_name = $this->merge_bean->table_name;
             }
@@ -275,52 +295,52 @@ class MergeRecord extends SugarBean {
             //Must do the same for pulling values in js dropdown
             if (isset ($vDefArray['search_type']) && $vDefArray['search_type'] == 'like') {
                 if ($merge_field != "email1" && $merge_field != "email2" && $merge_field !="release_name") {
-                	if ($vDefArray['value'] != '') {
-	                	array_push($where_clauses, $table_name.".".$merge_field." LIKE '%".$GLOBALS['db']->quote($vDefArray['value'])."%'");
-                	}
+                    if ($vDefArray['value'] != '') {
+                        array_push($where_clauses, $table_name.".".$merge_field." LIKE '%".$GLOBALS['db']->quote($vDefArray['value'])."%'");
+                    }
                 }
                 elseif($merge_field =="release_name"){
                     if(isset($vDefArray['value'])){
-						$in = $this->release_name_query('like',$vDefArray['value']);
+                        $in = $this->release_name_query('like',$vDefArray['value']);
                         array_push($where_clauses, $table_name.".found_in_release IN ($in)");
                     }
                 }
                 else {
-	                $query = $this->email_addresses_query($table_name, $this->merge_module, $this->merge_bean->id);
-	                $query .= " AND ea.email_address LIKE '%".$GLOBALS['db']->quote($vDefArray['value'])."%')";
-	                $where_clauses[] = $query;
+                    $query = $this->email_addresses_query($table_name, $this->merge_module, $this->merge_bean->id);
+                    $query .= " AND ea.email_address LIKE '%".$GLOBALS['db']->quote($vDefArray['value'])."%')";
+                    $where_clauses[] = $query;
                 }
             }
             elseif (isset ($vDefArray['search_type']) && $vDefArray['search_type'] == 'start') {
                 if ($merge_field != "email1" && $merge_field != "email2" && $merge_field !="release_name") {
-            		array_push($where_clauses, $table_name.".".$merge_field." LIKE '".$GLOBALS['db']->quote($vDefArray['value'])."%'"); 
+                    array_push($where_clauses, $table_name.".".$merge_field." LIKE '".$GLOBALS['db']->quote($vDefArray['value'])."%'"); 
                 }
                 elseif($merge_field =="release_name"){
-                        if(isset($vDefArray['value'])){
-						$in = $this->release_name_query('start',$vDefArray['value']);
+                    if(isset($vDefArray['value'])){
+                        $in = $this->release_name_query('start',$vDefArray['value']);
                         array_push($where_clauses, $table_name.".found_in_release IN ($in)");
                     }
                 }
                 else {
-	                $query = $this->email_addresses_query($table_name, $this->merge_module, $this->merge_bean->id);
-	                $query .= " AND ea.email_address LIKE '".$GLOBALS['db']->quote($vDefArray['value'])."%')";
-	                $where_clauses[] = $query;
+                    $query = $this->email_addresses_query($table_name, $this->merge_module, $this->merge_bean->id);
+                    $query .= " AND ea.email_address LIKE '".$GLOBALS['db']->quote($vDefArray['value'])."%')";
+                    $where_clauses[] = $query;
                 }
             }
             else {
                 if ($merge_field != "email1" && $merge_field != "email2" && $merge_field !="release_name") {
-		            array_push($where_clauses, $table_name.".".$merge_field."='".$GLOBALS['db']->quote($vDefArray['value'])."'");
+                    array_push($where_clauses, $table_name.".".$merge_field."='".$GLOBALS['db']->quote($vDefArray['value'])."'");
                 }
                 elseif($merge_field =="release_name"){
                     if(isset($vDefArray['value'])){
-						$in = $this->release_name_query('exact',$vDefArray['value']);
+                        $in = $this->release_name_query('exact',$vDefArray['value']);
                         array_push($where_clauses, $table_name.".found_in_release IN ($in)");
                     }
                 }
                 else {
-	                $query = $this->email_addresses_query($table_name, $this->merge_module, $this->merge_bean->id);
-	                $query .= " AND ea.email_address = '".$GLOBALS['db']->quote($vDefArray['value'])."')";
-	                $where_clauses[] = $query;
+                    $query = $this->email_addresses_query($table_name, $this->merge_module, $this->merge_bean->id);
+                    $query .= " AND ea.email_address = '".$GLOBALS['db']->quote($vDefArray['value'])."')";
+                    $where_clauses[] = $query;
                 }                
             }
         }
@@ -347,4 +367,5 @@ class MergeRecord extends SugarBean {
         return $where;
     }
 }
-?>
+
+// vim: ts=4 sw=4 et

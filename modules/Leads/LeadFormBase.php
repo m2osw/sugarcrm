@@ -37,10 +37,10 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
 
 require_once('include/SugarObjects/forms/PersonFormBase.php');
 
-class LeadFormBase extends PersonFormBase {
-
-var $moduleName = 'Leads';
-var $objectName = 'Lead';
+class LeadFormBase extends PersonFormBase
+{
+    var $moduleName = 'Leads';
+    var $objectName = 'Lead';
 
 /**
  * getDuplicateQuery
@@ -325,15 +325,24 @@ function handleSave($prefix,$redirect=true, $useRequired=false, $do_save=true, $
 		}
     }
 
-	if (!isset($_POST[$prefix.'email_opt_out'])) $focus->email_opt_out = 0;
-	if (!isset($_POST[$prefix.'do_not_call'])) $focus->do_not_call = 0;
+	if(!isset($_POST[$prefix.'email_opt_out']))
+    {
+        $focus->email_opt_out = 0;
+    }
+	if(!isset($_POST[$prefix.'do_not_call']))
+    {
+        $focus->do_not_call = 0;
+    }
 
-    if($do_save) {
-    	if(!empty($GLOBALS['check_notify'])) {
+    if($do_save)
+    {
+    	if(!empty($GLOBALS['check_notify']))
+        {
     		$focus->save($GLOBALS['check_notify']);
     	}
-    	else {
-    		$focus->save(FALSE);
+    	else
+        {
+    		$focus->save(false);
     	}
     }
 
@@ -395,5 +404,4 @@ function handleSave($prefix,$redirect=true, $useRequired=false, $do_save=true, $
 
 }
 
-
-?>
+// vim: ts=4 sw=4 et

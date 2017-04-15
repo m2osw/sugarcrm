@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -44,7 +44,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  ********************************************************************************/
 
 
-if (isset($_POST['saveConfig'])){
+if (isset($_POST['saveConfig']))
+{
     require_once('modules/Users/User.php');
 	$focus = new User();
 	$focus->retrieve($_POST['record']);	
@@ -101,4 +102,5 @@ if ($current_user->system_generated_password == '1')
 if(isset($_REQUEST['error_password'])) $sugar_smarty->assign('EXPIRATION_TYPE', $_REQUEST['error_password']);
 $sugar_smarty->display('modules/Users/Changenewpassword.tpl');
 
-?>
+
+// vim: ts=4 sw=4 et

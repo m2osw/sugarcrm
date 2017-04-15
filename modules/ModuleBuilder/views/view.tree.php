@@ -34,48 +34,50 @@
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-
 require_once('modules/ModuleBuilder/MB/AjaxCompose.php');
 require_once('modules/ModuleBuilder/Module/StudioModule.php');
 require_once('modules/ModuleBuilder/Module/StudioBrowser.php') ;
 require_once('include/ytree/ExtNode.php') ;
+require_once "include/MVC/View/SugarView.php";
+
 
 class ViewHistory extends SugarView 
 {
- 	/**
-	 * @see SugarView::_getModuleTitleParams()
-	 */
-	protected function _getModuleTitleParams($browserTitle = false)
-	{
-	    global $mod_strings;
-	    
-    	return array(
-    	   translate('LBL_MODULE_NAME','Administration'),
-    	   ModuleBuilderController::getModuleTitle(),
-    	   );
+    /**
+     * @see SugarView::_getModuleTitleParams()
+     */
+    protected function _getModuleTitleParams($browserTitle = false)
+    {
+        global $mod_strings;
+
+        return array(
+                translate('LBL_MODULE_NAME','Administration'),
+                ModuleBuilderController::getModuleTitle(),
+                );
     }
 
-	//STUDIO LABELS ONLY//
- 	//TODO Bundle Studio and ModuleBuilder label handling to increase maintainability.
- 	function display()
- 	{
-		$root = new ExtNode('root', 'root', true);
-		$sb = new StudioBrowser();
-		$sb->loadModules();
-		foreach($sb->modules as $name => $studioMod) {
-			$root->add_node($this->buildStudioNode($studioMod));
-		}
-		$json = getJSONobj();
-		echo($json->encode($root));
- 	}
-	
-	/**
-	 * 
-	 * @return ExtNode built from the passed StudioModule
-	 * @param $module StudioModule
-	 */
-	function buildStudioNode($module) {
-		
-	}
+    //STUDIO LABELS ONLY//
+    //TODO Bundle Studio and ModuleBuilder label handling to increase maintainability.
+    function display()
+    {
+        $root = new ExtNode('root', 'root', true);
+        $sb = new StudioBrowser();
+        $sb->loadModules();
+        foreach($sb->modules as $name => $studioMod) {
+            $root->add_node($this->buildStudioNode($studioMod));
+        }
+        $json = getJSONobj();
+        echo($json->encode($root));
+    }
 
+    /**
+     * 
+     * @return ExtNode built from the passed StudioModule
+     * @param $module StudioModule
+     */
+    function buildStudioNode($module) {
+
+    }
 }
+
+// vim: ts=4 sw=4 et
