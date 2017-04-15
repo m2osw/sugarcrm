@@ -24,13 +24,24 @@ The only changes I want to do are of three categories:
 
 # Status
 
-The installation has a bug that I need to retest to see whether I fixed it
-or not. It would not properly save the password to the database if you
-make use of a different username (i.e. you specify the user to use and
-its password...) This still needs to be fixed if it still isn't working.
+I ran PHP directly in my console against all the classes and that tells me
+when there is a problem. I fixed many more functions that did not have
+the correct signature between base classes and derived classes. These may
+still happen, but it looks like it should be pretty good. This change
+involved (a few times) the renaming of some functions. This means I may
+have missed changing the name of the function from callers... that means
+it still won't work as expected.
 
-Once installed, I can get all the way to the Dashboard. That's it for now.
-Will be working on the other pages, adding contacts, managing contacts,
+As far as I'm concerned, I finish worked on the installation and it works
+as expected in "Custom" mode. I do not know about the other mode(s) as
+I'm not using them. The only quirk is the SugarCRM registration page which
+has a permission error, like I care.
+
+Once installed, I get to the Dashboard as expected.
+
+That's it for now.
+
+I will be working on the other pages, adding contacts, managing contacts,
 calendar, etc. It's a huge project so it make take some time before we
 have a version that is seemless.
 
