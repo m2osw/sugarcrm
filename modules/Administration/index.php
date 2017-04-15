@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -150,7 +150,8 @@ foreach ($admin_group_header as $key=>$values) {
   }
 }
 
-$sugar_smarty->assign('MY_FRAME',"<iframe class='teamNoticeBox' title='https://www.sugarcrm.com/crm/product/gopro/admin' src='https://www.sugarcrm.com/crm/product/gopro/admin' width='100%' height='315px'></iframe>");
+//$sugar_smarty->assign('MY_FRAME',"<iframe class='teamNoticeBox' title='https://www.sugarcrm.com/crm/product/gopro/admin' src='https://www.sugarcrm.com/crm/product/gopro/admin' width='100%' height='315px'></iframe>");
+$sugar_smarty->assign('MY_FRAME',"");
 $sugar_smarty->assign("VALUES_3_TAB", $values_3_tab);
 $sugar_smarty->assign("ADMIN_GROUP_HEADER", $admin_group_header_tab);
 $sugar_smarty->assign("GROUP_HEADER", $group);

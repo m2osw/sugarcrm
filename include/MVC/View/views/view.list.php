@@ -168,19 +168,25 @@ class ViewList extends SugarView
         }
     }
 
-    function listViewProcess(){
+    function listViewProcess()
+    {
         $this->processSearchForm();
         $this->lv->searchColumns = $this->searchForm->searchColumns;
 
         if(!$this->headers)
+        {
             return;
-        if(empty($_REQUEST['search_form_only']) || $_REQUEST['search_form_only'] == false){
+        }
+
+        if(empty($_REQUEST['search_form_only']) || $_REQUEST['search_form_only'] == false)
+        {
             $this->lv->ss->assign("SEARCH",true);
             $this->lv->setup($this->seed, 'include/ListView/ListViewGeneric.tpl', $this->where, $this->params);
             $savedSearchName = empty($_REQUEST['saved_search_select_name']) ? '' : (' - ' . $_REQUEST['saved_search_select_name']);
             echo $this->lv->display();
         }
     }
+
     function prepareSearchForm()
     {
         $this->searchForm = null;
@@ -188,11 +194,15 @@ class ViewList extends SugarView
         //search
         $view = 'basic_search';
         if(!empty($_REQUEST['search_form_view']) && $_REQUEST['search_form_view'] == 'advanced_search')
+        {
             $view = $_REQUEST['search_form_view'];
+        }
         $this->headers = true;
 
         if(!empty($_REQUEST['search_form_only']) && $_REQUEST['search_form_only'])
+        {
             $this->headers = false;
+        }
         elseif(!isset($_REQUEST['search_form']) || $_REQUEST['search_form'] != 'false')
         {
             if(isset($_REQUEST['searchFormTab']) && $_REQUEST['searchFormTab'] == 'advanced_search')
@@ -206,35 +216,38 @@ class ViewList extends SugarView
         }
 
         $this->use_old_search = true;
-        if ((file_exists('modules/' . $this->module . '/SearchForm.html')
+        if((file_exists('modules/' . $this->module . '/SearchForm.html')
                     && !file_exists('modules/' . $this->module . '/metadata/searchdefs.php'))
-                || (file_exists('custom/modules/' . $this->module . '/SearchForm.html')
+        || (file_exists('custom/modules/' . $this->module . '/SearchForm.html')
                     && !file_exists('custom/modules/' . $this->module . '/metadata/searchdefs.php')))
         {
-            require_once('include/SearchForm/SearchForm.php');
+            require_once "include/SearchForm/SearchForm.php";
             $this->searchForm = new SearchForm($this->module, $this->seed);
         }
         else
         {
             $this->use_old_search = false;
-            require_once('include/SearchForm/SearchForm2.php');
+            require_once "include/SearchForm/SearchForm2.php";
 
             $searchMetaData = SearchForm::retrieveSearchDefs($this->module);
 
             $this->searchForm = $this->getSearchForm2($this->seed, $this->module, $this->action);
-            $this->searchForm->setup($searchMetaData['searchdefs'], $searchMetaData['searchFields'], 'SearchFormGeneric.tpl', $view, $this->listViewDefs);
+            $this->searchForm->setupSearchForm($searchMetaData['searchdefs'], $searchMetaData['searchFields'], 'SearchFormGeneric.tpl', $view, $this->listViewDefs);
             $this->searchForm->lv = $this->lv;
         }
     }
 
-    function processSearchForm(){
+    function processSearchForm()
+    {
         if(isset($_REQUEST['query']))
         {
             // we have a query
-            if(!empty($_SERVER['HTTP_REFERER']) && preg_match('/action=EditView/', $_SERVER['HTTP_REFERER'])) { // from EditView cancel
+            if(!empty($_SERVER['HTTP_REFERER']) && preg_match('/action=EditView/', $_SERVER['HTTP_REFERER']))
+            { // from EditView cancel
                 $this->searchForm->populateFromArray($this->storeQuery->query);
             }
-            else {
+            else
+            {
                 $this->searchForm->populateFromRequest();
             }
 
@@ -243,28 +256,39 @@ class ViewList extends SugarView
             if (count($where_clauses) > 0 )$this->where = '('. implode(' ) AND ( ', $where_clauses) . ')';
             $GLOBALS['log']->info("List View Where Clause: $this->where");
         }
-        if($this->use_old_search){
-            switch($view) {
+        if($this->use_old_search)
+        {
+            switch($view)
+            {
                 case 'basic_search':
-                    $this->searchForm->setup();
+                    $this->searchForm->setupSearchForm();
                     $this->searchForm->displayBasic($this->headers);
                     break;
+
                 case 'advanced_search':
-                    $this->searchForm->setup();
+                    $this->searchForm->setupSearchForm();
                     $this->searchForm->displayAdvanced($this->headers);
                     break;
+
                 case 'saved_views':
                     echo $this->searchForm->displaySavedViews($this->listViewDefs, $this->lv, $this->headers);
                     break;
+
             }
-        }else{
+        }
+        else
+        {
             echo $this->searchForm->display($this->headers);
         }
     }
-    function preDisplay(){
+
+    function preDisplay()
+    {
         $this->lv = new ListViewSmarty();
     }
-    function display(){
+
+    function display()
+    {
         if(!$this->bean || !$this->bean->ACLAccess('list')){
             ACLController::displayNoAccess();
         } else {

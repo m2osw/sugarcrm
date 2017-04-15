@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -3680,9 +3680,11 @@ function upgradeModulesForTeam() {
 			$current_user = new User();
 			$current_user->retrieve($row['assigned_user_id']);
 
-			if(!empty($content['dashlets']) && !empty($content['pages'])){
+			if(!empty($content['dashlets']) && !empty($content['pages']))
+            {
 				$originalDashlets = $content['dashlets'];
-				foreach($originalDashlets as $key => $ds){
+				foreach($originalDashlets as $key => $ds)
+                {
 				    if(!empty($ds['options']['url']) && stristr($ds['options']['url'],'https://www.sugarcrm.com/crm/product/gopro')){
 						unset($originalDashlets[$key]);
 					}

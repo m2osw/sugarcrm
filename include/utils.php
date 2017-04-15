@@ -4664,21 +4664,25 @@ function verify_image_file($path, $jpeg = false)
 function verify_uploaded_image($path, $jpeg_only = false)
 {
     $supportedExtensions = array('jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg');
-    if(!$jpeg_only) {
+    if(!$jpeg_only)
+    {
         $supportedExtensions['png'] = 'image/png';
     }
 
-    if(!file_exists($path) || !is_file($path)) {
-	    return false;
-	}
+    if(!file_exists($path) || !is_file($path))
+    {
+        return false;
+    }
 
-	$img_size = getimagesize($path);
-	$filetype = $img_size['mime'];
-	$ext = end(explode(".", $path));
-	if(substr_count('..', $path) > 0 || ($ext !== $path && !isset($supportedExtensions[strtolower($ext)])) ||
-	    !in_array($filetype, array_values($supportedExtensions))) {
-	        return false;
-	}
+    $img_size = getimagesize($path);
+    $filetype = $img_size['mime'];
+    $parts = explode(".", $path);
+    $ext = end($parts);
+    if(substr_count('..', $path) > 0 || ($ext !== $path && !isset($supportedExtensions[strtolower($ext)])) ||
+    !in_array($filetype, array_values($supportedExtensions))) {
+        return false;
+    }
+
     return verify_image_file($path, $jpeg_only);
 }
 

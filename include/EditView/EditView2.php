@@ -34,10 +34,9 @@
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-
-
 require_once('include/TemplateHandler/TemplateHandler.php');
 require_once('include/EditView/SugarVCR.php');
+
 
 /**
  * New EditView
@@ -160,19 +159,22 @@ class EditView
     {
         global $beanList, $beanFiles;
 
-        if (empty($beanList[$this->module])) return;
-        if(!$this->focus )
+        if(empty($beanList[$this->module]))
         {
-           $bean = $beanList[$this->module];
-           require_once($beanFiles[$bean]);
-           $obj = new $bean();
-           $this->focus = $obj;
+            return;
+        }
+        if(!$this->focus)
+        {
+            $bean = $beanList[$this->module];
+            require_once($beanFiles[$bean]);
+            $obj = new $bean();
+            $this->focus = $obj;
         }
 
         //If there is no idea, assume we are creating a new instance
         //and call the fill_in_additional_detail_fields where initialization
         //code has been moved to
-        if (empty($this->focus->id))
+        if(empty($this->focus->id))
         {
             global $current_user;
 
@@ -183,17 +185,17 @@ class EditView
 
     function populateBean()
     {
-        if (!empty($_REQUEST['record']) && $this->populateBean)
+        if(!empty($_REQUEST['record']) && $this->populateBean)
         {
-           global $beanList;
+            global $beanList;
 
-           $bean = $beanList[$this->module];
-           $obj = new $bean();
-           $this->focus = $obj->retrieve($_REQUEST['record']);
+            $bean = $beanList[$this->module];
+            $obj = new $bean();
+            $this->focus = $obj->retrieve($_REQUEST['record']);
         }
         else
         {
-           $GLOBALS['log']->debug("Unable to populate bean, no record parameter found");
+            $GLOBALS['log']->debug("Unable to populate bean, no record parameter found");
         }
     }
 
@@ -332,14 +334,13 @@ class EditView
                     }
                 }
 
-			    	$panel = $this->getPanelWithFillers($panel);
+                $panel = $this->getPanelWithFillers($panel);
 
-			    	$this->sectionPanels[strtoupper($key)] = $panel;
-		        }
+                $this->sectionPanels[strtoupper($key)] = $panel;
+            }
 
-
-		$panelCount++;
-		} //foreach
+            $panelCount++;
+        } //foreach
     }
 
     /**
@@ -456,26 +457,33 @@ class EditView
                 {
                     if(isset($GLOBALS['sugar_config']['enable_autocomplete']) && $GLOBALS['sugar_config']['enable_autocomplete'] == true)
                     {
-						$this->fieldDefs[$name]['autocomplete'] = true;
-	                	$this->fieldDefs[$name]['autocomplete_options'] = $this->fieldDefs[$name]['options']; // we need the name for autocomplete
-					} else {
+                        $this->fieldDefs[$name]['autocomplete'] = true;
+                        $this->fieldDefs[$name]['autocomplete_options'] = $this->fieldDefs[$name]['options']; // we need the name for autocomplete
+                    }
+                    else
+                    {
                         $this->fieldDefs[$name]['autocomplete'] = false;
-                   	}
-                   	// Bug 57472 - $this->fieldDefs[$name]['autocomplete_options' was set too late, it didn't retrieve the list's name, but the list itself (the developper comment show us that developper expected to retrieve list's name and not the options array)
-                   	$this->fieldDefs[$name]['options'] = $app_list_strings[$this->fieldDefs[$name]['options']];
+                    }
+                    // Bug 57472 - $this->fieldDefs[$name]['autocomplete_options' was set too late, it didn't retrieve the list's name, but the list itself (the developper comment show us that developper expected to retrieve list's name and not the options array)
+                    $this->fieldDefs[$name]['options'] = $app_list_strings[$this->fieldDefs[$name]['options']];
                 }
 
-                if(isset($this->fieldDefs[$name]['options']) && is_array($this->fieldDefs[$name]['options']) && isset($this->fieldDefs[$name]['default_empty']) && !isset($this->fieldDefs[$name]['options'][$this->fieldDefs[$name]['default_empty']])) {
+                if(isset($this->fieldDefs[$name]['options'])
+                && is_array($this->fieldDefs[$name]['options'])
+                && isset($this->fieldDefs[$name]['default_empty'])
+                && !isset($this->fieldDefs[$name]['options'][$this->fieldDefs[$name]['default_empty']]))
+                {
                     $this->fieldDefs[$name]['options'] = array_merge(array($this->fieldDefs[$name]['default_empty']=>$this->fieldDefs[$name]['default_empty']), $this->fieldDefs[$name]['options']);
                 }
                                 
-	       	 	if(isset($this->fieldDefs[$name]['function'])) {
-	       	 		$function = $this->fieldDefs[$name]['function'];
-	       			if(is_array($function) && isset($function['name'])){
-	       				$function = $this->fieldDefs[$name]['function']['name'];
-	       			}else{
-	       				$function = $this->fieldDefs[$name]['function'];
-	       			}
+                if(isset($this->fieldDefs[$name]['function']))
+                {
+                	$function = $this->fieldDefs[$name]['function'];
+                	if(is_array($function) && isset($function['name'])){
+                		$function = $this->fieldDefs[$name]['function']['name'];
+                	}else{
+                		$function = $this->fieldDefs[$name]['function'];
+                	}
 
                     if(isset($this->fieldDefs[$name]['function']['include']) && file_exists($this->fieldDefs[$name]['function']['include']))
                     {
@@ -897,3 +905,5 @@ class EditView
     }
 }
 
+
+// vim: ts=4 sw=4 et

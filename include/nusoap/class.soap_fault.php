@@ -1,4 +1,5 @@
 <?php
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 
 /*
 
@@ -38,8 +39,7 @@ r354 - 2004-08-02 23:00:37 -0700 (Mon, 02 Aug 2004) - sugarjacob - Adding Soap
 
 */
 
-
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+require_once "include/nusoap/class.nusoap_base.php";
 
 
 
@@ -52,7 +52,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
 
 * @access public
 */
-class nusoap_fault extends nusoap_base {
+class nusoap_fault extends nusoap_base
+{
 	/**
 	 * The fault code (client|server)
 	 * @var string
@@ -106,7 +107,7 @@ class nusoap_fault extends nusoap_base {
 			$ns_string .= "\n  xmlns:$k=\"$v\"";
 		}
 		$return_msg =
-			'<?xml version="1.0" encoding="'.$this->soap_defencoding.'"?>'.
+			'<?xml version="1.0" encoding="'.$this->soap_defencoding.'"?'.'>'.
 			'<SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"'.$ns_string.">\n".
 				'<SOAP-ENV:Body>'.
 				'<SOAP-ENV:Fault>'.
@@ -124,8 +125,8 @@ class nusoap_fault extends nusoap_base {
 /**
  * Backward compatibility
  */
-class soap_fault extends nusoap_fault {
+class soap_fault extends nusoap_fault
+{
 }
 
-
-?>
+// vim: ts=4 sw=4 et

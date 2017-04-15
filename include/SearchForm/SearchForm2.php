@@ -34,11 +34,10 @@
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-
-require_once('include/tabs.php');
-require_once('include/ListView/ListViewSmarty.php');
-require_once('include/TemplateHandler/TemplateHandler.php');
-require_once('include/EditView/EditView2.php');
+require_once "include/tabs.php";
+require_once "include/ListView/ListViewSmarty.php";
+require_once "include/TemplateHandler/TemplateHandler.php";
+require_once "include/EditView/EditView2.php";
 
 
 class SearchForm extends EditView
@@ -103,7 +102,7 @@ class SearchForm extends EditView
 
     //function EditView::setup($module, $focus = null, $metadataFile = null, $tpl = 'include/EditView/EditView.tpl', $createFocus = true)
     // this one needs to be renamed and called properly
-    function setup($searchdefs, $searchFields = array(), $tpl, $displayView = 'basic_search', $listViewDefs = array())
+    function setupSearchForm($searchdefs, $searchFields = array(), $tpl, $displayView = 'basic_search', $listViewDefs = array())
     {
         $this->searchdefs =  $searchdefs[$this->module];
         $this->tpl = $tpl;
@@ -649,7 +648,8 @@ class SearchForm extends EditView
 
         //rrs check for team_id
 
-        foreach($this->searchFields as $field=>$parms) {
+        foreach($this->searchFields as $field=>$parms)
+        {
             $customField = false;
             // Jenny - Bug 7462: We need a type check here to avoid database errors
             // when searching for numeric fields. This is a temporary fix until we have
@@ -968,208 +968,247 @@ class SearchForm extends EditView
                         }
 
 
-                        if($db->supports("case_sensitive") && isset($parms['query_type']) && $parms['query_type'] == 'case_insensitive') {
+                        if($db->supports("case_sensitive") && isset($parms['query_type']) && $parms['query_type'] == 'case_insensitive')
+                        {
                             $db_field = 'upper(' . $db_field . ")";
-                                    $field_value = strtoupper($field_value);
-                                    }
+                            $field_value = strtoupper($field_value);
+                        }
 
-                                    $itr++;
-                                    if(!empty($where)) {
-                                    $where .= " OR ";
-                                    }
+                        $itr++;
+                        if(!empty($where))
+                        {
+                            $where .= " OR ";
+                        }
 
-                                    //Here we make a last attempt to determine the field type if possible
-                                    if(empty($type) && isset($parms['db_field']) && isset($parms['db_field'][0]) && isset($this->seed->field_defs[$parms['db_field'][0]]['type']))
-                                    {
-                                    $type = $this->seed->field_defs[$parms['db_field'][0]]['type'];
-                                    }
+                        //Here we make a last attempt to determine the field type if possible
+                        if(empty($type) && isset($parms['db_field']) && isset($parms['db_field'][0]) && isset($this->seed->field_defs[$parms['db_field'][0]]['type']))
+                        {
+                            $type = $this->seed->field_defs[$parms['db_field'][0]]['type'];
+                        }
 
-                                    switch(strtolower($operator)) {
-                                    case 'subquery':
-                                    $in = 'IN';
-                                    if ( isset($parms['subquery_in_clause']) ) {
-                                    if ( !is_array($parms['subquery_in_clause']) ) {
+                        switch(strtolower($operator))
+                        {
+                        case 'subquery':
+                            $in = 'IN';
+                            if(isset($parms['subquery_in_clause']))
+                            {
+                                if(!is_array($parms['subquery_in_clause']))
+                                {
                                     $in = $parms['subquery_in_clause'];
-                                    }
-                                    elseif ( isset($parms['subquery_in_clause'][$field_value]) ) {
-                                        $in = $parms['subquery_in_clause'][$field_value];
-                                    }
-                                    }
-                                    $sq = $parms['subquery'];
-                                    if(is_array($sq)){
-                                        $and_or = ' AND ';
-                                        if (isset($sq['OR'])){
-                                            $and_or = ' OR ';
-                                        }
-                                        $first = true;
-                                        foreach($sq as $q){
-                                            if(empty($q) || strlen($q)<2) continue;
-                                            if(!$first){
-                                                $where .= $and_or;
-                                            }
-                                            $where .= " {$db_field} $in ({$q} ".$this->seed->db->quoted($field_value.'%').") ";
-                                            $first = false;
-                                        }
-                                    }elseif(!empty($parms['query_type']) && $parms['query_type'] == 'format'){
-                                        $stringFormatParams = array(0 => $field_value, 1 => $GLOBALS['current_user']->id);
-                                        $where .= "{$db_field} $in (".string_format($parms['subquery'], $stringFormatParams).")";
-                                    }else{
-                                        //Bug#37087: Re-write our sub-query to it is executed first and contents stored in a derived table to avoid mysql executing the query
-                                        //outside in. Additional details: http://bugs.mysql.com/bug.php?id=9021
-                                        $selectCol = ' * ';
-                                        //use the select column in the subquery if it exists
-                                        if(!empty($parms['subquery'])){
-                                            $selectCol = $this->getSelectCol($parms['subquery']);
-                                        }
-                                        $where .= "{$db_field} $in (select $selectCol from ({$parms['subquery']} ".$this->seed->db->quoted($field_value.'%').") {$field}_derived)";
-                                    }
-
-                                    break;
-
-                                    case 'like':
-                                    if($type == 'bool' && $field_value == 0)
+                                }
+                                elseif(isset($parms['subquery_in_clause'][$field_value]))
+                                {
+                                    $in = $parms['subquery_in_clause'][$field_value];
+                                }
+                            }
+                            $sq = $parms['subquery'];
+                            if(is_array($sq))
+                            {
+                                $and_or = ' AND ';
+                                if (isset($sq['OR']))
+                                {
+                                    $and_or = ' OR ';
+                                }
+                                $first = true;
+                                foreach($sq as $q)
+                                {
+                                    if(empty($q) || strlen($q)<2) continue;
+                                    if(!$first)
                                     {
-                                        // Bug 43452 - FG - Added parenthesis surrounding the OR (without them the WHERE clause would be broken)
-                                        $where .=  "( " . $db_field . " = '0' OR " . $db_field . " IS NULL )";
+                                        $where .= $and_or;
                                     }
-                                    else
+                                    $where .= " {$db_field} $in ({$q} ".$this->seed->db->quoted($field_value.'%').") ";
+                                    $first = false;
+                                }
+                            }
+                            elseif(!empty($parms['query_type']) && $parms['query_type'] == 'format')
+                            {
+                                $stringFormatParams = array(0 => $field_value, 1 => $GLOBALS['current_user']->id);
+                                $where .= "{$db_field} $in (".string_format($parms['subquery'], $stringFormatParams).")";
+                            }
+                            else
+                            {
+                                //Bug#37087: Re-write our sub-query to it is executed first and contents stored in a derived table to avoid mysql executing the query
+                                //outside in. Additional details: http://bugs.mysql.com/bug.php?id=9021
+                                $selectCol = ' * ';
+                                //use the select column in the subquery if it exists
+                                if(!empty($parms['subquery']))
+                                {
+                                    $selectCol = $this->getSelectCol($parms['subquery']);
+                                }
+                                $where .= "{$db_field} $in (select $selectCol from ({$parms['subquery']} ".$this->seed->db->quoted($field_value.'%').") {$field}_derived)";
+                            }
+
+                            break;
+
+                        case 'like':
+                            if($type == 'bool' && $field_value == 0)
+                            {
+                                // Bug 43452 - FG - Added parenthesis surrounding the OR (without them the WHERE clause would be broken)
+                                $where .=  "( " . $db_field . " = '0' OR " . $db_field . " IS NULL )";
+                            }
+                            else
+                            {
+                                // check to see if this is coming from unified search or not
+                                $UnifiedSearch = !empty($parms['force_unifiedsearch']);
+                                if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'UnifiedSearch'){
+                                    $UnifiedSearch = true;
+                                }
+
+                                // If it is a unified search and if the search contains more then 1 word (contains space)
+                                // and if it's the last element from db_field (so we do the concat only once, not for every db_field element)
+                                // we concat the db_field array() (both original, and in reverse order) and search for the whole string in it
+                                if ( $UnifiedSearch && strpos($field_value, ' ') !== false && strpos($db_field, $parms['db_field'][count($parms['db_field']) - 1]) !== false )
+                                {
+                                    // Get the table name used for concat
+                                    $concat_table = explode('.', $db_field);
+                                    $concat_table = $concat_table[0];
+                                    // Get the fields for concatenating
+                                    $concat_fields = $parms['db_field'];
+
+                                    // If db_fields (e.g. contacts.first_name) contain table name, need to remove it
+                                    for ($i = 0; $i < count($concat_fields); $i++)
                                     {
-                                        // check to see if this is coming from unified search or not
-                                        $UnifiedSearch = !empty($parms['force_unifiedsearch']);
-                                        if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'UnifiedSearch'){
-                                            $UnifiedSearch = true;
-                                        }
-
-                                        // If it is a unified search and if the search contains more then 1 word (contains space)
-                                        // and if it's the last element from db_field (so we do the concat only once, not for every db_field element)
-                                        // we concat the db_field array() (both original, and in reverse order) and search for the whole string in it
-                                        if ( $UnifiedSearch && strpos($field_value, ' ') !== false && strpos($db_field, $parms['db_field'][count($parms['db_field']) - 1]) !== false )
+                                        if (strpos($concat_fields[$i], $concat_table) !== false)
                                         {
-                                            // Get the table name used for concat
-                                            $concat_table = explode('.', $db_field);
-                                            $concat_table = $concat_table[0];
-                                            // Get the fields for concatenating
-                                            $concat_fields = $parms['db_field'];
-
-                                            // If db_fields (e.g. contacts.first_name) contain table name, need to remove it
-                                            for ($i = 0; $i < count($concat_fields); $i++)
-                                            {
-                                                if (strpos($concat_fields[$i], $concat_table) !== false)
-                                                {
-                                                    $concat_fields[$i] = substr($concat_fields[$i], strlen($concat_table) + 1);
-                                                }
-                                            }
-
-                                            // Concat the fields and search for the value
-                                            $where .= $this->seed->db->concat($concat_table, $concat_fields) . " LIKE " . $this->seed->db->quoted($field_value . $like_char);
-                                            $where .= ' OR ' . $this->seed->db->concat($concat_table, array_reverse($concat_fields)) . " LIKE " . $this->seed->db->quoted($field_value . $like_char);
+                                            $concat_fields[$i] = substr($concat_fields[$i], strlen($concat_table) + 1);
                                         }
-                                        else
+                                    }
+
+                                    // Concat the fields and search for the value
+                                    $where .= $this->seed->db->concat($concat_table, $concat_fields) . " LIKE " . $this->seed->db->quoted($field_value . $like_char);
+                                    $where .= ' OR ' . $this->seed->db->concat($concat_table, array_reverse($concat_fields)) . " LIKE " . $this->seed->db->quoted($field_value . $like_char);
+                                }
+                                else
+                                {
+                                    //Check if this is a first_name, last_name search
+                                    if(isset($this->seed->field_name_map) && isset($this->seed->field_name_map[$db_field]))
+                                    {
+                                        $vardefEntry = $this->seed->field_name_map[$db_field];
+                                        if(!empty($vardefEntry['db_concat_fields']) && in_array('first_name', $vardefEntry['db_concat_fields']) && in_array('last_name', $vardefEntry['db_concat_fields']))
                                         {
-                                            //Check if this is a first_name, last_name search
-                                            if(isset($this->seed->field_name_map) && isset($this->seed->field_name_map[$db_field]))
+                                            if(!empty($GLOBALS['app_list_strings']['salutation_dom']) && is_array($GLOBALS['app_list_strings']['salutation_dom']))
                                             {
-                                                $vardefEntry = $this->seed->field_name_map[$db_field];
-                                                if(!empty($vardefEntry['db_concat_fields']) && in_array('first_name', $vardefEntry['db_concat_fields']) && in_array('last_name', $vardefEntry['db_concat_fields']))
+                                                foreach($GLOBALS['app_list_strings']['salutation_dom'] as $salutation)
                                                 {
-                                                    if(!empty($GLOBALS['app_list_strings']['salutation_dom']) && is_array($GLOBALS['app_list_strings']['salutation_dom']))
+                                                    if(!empty($salutation) && strpos($field_value, $salutation) === 0)
                                                     {
-                                                        foreach($GLOBALS['app_list_strings']['salutation_dom'] as $salutation)
-                                                        {
-                                                            if(!empty($salutation) && strpos($field_value, $salutation) === 0)
-                                                            {
-                                                                $field_value = trim(substr($field_value, strlen($salutation)));
-                                                                break;
-                                                            }
-                                                        }
+                                                        $field_value = trim(substr($field_value, strlen($salutation)));
+                                                        break;
                                                     }
                                                 }
                                             }
-
-                                            //field is not last name or this is not from global unified search, so do normal where clause
-                                            $where .=  $db_field . " like ".$this->seed->db->quoted(sql_like_string($field_value, $like_char));
                                         }
                                     }
-                                    break;
-                                    case 'not in':
-                                    $where .= $db_field . ' not in ('.$field_value.')';
-                                            break;
-                                            case 'in':
-                                            $where .=  $db_field . ' in ('.$field_value.')';
-                                                break;
-                                                case '=':
-                                                if($type == 'bool' && $field_value == 0) {
-                                                $where .=  "($db_field = 0 OR $db_field IS NULL)";
-                                                }
-                                                else {
-                                                $where .=  $db_field . " = ".$db->quoteType($type, $field_value);
-                                                }
-                                                break;
-                                                // tyoung bug 15971 - need to add these special cases into the $where query
-                                                case 'custom_enum':
-                                                $where .= $field_value;
-                                                break;
-                                                case 'between':
-                                                if(!is_array($field_value)) {
-                                                $field_value = explode('<>', $field_value);
-                                                }
-                                                $field_value[0] = $db->quoteType($type, $field_value[0]);
-                                                $field_value[1] = $db->quoteType($type, $field_value[1]);
-                                                $where .= "($db_field >= {$field_value[0]} AND $db_field <= {$field_value[1]})";
-                                                break;
-                                                case 'date_not_equal':
-                                                if(!is_array($field_value)) {
-                                                    $field_value = explode('<>', $field_value);
-                                                }
-                                                $field_value[0] = $db->quoteType($type, $field_value[0]);
-                                                $field_value[1] = $db->quoteType($type, $field_value[1]);
-                                                $where .= "($db_field IS NULL OR $db_field < {$field_value[0]} OR $db_field > {$field_value[1]})";
-                                                break;
-                                                case 'innerjoin':
-                                                $this->seed->listview_inner_join[] = $parms['innerjoin'] . " '" . $parms['value'] . "%')";
-                                                break;
-                                                case 'not_equal':
-                                                $field_value = $db->quoteType($type, $field_value);
-                                                $where .= "($db_field IS NULL OR $db_field != $field_value)";
-                                                break;
-                                                case 'greater_than':
-                                                $field_value = $db->quoteType($type, $field_value);
-                                                $where .= "$db_field > $field_value";
-                                                break;
-                                                case 'greater_than_equals':
-                                                $field_value = $db->quoteType($type, $field_value);
-                                                $where .= "$db_field >= $field_value";
-                                                break;
-                                                case 'less_than':
-                                                $field_value = $db->quoteType($type, $field_value);
-                                                $where .= "$db_field < $field_value";
-                                                break;
-                                                case 'less_than_equals':
-                                                $field_value = $db->quoteType($type, $field_value);
-                                                $where .= "$db_field <= $field_value";
-                                                break;
-                                                case 'next_7_days':
-                                                case 'last_7_days':
-                                                case 'last_month':
-                                                case 'this_month':
-                                                case 'next_month':
-                                                case 'last_30_days':
-                                                case 'next_30_days':
-                                                case 'this_year':
-                                                case 'last_year':
-                                                case 'next_year':
-                                                if (!empty($field) && !empty($this->seed->field_name_map[$field]['type'])) {
-                                                    $where .= $this->parseDateExpression(strtolower($operator), $db_field, $this->seed->field_name_map[$field]['type']);
-                                                } else {
-                                                    $where .= $this->parseDateExpression(strtolower($operator), $db_field);
-                                                }
-                                                break;
-                                                case 'isnull':
-                                                $where .=  "($db_field IS NULL OR $db_field = '')";
-                                                if ($field_value != '')
-                                                    $where .=  ' OR ' . $db_field . " in (".$field_value.')';
-                                                break;
-                                    }
+
+                                    //field is not last name or this is not from global unified search, so do normal where clause
+                                    $where .=  $db_field . " like ".$this->seed->db->quoted(sql_like_string($field_value, $like_char));
+                                }
+                            }
+                            break;
+
+                        case 'not in':
+                            $where .= $db_field . ' not in ('.$field_value.')';
+                            break;
+
+                        case 'in':
+                            $where .=  $db_field . ' in ('.$field_value.')';
+                            break;
+
+                        case '=':
+                            if($type == 'bool' && $field_value == 0)
+                            {
+                                $where .=  "($db_field = 0 OR $db_field IS NULL)";
+                            }
+                            else
+                            {
+                                $where .=  $db_field . " = ".$db->quoteType($type, $field_value);
+                            }
+                            break;
+
+                        // tyoung bug 15971 - need to add these special cases into the $where query
+                        case 'custom_enum':
+                            $where .= $field_value;
+                            break;
+
+                        case 'between':
+                            if(!is_array($field_value))
+                            {
+                                $field_value = explode('<>', $field_value);
+                            }
+                            $field_value[0] = $db->quoteType($type, $field_value[0]);
+                            $field_value[1] = $db->quoteType($type, $field_value[1]);
+                            $where .= "($db_field >= {$field_value[0]} AND $db_field <= {$field_value[1]})";
+                            break;
+
+                        case 'date_not_equal':
+                            if(!is_array($field_value))
+                            {
+                                $field_value = explode('<>', $field_value);
+                            }
+                            $field_value[0] = $db->quoteType($type, $field_value[0]);
+                            $field_value[1] = $db->quoteType($type, $field_value[1]);
+                            $where .= "($db_field IS NULL OR $db_field < {$field_value[0]} OR $db_field > {$field_value[1]})";
+                            break;
+
+                        case 'innerjoin':
+                            $this->seed->listview_inner_join[] = $parms['innerjoin'] . " '" . $parms['value'] . "%')";
+                            break;
+
+                        case 'not_equal':
+                            $field_value = $db->quoteType($type, $field_value);
+                            $where .= "($db_field IS NULL OR $db_field != $field_value)";
+                            break;
+
+                        case 'greater_than':
+                            $field_value = $db->quoteType($type, $field_value);
+                            $where .= "$db_field > $field_value";
+                            break;
+
+                        case 'greater_than_equals':
+                            $field_value = $db->quoteType($type, $field_value);
+                            $where .= "$db_field >= $field_value";
+                            break;
+
+                        case 'less_than':
+                            $field_value = $db->quoteType($type, $field_value);
+                            $where .= "$db_field < $field_value";
+                            break;
+
+                        case 'less_than_equals':
+                            $field_value = $db->quoteType($type, $field_value);
+                            $where .= "$db_field <= $field_value";
+                            break;
+
+                        case 'next_7_days':
+                        case 'last_7_days':
+                        case 'last_month':
+                        case 'this_month':
+                        case 'next_month':
+                        case 'last_30_days':
+                        case 'next_30_days':
+                        case 'this_year':
+                        case 'last_year':
+                        case 'next_year':
+                            if(!empty($field) && !empty($this->seed->field_name_map[$field]['type']))
+                            {
+                                $where .= $this->parseDateExpression(strtolower($operator), $db_field, $this->seed->field_name_map[$field]['type']);
+                            }
+                            else
+                            {
+                                $where .= $this->parseDateExpression(strtolower($operator), $db_field);
+                            }
+                            break;
+
+                        case 'isnull':
+                            $where .=  "($db_field IS NULL OR $db_field = '')";
+                            if($field_value != '')
+                            {
+                                $where .=  ' OR ' . $db_field . " in (".$field_value.')';
+                            }
+                            break;
+
+                        }
                     }
                 }
 

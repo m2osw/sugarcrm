@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,96 +35,92 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
- 
-
-
+require_once "include/generic/SugarWidgets/SugarWidget.php";
 
 
 class SugarWidgetTabs extends SugarWidget
 {
- var $tabs;
- var $current_key;
+    var $tabs;
+    var $current_key;
 
- function SugarWidgetTabs(&$tabs,$current_key,$jscallback)
- {
-   $this->tabs = $tabs;
-   $this->current_key = $current_key;
-   $this->jscallback = $jscallback;
- }
+    function SugarWidgetTabs(&$tabs,$current_key,$jscallback)
+    {
+        $this->tabs = $tabs;
+        $this->current_key = $current_key;
+        $this->jscallback = $jscallback;
+    }
 
- function display()
- {
-	ob_start();
+    function display(&$layout_def)
+    {
+        ob_start();
 ?>
 <script>
-var keys = [ <?php 
+var keys = [<?php 
 $tabs_count = count($this->tabs);
-for($i=0; $i < $tabs_count;$i++) 
+for($i = 0; $i < $tabs_count; ++$i)
 {
- $tab = $this->tabs[$i];
- echo "\"".$tab['key']."\""; 
- if ($tabs_count > ($i + 1))
- {
-   echo ",";
- }
+  $tab = $this->tabs[$i];
+  echo "\"".$tab['key']."\""; 
+  if ($tabs_count > ($i + 1))
+  {
+     echo ",";
+  }
 }
 ?>]; 
 tabPreviousKey = '';
 
 function selectTabCSS(key)
 {
+  var i,
+      liclass,
+      linkclass;
 
-
-  for( var i=0; i<keys.length;i++)
+  for(i = 0; i < keys.length; ++i)
   {
-   var liclass = '';
-   var linkclass = '';
+    licclass = '';
+    linkclass = '';
 
- if ( key == keys[i])
- {
-   var liclass = 'active';
-   var linkclass = 'current';
- }
-  	document.getElementById('tab_li_'+keys[i]).className = liclass;
-
-  	document.getElementById('tab_link_'+keys[i]).className = linkclass;
+    if(key == keys[i])
+    {
+       liclass = 'active';
+       linkclass = 'current';
+    }
+    document.getElementById('tab_li_'+keys[i]).className = liclass;
+    document.getElementById('tab_link_'+keys[i]).className = linkclass;
   }
-    <?php echo $this->jscallback;?>(key, tabPreviousKey);
-    tabPreviousKey = key;
+  <?php echo $this->jscallback;?>(key, tabPreviousKey);
+  tabPreviousKey = key;
 }
 </script>
 
 <ul id="searchTabs" class="tablist">
 <?php 
-	foreach ($this->tabs as $tab)
-	{
-		$TITLE = $tab['title'];
-		$LI_ID = "";
-		$A_ID = "";
+        foreach ($this->tabs as $tab)
+        {
+            $TITLE = $tab['title'];
+            $LI_ID = "";
+            $A_ID = "";
 
-	  if ( ! empty($tab['hidden']) && $tab['hidden'] == true)
-		{
-			  $LI_ID = "style=\"display: none\"";
-			  $A_ID = "style=\"display: none\"";
+            if(!empty($tab['hidden']) && $tab['hidden'] == true)
+            {
+                $LI_ID = "style=\"display: none\"";
+                $A_ID = "style=\"display: none\"";
+            }
+            elseif($this->current_key == $tab['key'])
+            {
+                $LI_ID = "class=\"active\"";
+                $A_ID = "class=\"current\"";
+            }
 
-		} else if ( $this->current_key == $tab['key'])
-		{
-			  $LI_ID = "class=\"active\"";
-			  $A_ID = "class=\"current\"";
-		}
+            $LINK = "<li $LI_ID id=\"tab_li_".$tab['link']."\"><a $A_ID id=\"tab_link_".$tab['link']."\" href=\"javascript:selectTabCSS('{$tab['link']}');\">$TITLE</a></li>";
+            echo $LINK;
+        }
+        echo "</ul>";
 
-		$LINK = "<li $LI_ID id=\"tab_li_".$tab['link']."\"><a $A_ID id=\"tab_link_".$tab['link']."\" href=\"javascript:selectTabCSS('{$tab['link']}');\">$TITLE</a></li>";
-
-?>
-<?php echo $LINK; ?>	
-<?php
-	}
-?>
-</ul>
-<?php 
-	$ob_contents = ob_get_contents();
+        $ob_contents = ob_get_contents();
         ob_end_clean();
         return $ob_contents;
-	}
+    }
 }
-?>
+
+// vim: ts=4 sw=4 et

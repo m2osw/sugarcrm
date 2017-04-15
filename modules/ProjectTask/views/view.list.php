@@ -1,6 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
-
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -47,25 +46,31 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
 
 require_once('include/MVC/View/views/view.list.php');
 
-class ProjectTaskViewList extends ViewList{
+class ProjectTaskViewList extends ViewList
+{
  	function ProjectTaskViewList(){
  		parent::ViewList();
-
  	}
 
- 	function display(){
- 		if(!$this->bean->ACLAccess('list')){
+ 	function display()
+    {
+ 		if(!$this->bean->ACLAccess('list'))
+        {
  			ACLController::displayNoAccess();
  			return;
  		}
         $module = $GLOBALS['module'];
  	    $metadataFile = null;
         $foundViewDefs = false;
-        if(file_exists('custom/modules/' . $module. '/metadata/listviewdefs.php')){
+        if(file_exists('custom/modules/' . $module. '/metadata/listviewdefs.php'))
+        {
             $metadataFile = 'custom/modules/' . $module . '/metadata/listviewdefs.php';
             $foundViewDefs = true;
-        }else{
-            if(file_exists('custom/modules/'.$module.'/metadata/metafiles.php')){
+        }
+        else
+        {
+            if(file_exists('custom/modules/'.$module.'/metadata/metafiles.php'))
+            {
                 require_once('custom/modules/'.$module.'/metadata/metafiles.php');
                 if(!empty($metafiles[$module]['listviewdefs'])){
                     $metadataFile = $metafiles[$module]['listviewdefs'];
@@ -161,49 +166,60 @@ class ProjectTaskViewList extends ViewList{
 		//search
 		$view = 'basic_search';
 		if(!empty($_REQUEST['search_form_view']))
+        {
 			$view = $_REQUEST['search_form_view'];
+        }
 		$headers = true;
 		if(!empty($_REQUEST['search_form_only']) && $_REQUEST['search_form_only'])
+        {
 			$headers = false;
-		elseif(!isset($_REQUEST['search_form']) || $_REQUEST['search_form'] != 'false') {
-        	if(isset($_REQUEST['searchFormTab']) && $_REQUEST['searchFormTab'] == 'advanced_search') {
+        }
+		elseif(!isset($_REQUEST['search_form']) || $_REQUEST['search_form'] != 'false')
+        {
+        	if(isset($_REQUEST['searchFormTab']) && $_REQUEST['searchFormTab'] == 'advanced_search')
+            {
 				$view = 'advanced_search';
-			}else {
+			}
+            else
+            {
 				$view = 'basic_search';
 			}
 		}
 
-		$use_old_search = true;
-		if(file_exists('modules/'.$this->module.'/SearchForm.html')){
+		$use_old_search = file_exists('modules/'.$this->module.'/SearchForm.html');
+		if($use_old_search)
+        {
 			require_once('include/SearchForm/SearchForm.php');
 			$searchForm = new SearchForm($this->module, $this->seed);
-		}else{
-			$use_old_search = false;
+		}
+        else
+        {
 			require_once('include/SearchForm/SearchForm2.php');
 
-
-			if (file_exists('custom/modules/'.$this->module.'/metadata/searchdefs.php'))
+			if(file_exists('custom/modules/'.$this->module.'/metadata/searchdefs.php'))
 			{
 			    require_once('custom/modules/'.$this->module.'/metadata/searchdefs.php');
 			}
-			elseif (!empty($metafiles[$this->module]['searchdefs']))
+			elseif(!empty($metafiles[$this->module]['searchdefs']))
 			{
 				require_once($metafiles[$this->module]['searchdefs']);
 			}
-			elseif (file_exists('modules/'.$this->module.'/metadata/searchdefs.php'))
+			elseif(file_exists('modules/'.$this->module.'/metadata/searchdefs.php'))
 			{
 			    require_once('modules/'.$this->module.'/metadata/searchdefs.php');
 			}
 
-
 			if(!empty($metafiles[$this->module]['searchfields']))
+            {
                 require($metafiles[$this->module]['searchfields']);
+            }
 			elseif(file_exists('modules/'.$this->module.'/metadata/SearchFields.php'))
+            {
                 require('modules/'.$this->module.'/metadata/SearchFields.php');
-
+            }
 
 			$searchForm = new SearchForm($this->seed, $this->module, $this->action);
-			$searchForm->setup($searchdefs, $searchFields, 'SearchFormGeneric.tpl', $view, $listViewDefs);
+			$searchForm->setupSearchForm($searchdefs, $searchFields, 'SearchFormGeneric.tpl', $view, $listViewDefs);
 			$searchForm->lv = $lv;
 		}
 
@@ -226,33 +242,46 @@ class ProjectTaskViewList extends ViewList{
 			if (count($where_clauses) > 0 )$where = '('. implode(' ) AND ( ', $where_clauses) . ')';
 			$GLOBALS['log']->info("List View Where Clause: $where");
 		}
-		if($use_old_search){
-			switch($view) {
-				case 'basic_search':
-			    	$searchForm->setup();
-			        $searchForm->displayBasic($headers);
-			        break;
-			     case 'advanced_search':
-			     	$searchForm->setup();
-			        $searchForm->displayAdvanced($headers);
-			        break;
-			     case 'saved_views':
-			     	echo $searchForm->displaySavedViews($listViewDefs, $lv, $headers);
-			       break;
-			}
-		}else{
-			echo $searchForm->display($headers);
-		}
-		if(!$headers)
-			return;
-         /*
-         * Bug 50575 - related search columns not inluded in query in a proper way
-         */
-         $lv->searchColumns = $searchForm->searchColumns;
+		if($use_old_search)
+        {
+            switch($view)
+            {
+            case 'basic_search':
+                $searchForm->setupSearchForm();
+                $searchForm->displayBasic($headers);
+                break;
 
-		if(empty($_REQUEST['search_form_only']) || $_REQUEST['search_form_only'] == false){
+             case 'advanced_search':
+                $searchForm->setupSearchForm();
+                $searchForm->displayAdvanced($headers);
+                break;
+
+             case 'saved_views':
+                echo $searchForm->displaySavedViews($listViewDefs, $lv, $headers);
+                break;
+
+            }
+        }
+        else
+        {
+            echo $searchForm->display($headers);
+        }
+        if(!$headers)
+        {
+            return;
+        }
+
+        /*
+        * Bug 50575 - related search columns not inluded in query in a proper way
+        */
+        $lv->searchColumns = $searchForm->searchColumns;
+
+        if(empty($_REQUEST['search_form_only'])
+        || !$_REQUEST['search_form_only'])
+        {
             //Bug 58841 - mass update form was not displayed for non-admin users that should have access
-            if(ACLController::checkAccess($module, 'massupdate') || ACLController::checkAccess($module, 'export'))
+            if(ACLController::checkAccess($module, 'massupdate')
+            || ACLController::checkAccess($module, 'export'))
             {
                 $lv->setup($seed, 'include/ListView/ListViewGeneric.tpl', $where, $params);
             }
@@ -261,9 +290,9 @@ class ProjectTaskViewList extends ViewList{
                 $lv->setup($seed, 'include/ListView/ListViewNoMassUpdate.tpl', $where, $params);
             }
 
-			echo $lv->display();
-		}
- 	}
+            echo $lv->display();
+        }
+    }
 }
 
-?>
+// vim: ts=4 sw=4 et

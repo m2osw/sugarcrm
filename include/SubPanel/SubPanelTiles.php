@@ -148,7 +148,9 @@ class SubPanelTiles
         else
         {
             // see if user current user has custom subpanel layout
-            $tabs = SubPanelTilesTabs::applyUserCustomLayoutToTabs($tabs);
+            $objSubPanelTilesTabs = new SubPanelTilesTabs($this->focus);
+            $tabs = $objSubPanelTilesTabs->applyUserCustomLayoutToTabs($tabs);
+            unset($objSubPanelTilesTabs);
 
             /* Check if the preference is set now,
              * because there's no point in executing this code if
@@ -224,7 +226,8 @@ if(document.DetailView != null &&
 			require_once('include/tabs.php');
     		$tab_panel = new SugarWidgetTabs($tabs, $current_key, 'showSubPanel');
 			echo get_form_header('Related', '', false);
-			echo "<br />" . $tab_panel->display();
+            $ignore_layout = null;
+			echo "<br />" . $tab_panel->display($ignore_layout);
 		}
 
         if(empty($_REQUEST['subpanels']))

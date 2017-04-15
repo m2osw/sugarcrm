@@ -80,15 +80,15 @@ class ViewSugarFieldCollection
      * Retrieve the related module and load the bean and the relationship
      * call retrieve values()
      */
-    function setup(){
-        if(!class_exists('Relationship')){
-
-        }
+    function setup()
+    {
         $rel = new Relationship();
-        if(!empty($this->vardef['relationship'])){
+        if(!empty($this->vardef['relationship']))
+        {
             $rel->retrieve_by_name($this->vardef['relationship']);
         }
-        if($rel->relationship_type == 'many-to-many'){
+        if($rel->relationship_type == 'many-to-many')
+        {
             if($rel->lhs_module == $this->module_dir){
                 $this->related_module = $rel->rhs_module;
                 $module_dir = $rel->lhs_module;
@@ -118,7 +118,8 @@ class ViewSugarFieldCollection
                 die($this->module_dir . ' is not in the beanList.');
             }
         }
-        else{
+        else
+        {
             die("the relationship is not a many-to-many");
         }
     }
@@ -126,7 +127,8 @@ class ViewSugarFieldCollection
      * Retrieve the values from the DB using the get method of the link class
      * Organize and save the value into the bean
      */
-    function retrieve_values(){
+    function retrieve_values()
+    {
         if(empty($this->bean->{$this->value_name}) && isset($this->bean->{$this->name})){
             $values = array();
             $values = $this->bean->{$this->name}->get(true);
@@ -273,12 +275,12 @@ class ViewSugarFieldCollection
                 $this->displayParams['collection_field_list'][$name]['field'] .= '{literal}'.$javascript;
                 // Handle update_field array ONCHANGE
                 $this->displayParams['collection_field_list'][$name]['field'] .= <<<FRA
-                    <script language='javascript'>
-                    var oldonchange = '';
-                if(typeof(document.getElementById('{$collection_field_vardef['name']}').attributes.onchange) != 'undefined')
-                {
-                    oldonchange=document.getElementById('{$collection_field_vardef['name']}').attributes.onchange.value;
-                }
+<script language='javascript'>
+  var oldonchange = '';
+  if(typeof(document.getElementById('{$collection_field_vardef['name']}').attributes.onchange) != 'undefined')
+  {
+    oldonchange=document.getElementById('{$collection_field_vardef['name']}').attributes.onchange.value;
+  }
 FRA;
                 $this->displayParams['collection_field_list'][$name]['field'] .= "eval(\"document.getElementById('{$collection_field_vardef['name']}').onchange = function onchange(event){collection['{$this->vardef['name']}'].update_fields.{$collection_field_vardef['name']}=true;";
                 if($collection_field_vardef['type'] == 'relate'){
@@ -308,15 +310,20 @@ FRA;
     /*
      * Init the template with the variables
      */
-    function init_tpl(){
-        foreach($this->extra_var as $k=>$v){
+    function init_tpl()
+    {
+        foreach($this->extra_var as $k => $v)
+        {
             $this->ss->assign($k,$v);
         }
-        if($this->action_type == 'editview'){
+        if($this->action_type == 'editview')
+        {
             $this->ss->assign('quickSearchCode',$this->createQuickSearchCode());
             $this->createPopupCode();// this code populate $this->displayParams with popupdata.
             $this->tpl_path = $this->edit_tpl_path;
-        }else if($this->action_type == 'detailview'){
+        }
+        elseif($this->action_type == 'detailview')
+        {
             $this->tpl_path = $this->detail_tpl_path;
         }
 
@@ -331,7 +338,8 @@ FRA;
     /*
      * Display the collection field after retrieving the cached row.
      */
-    function display(){
+    function display()
+    {
         $cacheRowFile = sugar_cached('modules/') . $this->module_dir .  '/collections/'. $this->name . '.tpl';
         if(!$this->checkTemplate($cacheRowFile)){
             $dir = dirname($cacheRowFile);

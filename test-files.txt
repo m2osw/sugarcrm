@@ -894,11 +894,11 @@
 #./include/nusoap/class.nusoap_base.php
 #./include/nusoap/class.soap_parser.php
 #./include/nusoap/class.wsdl.php
-#./include/nusoap/class.wsdlcache.php
-#./include/nusoap/class.soap_fault.php
-#./include/nusoap/nusoap.php
-#./include/SearchForm/SearchForm2.php
-#./include/SearchForm/SearchForm.php
+./include/nusoap/class.wsdlcache.php
+./include/nusoap/class.soap_fault.php
+./include/nusoap/nusoap.php
+./include/SearchForm/SearchForm2.php
+./include/SearchForm/SearchForm.php
 ./include/SearchForm/SugarSpot.php
 ./include/TimeDate.php
 #./vCard.php
