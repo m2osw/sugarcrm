@@ -1,4 +1,14 @@
 
+2017/04/16 -- Fixing the search form
+
+* Renamed SearchForm->setup() as SearchForm->setupSearchForm().
+* Made a few more files pass out test.sh script.
+* Fixed several inherited function parameters.
+* Fixed and end() call which had an inline array.
+
+
+2017/04/15 -- First few check-ins
+
 SugarOS 6.5.x is for PHP 5.2/5.3 by default.
 Here is my changelog to make it generally work with PHP 7.
 
