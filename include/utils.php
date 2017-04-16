@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -49,381 +49,383 @@ require_once('include/utils/security_utils.php');
 
 function make_sugar_config(&$sugar_config)
 {
-	/* used to convert non-array config.php file to array format */
-	global $admin_export_only;
-	global $cache_dir;
-	global $calculate_response_time;
-	global $create_default_user;
-	global $dateFormats;
-	global $dbconfig;
-	global $dbconfigoption;
-	global $default_action;
-	global $default_charset;
-	global $default_currency_name;
-	global $default_currency_symbol;
+    /* used to convert non-array config.php file to array format */
+    global $admin_export_only;
+    global $cache_dir;
+    global $calculate_response_time;
+    global $create_default_user;
+    global $dateFormats;
+    global $dbconfig;
+    global $dbconfigoption;
+    global $default_action;
+    global $default_charset;
+    global $default_currency_name;
+    global $default_currency_symbol;
     global $default_currency_iso4217;
-	global $defaultDateFormat;
-	global $default_language;
-	global $default_module;
-	global $default_password;
-	global $default_permission_mode;
-	global $default_theme;
-	global $defaultTimeFormat;
-	global $default_user_is_admin;
-	global $default_user_name;
-	global $disable_export;
-	global $disable_persistent_connections;
-	global $display_email_template_variable_chooser;
-	global $display_inbound_email_buttons;
-	global $history_max_viewed;
-	global $host_name;
-	global $import_dir;
-	global $languages;
-	global $list_max_entries_per_page;
-	global $lock_default_user_name;
-	global $log_memory_usage;
+    global $defaultDateFormat;
+    global $default_language;
+    global $default_module;
+    global $default_password;
+    global $default_permission_mode;
+    global $default_theme;
+    global $defaultTimeFormat;
+    global $default_user_is_admin;
+    global $default_user_name;
+    global $disable_export;
+    global $disable_persistent_connections;
+    global $display_email_template_variable_chooser;
+    global $display_inbound_email_buttons;
+    global $history_max_viewed;
+    global $host_name;
+    global $import_dir;
+    global $languages;
+    global $list_max_entries_per_page;
+    global $lock_default_user_name;
+    global $log_memory_usage;
     global $nameFormats;
-	global $requireAccounts;
-	global $RSS_CACHE_TIME;
-	global $session_dir;
-	global $site_URL;
-	global $site_url;
-	global $sugar_version;
-	global $timeFormats;
-	global $tmp_dir;
-	global $translation_string_prefix;
-	global $unique_key;
-	global $upload_badext;
-	global $upload_dir;
-	global $upload_maxsize;
-	global $import_max_execution_time;
-	global $list_max_entries_per_subpanel;
-	global $passwordsetting;
+    global $requireAccounts;
+    global $RSS_CACHE_TIME;
+    global $session_dir;
+    global $site_URL;
+    global $site_url;
+    global $sugar_version;
+    global $timeFormats;
+    global $tmp_dir;
+    global $translation_string_prefix;
+    global $unique_key;
+    global $upload_badext;
+    global $upload_dir;
+    global $upload_maxsize;
+    global $import_max_execution_time;
+    global $list_max_entries_per_subpanel;
+    global $passwordsetting;
 
-	// assumes the following variables must be set:
-	// $dbconfig, $dbconfigoption, $cache_dir,  $session_dir, $site_URL, $upload_dir
+    // assumes the following variables must be set:
+    // $dbconfig, $dbconfigoption, $cache_dir,  $session_dir, $site_URL, $upload_dir
 
-	$sugar_config = array (
-	'admin_export_only' => empty($admin_export_only) ? false : $admin_export_only,
-	'export_delimiter' => empty($export_delimiter) ? ',' : $export_delimiter,
-	'cache_dir' => empty($cache_dir) ? 'cache/' : $cache_dir,
-	'calculate_response_time' => empty($calculate_response_time) ? true : $calculate_response_time,
-	'create_default_user' => empty($create_default_user) ? false : $create_default_user,
-	'chartEngine' => 'Jit',
-	'date_formats' => empty($dateFormats) ? array(
-	'Y-m-d'=>'2010-12-23',
-	'd-m-Y' => '23-12-2010',
-	'm-d-Y'=>'12-23-2010',
-	'Y/m/d'=>'2010/12/23',
-	'd/m/Y' => '23/12/2010',
-	'm/d/Y'=>'12/23/2010',
-	'Y.m.d' => '2010.12.23',
-	'd.m.Y' => '23.12.2010',
-	'm.d.Y' => '12.23.2010'
-		) : $dateFormats,
-	'dbconfig' => $dbconfig,  // this must be set!!
-	'dbconfigoption' => $dbconfigoption,  // this must be set!!
-	'default_action' => empty($default_action) ? 'index' : $default_action,
-	'default_charset' => empty($default_charset) ? 'UTF-8' : $default_charset,
-	'default_currency_name' => empty($default_currency_name) ? 'US Dollar' : $default_currency_name,
-	'default_currency_symbol' => empty($default_currency_symbol) ? '$' : $default_currency_symbol,
-	'default_currency_iso4217' => empty($default_currency_iso4217) ? '$' : $default_currency_iso4217,
-	'default_date_format' => empty($defaultDateFormat) ? 'm/d/Y' : $defaultDateFormat,
-    'default_locale_name_format' => empty($defaultNameFormat) ? 's f l' : $defaultNameFormat,
-	'default_export_charset' => 'UTF-8',
-	'default_language' => empty($default_language) ? 'en_us' : $default_language,
-	'default_module' => empty($default_module) ? 'Home' : $default_module,
-	'default_password' => empty($default_password) ? '' : $default_password,
-	'default_permissions' => array (
-		'dir_mode' => 02770,
-		'file_mode' => 0660,
-		'chown' => '',
-		'chgrp' => '',
-	),
-    'default_theme' => empty($default_theme) ? 'Sugar5' : $default_theme,
-    'default_time_format' => empty($defaultTimeFormat) ? 'h:ia' : $defaultTimeFormat,
-	'default_user_is_admin' => empty($default_user_is_admin) ? false : $default_user_is_admin,
-	'default_user_name' => empty($default_user_name) ? '' : $default_user_name,
-	'disable_export' => empty($disable_export) ? false : $disable_export,
-    'disable_persistent_connections' => empty($disable_persistent_connections) ? false : $disable_persistent_connections,
-    'display_email_template_variable_chooser' => empty($display_email_template_variable_chooser) ? false : $display_email_template_variable_chooser,
-	'display_inbound_email_buttons' => empty($display_inbound_email_buttons) ? false : $display_inbound_email_buttons,
-	'history_max_viewed' => empty($history_max_viewed) ? 50 : $history_max_viewed,
-	'host_name' => empty($host_name) ? 'localhost' : $host_name,
-	'import_dir' => $import_dir,  // this must be set!!
-	'import_max_records_per_file' => 100,
-    'import_max_records_total_limit' => '',
-	'languages' => empty($languages) ? array('en_us' => 'English (US)') : $languages,
-	'list_max_entries_per_page' => empty($list_max_entries_per_page) ? 20 : $list_max_entries_per_page,
-	'list_max_entries_per_subpanel' => empty($list_max_entries_per_subpanel) ? 10 : $list_max_entries_per_subpanel,
-	'lock_default_user_name' => empty($lock_default_user_name) ? false : $lock_default_user_name,
-	'log_memory_usage' => empty($log_memory_usage) ? false : $log_memory_usage,
-    'name_formats' => empty($nameFormats) ? array(
-        's f l' => 's f l', 'f l' => 'f l', 's l' => 's l', 'l, s f' => 'l, s f',
-        'l, f' => 'l, f', 's l, f' => 's l, f', 'l s f' => 'l s f', 'l f s' => 'l f s'
-    ) : $nameFormats,
-    'portal_view' => 'single_user',
-	'resource_management' => array (
-	    'special_query_limit' => 50000,
-	    'special_query_modules' => array('Reports', 'Export', 'Import', 'Administration', 'Sync'),
-	    'default_limit' => 1000,
-    ),
-	'require_accounts' => empty($requireAccounts) ? true : $requireAccounts,
-	'rss_cache_time' => empty($RSS_CACHE_TIME) ? '10800' : $RSS_CACHE_TIME,
-	'session_dir' => $session_dir,  // this must be set!!
-	'site_url' => empty($site_URL) ? $site_url : $site_URL,  // this must be set!!
-	'showDetailData' => true, // if true, read-only ACL fields will still appear on EditViews as non-editable
-	'showThemePicker' => true,
-	'sugar_version' => empty($sugar_version) ? 'unknown' : $sugar_version,
-	'time_formats' => empty($timeFormats) ? array (
-	'H:i'=>'23:00', 'h:ia'=>'11:00 pm', 'h:iA'=>'11:00PM',
-	'H.i'=>'23.00', 'h.ia'=>'11.00 pm', 'h.iA'=>'11.00PM' ) : $timeFormats,
-	'tmp_dir' => $tmp_dir,  // this must be set!!
-	'translation_string_prefix' => empty($translation_string_prefix) ? false : $translation_string_prefix,
-	'unique_key' => empty($unique_key) ? md5(create_guid()) : $unique_key,
-	'upload_badext' => empty($upload_badext) ? array (
-	'php', 'php3', 'php4', 'php5', 'pl', 'cgi', 'py',
-	'asp', 'cfm', 'js', 'vbs', 'html', 'htm' ) : $upload_badext,
-	'upload_dir' => $upload_dir,  // this must be set!!
-	'upload_maxsize' => empty($upload_maxsize) ? 30000000 : $upload_maxsize,
-	'import_max_execution_time' => empty($import_max_execution_time) ? 3600 : $import_max_execution_time,
-	'lock_homepage' => false,
-	'lock_subpanels' => false,
-	'max_dashlets_homepage' => 15,
-	'dashlet_display_row_options' => array('1','3','5','10'),
-	'default_max_tabs' => empty($max_tabs) ? '7' : $max_tabs,
-	'default_subpanel_tabs' =>  empty($subpanel_tabs) ? true : $subpanel_tabs,
-	'default_subpanel_links' => empty($subpanel_links) ? false : $subpanel_links,
-	'default_swap_last_viewed' => empty($swap_last_viewed) ? false : $swap_last_viewed,
-	'default_swap_shortcuts' => empty($swap_shortcuts) ? false : $swap_shortcuts,
-	'default_navigation_paradigm' => empty($navigation_paradigm) ? 'gm' : $navigation_paradigm,
-    'default_call_status' => 'Planned',
-	'js_lang_version' => 1,
-	'passwordsetting' => empty($passwordsetting) ? array (
-	    'SystemGeneratedPasswordON' => '',
-	    'generatepasswordtmpl' => '',
-	    'lostpasswordtmpl' => '',
-	    'forgotpasswordON' => true,
-    	'linkexpiration' => '1',
-    	'linkexpirationtime' => '30',
-    	'linkexpirationtype' => '1',
-	    'systexpiration' => '0',
-	    'systexpirationtime' => '',
-	    'systexpirationtype' => '0',
-	    'systexpirationlogin' => '',
-		) : $passwordsetting,
-		'use_sprites' => function_exists('imagecreatetruecolor'),
-    	'search_wildcard_infront' => false,
-        'search_wildcard_char' => '%',
-		'jobs' => array(
-		    'min_retry_interval' => 60, // minimal job retry delay
-		    'max_retries' => 5, // how many times to retry the job
-		    'timeout' => 86400, // how long a job may spend as running before being force-failed
-		    'soft_lifetime' => 7, // how many days until job record will be soft deleted after completion
-		    'hard_lifetime' => 21, // how many days until job record will be purged from DB
-		),
-		"cron" => array(
-			'max_cron_jobs' => 10, // max jobs per cron schedule run
-		    'max_cron_runtime' => 60, // max runtime for cron jobs
-		    'min_cron_interval' => 30, // minimal interval between cron jobs
-		),
-	);
+    $sugar_config = array (
+            'admin_export_only' => empty($admin_export_only) ? false : $admin_export_only,
+            'export_delimiter' => empty($export_delimiter) ? ',' : $export_delimiter,
+            'cache_dir' => empty($cache_dir) ? 'cache/' : $cache_dir,
+            'calculate_response_time' => empty($calculate_response_time) ? true : $calculate_response_time,
+            'create_default_user' => empty($create_default_user) ? false : $create_default_user,
+            'chartEngine' => 'Jit',
+            'date_formats' => empty($dateFormats) ? array(
+                'Y-m-d'=>'2010-12-23',
+                'd-m-Y' => '23-12-2010',
+                'm-d-Y'=>'12-23-2010',
+                'Y/m/d'=>'2010/12/23',
+                'd/m/Y' => '23/12/2010',
+                'm/d/Y'=>'12/23/2010',
+                'Y.m.d' => '2010.12.23',
+                'd.m.Y' => '23.12.2010',
+                'm.d.Y' => '12.23.2010'
+                ) : $dateFormats,
+            'dbconfig' => $dbconfig,  // this must be set!!
+            'dbconfigoption' => $dbconfigoption,  // this must be set!!
+            'default_action' => empty($default_action) ? 'index' : $default_action,
+            'default_charset' => empty($default_charset) ? 'UTF-8' : $default_charset,
+            'default_currency_name' => empty($default_currency_name) ? 'US Dollar' : $default_currency_name,
+            'default_currency_symbol' => empty($default_currency_symbol) ? '$' : $default_currency_symbol,
+            'default_currency_iso4217' => empty($default_currency_iso4217) ? '$' : $default_currency_iso4217,
+            'default_date_format' => empty($defaultDateFormat) ? 'm/d/Y' : $defaultDateFormat,
+            'default_locale_name_format' => empty($defaultNameFormat) ? 's f l' : $defaultNameFormat,
+            'default_export_charset' => 'UTF-8',
+            'default_language' => empty($default_language) ? 'en_us' : $default_language,
+            'default_module' => empty($default_module) ? 'Home' : $default_module,
+            'default_password' => empty($default_password) ? '' : $default_password,
+            'default_permissions' => array (
+                    'dir_mode' => 02770,
+                    'file_mode' => 0660,
+                    'chown' => '',
+                    'chgrp' => '',
+                    ),
+            'default_theme' => empty($default_theme) ? 'Sugar5' : $default_theme,
+            'default_time_format' => empty($defaultTimeFormat) ? 'h:ia' : $defaultTimeFormat,
+            'default_user_is_admin' => empty($default_user_is_admin) ? false : $default_user_is_admin,
+            'default_user_name' => empty($default_user_name) ? '' : $default_user_name,
+            'disable_export' => empty($disable_export) ? false : $disable_export,
+            'disable_persistent_connections' => empty($disable_persistent_connections) ? false : $disable_persistent_connections,
+            'display_email_template_variable_chooser' => empty($display_email_template_variable_chooser) ? false : $display_email_template_variable_chooser,
+            'display_inbound_email_buttons' => empty($display_inbound_email_buttons) ? false : $display_inbound_email_buttons,
+            'history_max_viewed' => empty($history_max_viewed) ? 50 : $history_max_viewed,
+            'host_name' => empty($host_name) ? 'localhost' : $host_name,
+            'import_dir' => $import_dir,  // this must be set!!
+            'import_max_records_per_file' => 100,
+            'import_max_records_total_limit' => '',
+            'languages' => empty($languages) ? array('en_us' => 'English (US)') : $languages,
+            'list_max_entries_per_page' => empty($list_max_entries_per_page) ? 20 : $list_max_entries_per_page,
+            'list_max_entries_per_subpanel' => empty($list_max_entries_per_subpanel) ? 10 : $list_max_entries_per_subpanel,
+            'lock_default_user_name' => empty($lock_default_user_name) ? false : $lock_default_user_name,
+            'log_memory_usage' => empty($log_memory_usage) ? false : $log_memory_usage,
+            'name_formats' => empty($nameFormats) ? array(
+                    's f l' => 's f l', 'f l' => 'f l', 's l' => 's l', 'l, s f' => 'l, s f',
+                    'l, f' => 'l, f', 's l, f' => 's l, f', 'l s f' => 'l s f', 'l f s' => 'l f s'
+                    ) : $nameFormats,
+            'portal_view' => 'single_user',
+            'resource_management' => array (
+                    'special_query_limit' => 50000,
+                    'special_query_modules' => array('Reports', 'Export', 'Import', 'Administration', 'Sync'),
+                    'default_limit' => 1000,
+                    ),
+            'require_accounts' => empty($requireAccounts) ? true : $requireAccounts,
+            'rss_cache_time' => empty($RSS_CACHE_TIME) ? '10800' : $RSS_CACHE_TIME,
+            'session_dir' => $session_dir,  // this must be set!!
+            'site_url' => empty($site_URL) ? $site_url : $site_URL,  // this must be set!!
+            'showDetailData' => true, // if true, read-only ACL fields will still appear on EditViews as non-editable
+            'showThemePicker' => true,
+            'sugar_version' => empty($sugar_version) ? 'unknown' : $sugar_version,
+            'time_formats' => empty($timeFormats) ? array (
+                    'H:i'=>'23:00', 'h:ia'=>'11:00 pm', 'h:iA'=>'11:00PM',
+                    'H.i'=>'23.00', 'h.ia'=>'11.00 pm', 'h.iA'=>'11.00PM' ) : $timeFormats,
+            'tmp_dir' => $tmp_dir,  // this must be set!!
+            'translation_string_prefix' => empty($translation_string_prefix) ? false : $translation_string_prefix,
+            'unique_key' => empty($unique_key) ? md5(create_guid()) : $unique_key,
+            'upload_badext' => empty($upload_badext) ? array (
+                    'php', 'php3', 'php4', 'php5', 'pl', 'cgi', 'py',
+                    'asp', 'cfm', 'js', 'vbs', 'html', 'htm' ) : $upload_badext,
+            'upload_dir' => $upload_dir,  // this must be set!!
+            'upload_maxsize' => empty($upload_maxsize) ? 30000000 : $upload_maxsize,
+            'import_max_execution_time' => empty($import_max_execution_time) ? 3600 : $import_max_execution_time,
+            'lock_homepage' => false,
+            'lock_subpanels' => false,
+            'max_dashlets_homepage' => 15,
+            'dashlet_display_row_options' => array('1','3','5','10'),
+            'default_max_tabs' => empty($max_tabs) ? '7' : $max_tabs,
+            'default_subpanel_tabs' =>  empty($subpanel_tabs) ? true : $subpanel_tabs,
+            'default_subpanel_links' => empty($subpanel_links) ? false : $subpanel_links,
+            'default_swap_last_viewed' => empty($swap_last_viewed) ? false : $swap_last_viewed,
+            'default_swap_shortcuts' => empty($swap_shortcuts) ? false : $swap_shortcuts,
+            'default_navigation_paradigm' => empty($navigation_paradigm) ? 'gm' : $navigation_paradigm,
+            'default_call_status' => 'Planned',
+            'js_lang_version' => 1,
+            'passwordsetting' => empty($passwordsetting) ? array (
+                    'SystemGeneratedPasswordON' => '',
+                    'generatepasswordtmpl' => '',
+                    'lostpasswordtmpl' => '',
+                    'forgotpasswordON' => true,
+                    'linkexpiration' => '1',
+                    'linkexpirationtime' => '30',
+                    'linkexpirationtype' => '1',
+                    'systexpiration' => '0',
+                    'systexpirationtime' => '',
+                    'systexpirationtype' => '0',
+                    'systexpirationlogin' => '',
+                    ) : $passwordsetting,
+            'use_sprites' => function_exists('imagecreatetruecolor'),
+            'search_wildcard_infront' => false,
+            'search_wildcard_char' => '%',
+            'jobs' => array(
+                    'min_retry_interval' => 60, // minimal job retry delay
+                    'max_retries' => 5, // how many times to retry the job
+                    'timeout' => 86400, // how long a job may spend as running before being force-failed
+                    'soft_lifetime' => 7, // how many days until job record will be soft deleted after completion
+                    'hard_lifetime' => 21, // how many days until job record will be purged from DB
+                    ),
+            "cron" => array(
+                    'max_cron_jobs' => 10, // max jobs per cron schedule run
+                    'max_cron_runtime' => 60, // max runtime for cron jobs
+                    'min_cron_interval' => 30, // minimal interval between cron jobs
+                    ),
+            );
 }
 
-function get_sugar_config_defaults() {
-	global $locale;
-	/**
-	 * used for getting base values for array style config.php.  used by the
-	 * installer and to fill in new entries on upgrades.  see also:
-	 * sugar_config_union
-	 */
+function get_sugar_config_defaults()
+{
+    global $locale;
+    /**
+     * used for getting base values for array style config.php.  used by the
+     * installer and to fill in new entries on upgrades.  see also:
+     * sugar_config_union
+     */
 
-	$sugar_config_defaults = array (
-	'admin_export_only' => false,
-	'export_delimiter' => ',',
-	'export_excel_compatible' => false,
-	'cache_dir' => 'cache/',
-	'calculate_response_time' => true,
-	'create_default_user' => false,
- 	'chartEngine' => 'Jit',
-	'date_formats' => array (
-	'Y-m-d' => '2010-12-23', 'm-d-Y' => '12-23-2010', 'd-m-Y' => '23-12-2010',
-	'Y/m/d' => '2010/12/23', 'm/d/Y' => '12/23/2010', 'd/m/Y' => '23/12/2010',
-	'Y.m.d' => '2010.12.23', 'd.m.Y' => '23.12.2010', 'm.d.Y' => '12.23.2010',),
-    'name_formats' => array (
-        's f l' => 's f l', 'f l' => 'f l', 's l' => 's l', 'l, s f' => 'l, s f',
-        'l, f' => 'l, f', 's l, f' => 's l, f', 'l s f' => 'l s f', 'l f s' => 'l f s'
-    ),
-	'dbconfigoption' => array (
-	'persistent' => true,
-	'autofree' => false,
-	'debug' => 0,
-	'ssl' => false ),
-	'default_action' => 'index',
-	'default_charset' => return_session_value_or_default('default_charset',
-	'UTF-8'),
-	'default_currency_name' => return_session_value_or_default('default_currency_name', 'US Dollar'),
-	'default_currency_symbol' => return_session_value_or_default('default_currency_symbol', '$'),
-	'default_currency_iso4217' => return_session_value_or_default('default_currency_iso4217', 'USD'),
-	'default_currency_significant_digits' => return_session_value_or_default('default_currency_significant_digits', 2),
-	'default_number_grouping_seperator' => return_session_value_or_default('default_number_grouping_seperator', ','),
-	'default_decimal_seperator' => return_session_value_or_default('default_decimal_seperator', '.'),
-	'default_date_format' => 'm/d/Y',
-    'default_locale_name_format' => 's f l',
-	'default_export_charset' => 'UTF-8',
-	'default_language' => return_session_value_or_default('default_language',
-	'en_us'),
-	'default_module' => 'Home',
-	'default_password' => '',
-	'default_permissions' => array (
-		'dir_mode' => 02770,
-		'file_mode' => 0660,
-		'user' => '',
-		'group' => '',
-	),
-	'default_theme' => return_session_value_or_default('site_default_theme', 'Sugar5'),
-	'default_time_format' => 'h:ia',
-	'default_user_is_admin' => false,
-	'default_user_name' => '',
-	'disable_export' => false,
-	'disable_persistent_connections' =>
-	return_session_value_or_default('disable_persistent_connections',
-	'false'),
-    'display_email_template_variable_chooser' => false,
-	'display_inbound_email_buttons' => false,
-	'dump_slow_queries' => false,
-	'email_address_separator' => ',', // use RFC2368 spec unless we have a noncompliant email client
-    'email_default_editor' => 'html',
-	'email_default_client' => 'sugar',
-	'email_default_delete_attachments' => true,
-	'history_max_viewed' => 50,
-	'installer_locked' => true,
-	'import_max_records_per_file' => 100,
-    'import_max_records_total_limit' => '',
-	'languages' => array('en_us' => 'English (US)'),
-	'large_scale_test' => false,
-	'list_max_entries_per_page' => 20,
-	'list_max_entries_per_subpanel' => 10,
-	'lock_default_user_name' => false,
-	'log_memory_usage' => false,
-	'portal_view' => 'single_user',
-    'resource_management' => array (
-	    'special_query_limit' => 50000,
-	    'special_query_modules' => array('Reports', 'Export', 'Import', 'Administration', 'Sync'),
-	    'default_limit' => 1000,
-    ),
-	'require_accounts' => true,
-	'rss_cache_time' => return_session_value_or_default('rss_cache_time',
-	'10800'),
-	'save_query' => 'all',
-	'showDetailData' => true, // if true, read-only ACL fields will still appear on EditViews as non-editable
-	'showThemePicker' => true,
-	'slow_query_time_msec' => '100',
-    'sugarbeet' => true,
-    'time_formats' => array (
-        'H:i'=>'23:00', 'h:ia'=>'11:00pm', 'h:iA'=>'11:00PM', 'h:i a'=>'11:00 pm', 'h:i A'=>'11:00 PM',
-        'H.i'=>'23.00', 'h.ia'=>'11.00pm', 'h.iA'=>'11.00PM', 'h.i a'=>'11.00 pm', 'h.i A'=>'11.00 PM' ),
-    'tracker_max_display_length' => 15,
-	'translation_string_prefix' =>
-	return_session_value_or_default('translation_string_prefix', false),
-	'upload_badext' => array (
-	'php', 'php3', 'php4', 'php5', 'pl', 'cgi', 'py',
-	'asp', 'cfm', 'js', 'vbs', 'html', 'htm' ),
-	'upload_maxsize' => 30000000,
-	'import_max_execution_time' => 3600,
-//	'use_php_code_json' => returnPhpJsonStatus(),
-	'verify_client_ip' => true,
-	'js_custom_version' => '',
-	'js_lang_version' => 1,
-        'lead_conv_activity_opt' => 'donothing',
-	'default_number_grouping_seperator' => ',',
-	'default_decimal_seperator' => '.',
-	'lock_homepage' => false,
-	'lock_subpanels' => false,
-	'max_dashlets_homepage' => '15',
-	'default_max_tabs' => '7',
-	'dashlet_display_row_options' => array('1','3','5','10'),
-	'default_subpanel_tabs' =>  true,
-	'default_subpanel_links' => false,
-	'default_swap_last_viewed' => false,
-	'default_swap_shortcuts' => false,
-	'default_navigation_paradigm' => 'gm',
-	'admin_access_control' => false,
-  	'use_common_ml_dir'	=> false,
-  	'common_ml_dir' => '',
-	'vcal_time' => '2',
-	'calendar' => array(
-	  'default_view' => 'week',
-	  'show_calls_by_default' => true,
-	  'show_tasks_by_default' => true,
-	  'show_completed_by_default' => true,
-	  'editview_width' => 990,
-	  'editview_height' => 485,
-	  'day_timestep' => 15,
-	  'week_timestep' => 30,
-	  'items_draggable' => true,
-	  'items_resizable' => true,
-	  'enable_repeat' => true,
-	  'max_repeat_count' => 1000,
-	),
-	'passwordsetting' => empty($passwordsetting) ? array (
-	    'SystemGeneratedPasswordON' => '',
-	    'generatepasswordtmpl' => '',
-	    'lostpasswordtmpl' => '',
-	    'forgotpasswordON' => false,
-    	'linkexpiration' => '1',
-    	'linkexpirationtime' => '30',
-    	'linkexpirationtype' => '1',
-	    'systexpiration' => '0',
-	    'systexpirationtime' => '',
-	    'systexpirationtype' => '0',
-	    'systexpirationlogin' => '',
-		) : $passwordsetting,
-		'use_real_names' => true,
+    $sugar_config_defaults = array (
+            'admin_export_only' => false,
+            'export_delimiter' => ',',
+            'export_excel_compatible' => false,
+            'cache_dir' => 'cache/',
+            'calculate_response_time' => true,
+            'create_default_user' => false,
+            'chartEngine' => 'Jit',
+            'date_formats' => array (
+                'Y-m-d' => '2010-12-23', 'm-d-Y' => '12-23-2010', 'd-m-Y' => '23-12-2010',
+                'Y/m/d' => '2010/12/23', 'm/d/Y' => '12/23/2010', 'd/m/Y' => '23/12/2010',
+                'Y.m.d' => '2010.12.23', 'd.m.Y' => '23.12.2010', 'm.d.Y' => '12.23.2010',),
+            'name_formats' => array (
+                's f l' => 's f l', 'f l' => 'f l', 's l' => 's l', 'l, s f' => 'l, s f',
+                'l, f' => 'l, f', 's l, f' => 's l, f', 'l s f' => 'l s f', 'l f s' => 'l f s'
+                ),
+            'dbconfigoption' => array (
+                'persistent' => true,
+                'autofree' => false,
+                'debug' => 0,
+                'ssl' => false ),
+            'default_action' => 'index',
+            'default_charset' => return_session_value_or_default('default_charset',
+                    'UTF-8'),
+            'default_currency_name' => return_session_value_or_default('default_currency_name', 'US Dollar'),
+            'default_currency_symbol' => return_session_value_or_default('default_currency_symbol', '$'),
+            'default_currency_iso4217' => return_session_value_or_default('default_currency_iso4217', 'USD'),
+            'default_currency_significant_digits' => return_session_value_or_default('default_currency_significant_digits', 2),
+            'default_number_grouping_seperator' => return_session_value_or_default('default_number_grouping_seperator', ','),
+            'default_decimal_seperator' => return_session_value_or_default('default_decimal_seperator', '.'),
+            'default_date_format' => 'm/d/Y',
+            'default_locale_name_format' => 's f l',
+            'default_export_charset' => 'UTF-8',
+            'default_language' => return_session_value_or_default('default_language',
+                    'en_us'),
+            'default_module' => 'Home',
+            'default_password' => '',
+            'default_permissions' => array (
+                    'dir_mode' => 02770,
+                    'file_mode' => 0660,
+                    'user' => '',
+                    'group' => '',
+                    ),
+            'default_theme' => return_session_value_or_default('site_default_theme', 'Sugar5'),
+            'default_time_format' => 'h:ia',
+            'default_user_is_admin' => false,
+            'default_user_name' => '',
+            'disable_export' => false,
+            'disable_persistent_connections' =>
+                return_session_value_or_default('disable_persistent_connections',
+                        'false'),
+            'display_email_template_variable_chooser' => false,
+            'display_inbound_email_buttons' => false,
+            'dump_slow_queries' => false,
+            'email_address_separator' => ',', // use RFC2368 spec unless we have a noncompliant email client
+            'email_default_editor' => 'html',
+            'email_default_client' => 'sugar',
+            'email_default_delete_attachments' => true,
+            'history_max_viewed' => 50,
+            'installer_locked' => true,
+            'import_max_records_per_file' => 100,
+            'import_max_records_total_limit' => '',
+            'languages' => array('en_us' => 'English (US)'),
+            'large_scale_test' => false,
+            'list_max_entries_per_page' => 20,
+            'list_max_entries_per_subpanel' => 10,
+            'lock_default_user_name' => false,
+            'log_memory_usage' => false,
+            'portal_view' => 'single_user',
+            'resource_management' => array (
+                    'special_query_limit' => 50000,
+                    'special_query_modules' => array('Reports', 'Export', 'Import', 'Administration', 'Sync'),
+                    'default_limit' => 1000,
+                    ),
+            'require_accounts' => true,
+            'rss_cache_time' => return_session_value_or_default('rss_cache_time',
+                    '10800'),
+            'save_query' => 'all',
+            'showDetailData' => true, // if true, read-only ACL fields will still appear on EditViews as non-editable
+            'showThemePicker' => true,
+            'slow_query_time_msec' => '100',
+            'sugarbeet' => true,
+            'time_formats' => array (
+                    'H:i'=>'23:00', 'h:ia'=>'11:00pm', 'h:iA'=>'11:00PM', 'h:i a'=>'11:00 pm', 'h:i A'=>'11:00 PM',
+                    'H.i'=>'23.00', 'h.ia'=>'11.00pm', 'h.iA'=>'11.00PM', 'h.i a'=>'11.00 pm', 'h.i A'=>'11.00 PM' ),
+            'tracker_max_display_length' => 15,
+            'translation_string_prefix' =>
+                return_session_value_or_default('translation_string_prefix', false),
+            'upload_badext' => array (
+                    'php', 'php3', 'php4', 'php5', 'pl', 'cgi', 'py',
+                    'asp', 'cfm', 'js', 'vbs', 'html', 'htm' ),
+            'upload_maxsize' => 30000000,
+            'import_max_execution_time' => 3600,
+            // 'use_php_code_json' => returnPhpJsonStatus(),
+            'verify_client_ip' => true,
+            'js_custom_version' => '',
+            'js_lang_version' => 1,
+            'lead_conv_activity_opt' => 'donothing',
+            'default_number_grouping_seperator' => ',',
+            'default_decimal_seperator' => '.',
+            'lock_homepage' => false,
+            'lock_subpanels' => false,
+            'max_dashlets_homepage' => '15',
+            'default_max_tabs' => '7',
+            'dashlet_display_row_options' => array('1','3','5','10'),
+            'default_subpanel_tabs' =>  true,
+            'default_subpanel_links' => false,
+            'default_swap_last_viewed' => false,
+            'default_swap_shortcuts' => false,
+            'default_navigation_paradigm' => 'gm',
+            'admin_access_control' => false,
+            'use_common_ml_dir' => false,
+            'common_ml_dir' => '',
+            'vcal_time' => '2',
+            'calendar' => array(
+                    'default_view' => 'week',
+                    'show_calls_by_default' => true,
+                    'show_tasks_by_default' => true,
+                    'show_completed_by_default' => true,
+                    'editview_width' => 990,
+                    'editview_height' => 485,
+                    'day_timestep' => 15,
+                    'week_timestep' => 30,
+                    'items_draggable' => true,
+                    'items_resizable' => true,
+                    'enable_repeat' => true,
+                    'max_repeat_count' => 1000,
+                    ),
+            'passwordsetting' => empty($passwordsetting) ? array (
+                    'SystemGeneratedPasswordON' => '',
+                    'generatepasswordtmpl' => '',
+                    'lostpasswordtmpl' => '',
+                    'forgotpasswordON' => false,
+                    'linkexpiration' => '1',
+                    'linkexpirationtime' => '30',
+                    'linkexpirationtype' => '1',
+                    'systexpiration' => '0',
+                    'systexpirationtime' => '',
+                    'systexpirationtype' => '0',
+                    'systexpirationlogin' => '',
+                    ) : $passwordsetting,
+            'use_real_names' => true,
 
-		'search_wildcard_infront' => false,
-        'search_wildcard_char' => '%',
-		'jobs' => array(
-		    'min_retry_interval' => 30, // 30 seconds minimal job retry
-		    'max_retries' => 5, // how many times to retry the job
-		    'timeout' => 86400, // how long a job may spend as running before being force-failed
-		),
-		"cron" => array(
-			'max_cron_jobs' => 10, // max jobs per cron schedule run
-		    'max_cron_runtime' => 30, // max runtime for cron jobs
-		    'min_cron_interval' => 30, // minimal interval between cron jobs
-		),
-    );
+            'search_wildcard_infront' => false,
+            'search_wildcard_char' => '%',
+            'jobs' => array(
+                    'min_retry_interval' => 30, // 30 seconds minimal job retry
+                    'max_retries' => 5, // how many times to retry the job
+                    'timeout' => 86400, // how long a job may spend as running before being force-failed
+                    ),
+            "cron" => array(
+                    'max_cron_jobs' => 10, // max jobs per cron schedule run
+                    'max_cron_runtime' => 30, // max runtime for cron jobs
+                    'min_cron_interval' => 30, // minimal interval between cron jobs
+                    ),
+            );
 
-	if(!is_object($locale)) {
-		$locale = new Localization();
-	}
+    if(!is_object($locale)) {
+        $locale = new Localization();
+    }
 
-	$sugar_config_defaults['default_currencies'] = $locale->getDefaultCurrencies();
+    $sugar_config_defaults['default_currencies'] = $locale->getDefaultCurrencies();
 
-	$sugar_config_defaults = sugarArrayMerge($locale->getLocaleConfigDefaults(), $sugar_config_defaults);
-	return( $sugar_config_defaults );
+    $sugar_config_defaults = sugarArrayMerge($locale->getLocaleConfigDefaults(), $sugar_config_defaults);
+    return( $sugar_config_defaults );
 }
 
 /**
  * @deprecated use SugarView::getMenu() instead
  */
-function load_menu($path){
-	global $module_menu;
+function load_menu($path)
+{
+    global $module_menu;
 
-	if(file_exists($path . 'Menu.php'))
-	{
-		require($path . 'Menu.php');
-	}
-	if(file_exists('custom/' . $path . 'Ext/Menus/menu.ext.php'))
-	{
-		require('custom/' . $path . 'Ext/Menus/menu.ext.php');
-	}
-	if(file_exists('custom/application/Ext/Menus/menu.ext.php'))
-	{
-		require('custom/application/Ext/Menus/menu.ext.php');
-	}
-	return $module_menu;
+    if(file_exists($path . 'Menu.php'))
+    {
+        require($path . 'Menu.php');
+    }
+    if(file_exists('custom/' . $path . 'Ext/Menus/menu.ext.php'))
+    {
+        require('custom/' . $path . 'Ext/Menus/menu.ext.php');
+    }
+    if(file_exists('custom/application/Ext/Menus/menu.ext.php'))
+    {
+        require('custom/application/Ext/Menus/menu.ext.php');
+    }
+    return $module_menu;
 }
 
 /**
@@ -432,70 +434,73 @@ function load_menu($path){
  *
  * @return string relative file path to email notifications template file
  */
-function get_notify_template_file($language){
-	/*
-	 * Order of operation:
-	 * 1) custom version of specified language
-	 * 2) stock version of specified language
-	 * 3) custom version of en_us template
-	 * 4) stock en_us template
-	 */
+function get_notify_template_file($language)
+{
+    /*
+     * Order of operation:
+     * 1) custom version of specified language
+     * 2) stock version of specified language
+     * 3) custom version of en_us template
+     * 4) stock en_us template
+     */
 
-	// set $file to the base code template so it's set if none of the conditions pass
-	$file = "include/language/en_us.notify_template.html";
+    // set $file to the base code template so it's set if none of the conditions pass
+    $file = "include/language/en_us.notify_template.html";
 
-	if(file_exists("custom/include/language/{$language}.notify_template.html")){
-		$file = "custom/include/language/{$language}.notify_template.html";
-	}
-	else if(file_exists("include/language/{$language}.notify_template.html")){
-		$file = "include/language/{$language}.notify_template.html";
-	}
-	else if(file_exists("custom/include/language/en_us.notify_template.html")){
-		$file = "custom/include/language/en_us.notify_template.html";
-	}
+    if(file_exists("custom/include/language/{$language}.notify_template.html")){
+        $file = "custom/include/language/{$language}.notify_template.html";
+    }
+    else if(file_exists("include/language/{$language}.notify_template.html")){
+        $file = "include/language/{$language}.notify_template.html";
+    }
+    else if(file_exists("custom/include/language/en_us.notify_template.html")){
+        $file = "custom/include/language/en_us.notify_template.html";
+    }
 
-	return $file;
+    return $file;
 }
 
-function sugar_config_union( $default, $override ){
-	// a little different then array_merge and array_merge_recursive.  we want
-	// the second array to override the first array if the same value exists,
-	// otherwise merge the unique keys.  it handles arrays of arrays recursively
-	// might be suitable for a generic array_union
-	if( !is_array( $override ) ){
-		$override = array();
-	}
-	foreach( $default as $key => $value ){
-		if( !array_key_exists($key, $override) ){
-			$override[$key] = $value;
-		}
-		else if( is_array( $key ) ){
-			$override[$key] = sugar_config_union( $value, $override[$key] );
-		}
-	}
-	return( $override );
+function sugar_config_union( $default, $override )
+{
+    // a little different then array_merge and array_merge_recursive.  we want
+    // the second array to override the first array if the same value exists,
+    // otherwise merge the unique keys.  it handles arrays of arrays recursively
+    // might be suitable for a generic array_union
+    if( !is_array( $override ) ){
+        $override = array();
+    }
+    foreach( $default as $key => $value ){
+        if( !array_key_exists($key, $override) ){
+            $override[$key] = $value;
+        }
+        else if( is_array( $key ) ){
+            $override[$key] = sugar_config_union( $value, $override[$key] );
+        }
+    }
+    return( $override );
 }
 
-function make_not_writable( $file ){
-	// Returns true if the given file/dir has been made not writable
-	$ret_val = false;
-	if( is_file($file) || is_dir($file) ){
-		if( !is_writable($file) ){
-			$ret_val = true;
-		}
-		else {
-			$original_fileperms = fileperms($file);
+function make_not_writable( $file )
+{
+    // Returns true if the given file/dir has been made not writable
+    $ret_val = false;
+    if( is_file($file) || is_dir($file) ){
+        if( !is_writable($file) ){
+            $ret_val = true;
+        }
+        else {
+            $original_fileperms = fileperms($file);
 
-			// take away writable permissions
-			$new_fileperms = $original_fileperms & ~0x0092;
-			@sugar_chmod($file, $new_fileperms);
+            // take away writable permissions
+            $new_fileperms = $original_fileperms & ~0x0092;
+            @sugar_chmod($file, $new_fileperms);
 
-			if( !is_writable($file) ){
-				$ret_val = true;
-			}
-		}
-	}
-	return $ret_val;
+            if( !is_writable($file) ){
+                $ret_val = true;
+            }
+        }
+    }
+    return $ret_val;
 }
 
 
@@ -509,76 +514,79 @@ function make_not_writable( $file ){
  */
 function return_name($row, $first_column, $last_column)
 {
-	$first_name = "";
-	$last_name = "";
-	$full_name = "";
+    $first_name = "";
+    $last_name = "";
+    $full_name = "";
 
-	if(isset($row[$first_column]))
-	{
-		$first_name = stripslashes($row[$first_column]);
-	}
+    if(isset($row[$first_column]))
+    {
+        $first_name = stripslashes($row[$first_column]);
+    }
 
-	if(isset($row[$last_column]))
-	{
-		$last_name = stripslashes($row[$last_column]);
-	}
+    if(isset($row[$last_column]))
+    {
+        $last_name = stripslashes($row[$last_column]);
+    }
 
-	$full_name = $first_name;
+    $full_name = $first_name;
 
-	// If we have a first name and we have a last name
-	if($full_name != "" && $last_name != "")
-	{
-		// append a space, then the last name
-		$full_name .= " ".$last_name;
-	}
-	// If we have no first name, but we have a last name
-	else if($last_name != "")
-	{
-		// append the last name without the space.
-		$full_name .= $last_name;
-	}
+    // If we have a first name and we have a last name
+    if($full_name != "" && $last_name != "")
+    {
+        // append a space, then the last name
+        $full_name .= " ".$last_name;
+    }
+    // If we have no first name, but we have a last name
+    else if($last_name != "")
+    {
+        // append the last name without the space.
+        $full_name .= $last_name;
+    }
 
-	return $full_name;
+    return $full_name;
 }
 
 
 function get_languages()
 {
-	global $sugar_config;
-	$lang = $sugar_config['languages'];
+    global $sugar_config;
+    $lang = $sugar_config['languages'];
     if(!empty($sugar_config['disabled_languages'])){
         foreach(explode(',', $sugar_config['disabled_languages']) as $disable) {
             unset($lang[$disable]);
         }
     }
-	return $lang;
+    return $lang;
 }
 
 function get_all_languages()
 {
-	global $sugar_config;
-	return $sugar_config['languages'];
+    global $sugar_config;
+    return $sugar_config['languages'];
 }
 
 
 function get_language_display($key)
 {
-	global $sugar_config;
-	return $sugar_config['languages'][$key];
+    global $sugar_config;
+    return $sugar_config['languages'][$key];
 }
 
-function get_assigned_user_name($assigned_user_id, $is_group = '') {
-	static $saved_user_list = null;
+function get_assigned_user_name($assigned_user_id, $is_group = '')
+{
+    static $saved_user_list = null;
 
-	if(empty($saved_user_list)) {
-		$saved_user_list = get_user_array(false, '', '', false, null, $is_group);
-	}
+    if(empty($saved_user_list))
+    {
+        $saved_user_list = get_user_array(false, '', '', false, null, $is_group);
+    }
 
-	if(isset($saved_user_list[$assigned_user_id])) {
-		return $saved_user_list[$assigned_user_id];
-	}
+    if(isset($saved_user_list[$assigned_user_id]))
+    {
+        return $saved_user_list[$assigned_user_id];
+    }
 
-	return '';
+    return '';
 }
 
 /**
@@ -586,17 +594,20 @@ function get_assigned_user_name($assigned_user_id, $is_group = '') {
  * @param string id GUID of user
  * @return string
  */
-function get_user_name($id) {
-	global $db;
+function get_user_name($id)
+{
+    global $db;
 
-	if(empty($db))
-	$db = DBManagerFactory::getInstance();
+    if(empty($db))
+    {
+        $db = DBManagerFactory::getInstance();
+    }
 
-	$q = "SELECT user_name FROM users WHERE id='{$id}'";
-	$r = $db->query($q);
-	$a = $db->fetchByAssoc($r);
+    $q = "SELECT user_name FROM users WHERE id='{$id}'";
+    $r = $db->query($q);
+    $a = $db->fetchByAssoc($r);
 
-	return (empty($a)) ? '' : $a['user_name'];
+    return (empty($a)) ? '' : $a['user_name'];
 }
 
 
@@ -617,36 +628,38 @@ function get_user_name($id) {
  * @param bool $from_cache Boolean value indicating whether or not to use the get_register_value function for caching, true by default
  * @return array Array of users matching the filter criteria that may be from cache (if similar search was previously run)
  */
-function get_user_array($add_blank=true, $status="Active", $user_id='', $use_real_name=false, $user_name_filter='', $portal_filter=' AND portal_only=0 ', $from_cache = true) {
-	global $locale, $sugar_config, $current_user;
+function get_user_array($add_blank=true, $status="Active", $user_id='', $use_real_name=false, $user_name_filter='', $portal_filter=' AND portal_only=0 ', $from_cache = true)
+{
+    global $locale, $sugar_config, $current_user;
 
-	if(empty($locale)) {
-		$locale = new Localization();
-	}
-
-	if($from_cache) {
-        $key_name = $add_blank. $status . $user_id . $use_real_name . $user_name_filter . $portal_filter;
-		$user_array = get_register_value('user_array', $key_name);
+    if(empty($locale))
+    {
+        $locale = new Localization();
     }
 
-	if(empty($user_array)) {
-		$db = DBManagerFactory::getInstance();
-		$temp_result = Array();
-		// Including deleted users for now.
-		if (empty($status)) {
-			$query = "SELECT id, first_name, last_name, user_name from users WHERE 1=1".$portal_filter;
-		}
-		else {
-			$query = "SELECT id, first_name, last_name, user_name from users WHERE status='$status'".$portal_filter;
-		}
+    if($from_cache) {
+        $key_name = $add_blank. $status . $user_id . $use_real_name . $user_name_filter . $portal_filter;
+        $user_array = get_register_value('user_array', $key_name);
+    }
 
-		if (!empty($user_name_filter)) {
-		    $user_name_filter = $db->quote($user_name_filter);
-			$query .= " AND user_name LIKE '$user_name_filter%' ";
-		}
-		if (!empty($user_id)) {
-			$query .= " OR id='{$user_id}'";
-		}
+    if(empty($user_array)) {
+        $db = DBManagerFactory::getInstance();
+        $temp_result = Array();
+        // Including deleted users for now.
+        if (empty($status)) {
+            $query = "SELECT id, first_name, last_name, user_name from users WHERE 1=1".$portal_filter;
+        }
+        else {
+            $query = "SELECT id, first_name, last_name, user_name from users WHERE status='$status'".$portal_filter;
+        }
+
+        if (!empty($user_name_filter)) {
+            $user_name_filter = $db->quote($user_name_filter);
+            $query .= " AND user_name LIKE '$user_name_filter%' ";
+        }
+        if (!empty($user_id)) {
+            $query .= " OR id='{$user_id}'";
+        }
 
         //get the user preference for name formatting, to be used in order by
         $order_by_string =' user_name ASC ';
@@ -668,37 +681,37 @@ function get_user_array($add_blank=true, $status="Active", $user_id='', $use_rea
             }
         }
 
-		$query = $query.' ORDER BY '.$order_by_string;
-		$GLOBALS['log']->debug("get_user_array query: $query");
-		$result = $db->query($query, true, "Error filling in user array: ");
+        $query = $query.' ORDER BY '.$order_by_string;
+        $GLOBALS['log']->debug("get_user_array query: $query");
+        $result = $db->query($query, true, "Error filling in user array: ");
 
-		if ($add_blank==true) {
-			// Add in a blank row
-			$temp_result[''] = '';
-		}
-
-		// Get the id and the name.
-		while($row = $db->fetchByAssoc($result)) {
-			if($use_real_name == true || showFullName()) {
-				if(isset($row['last_name'])) { // cn: we will ALWAYS have both first_name and last_name (empty value if blank in db)
-					$temp_result[$row['id']] = $locale->getLocaleFormattedName($row['first_name'],$row['last_name']);
-				} else {
-					$temp_result[$row['id']] = $row['user_name'];
-				}
-			} else {
-				$temp_result[$row['id']] = $row['user_name'];
-			}
-		}
-
-		$user_array = $temp_result;
-		if($from_cache)
-        {
-			set_register_value('user_array', $key_name, $temp_result);
+        if ($add_blank==true) {
+            // Add in a blank row
+            $temp_result[''] = '';
         }
-	}
+
+        // Get the id and the name.
+        while($row = $db->fetchByAssoc($result)) {
+            if($use_real_name == true || showFullName()) {
+                if(isset($row['last_name'])) { // cn: we will ALWAYS have both first_name and last_name (empty value if blank in db)
+                    $temp_result[$row['id']] = $locale->getLocaleFormattedName($row['first_name'],$row['last_name']);
+                } else {
+                    $temp_result[$row['id']] = $row['user_name'];
+                }
+            } else {
+                $temp_result[$row['id']] = $row['user_name'];
+            }
+        }
+
+        $user_array = $temp_result;
+        if($from_cache)
+        {
+            set_register_value('user_array', $key_name, $temp_result);
+        }
+    }
 
 
-	return $user_array;
+    return $user_array;
 }
 
 
@@ -708,12 +721,13 @@ function get_user_array($add_blank=true, $status="Active", $user_id='', $use_rea
  * @param args string where clause entry
  * @return array Array of Users' details that match passed criteria
  */
-function getUserArrayFromFullName($args, $hide_portal_users = false) {
-	global $locale;
-	$db = DBManagerFactory::getInstance();
+function getUserArrayFromFullName($args, $hide_portal_users = false)
+{
+    global $locale;
+    $db = DBManagerFactory::getInstance();
 
-	// jmorais@dri - Bug #51411
-	//
+    // jmorais@dri - Bug #51411
+    //
     // Refactor the code responsible for parsing supplied $args, this way we
     // ensure that if $args has at least one space (after trim), the $inClause
     // will be composed by several clauses ($inClauses) inside parenthesis.
@@ -739,49 +753,50 @@ function getUserArrayFromFullName($args, $hide_portal_users = false) {
     }
     // ~jmorais@dri
 
-	$query  = "SELECT id, first_name, last_name, user_name FROM users WHERE status='Active' AND deleted=0 AND ";
-	if ( $hide_portal_users ) {
-	    $query .= " portal_only=0 AND ";
-	}
-	$query .= $inClause;
-	$query .= " ORDER BY last_name ASC";
+    $query  = "SELECT id, first_name, last_name, user_name FROM users WHERE status='Active' AND deleted=0 AND ";
+    if ( $hide_portal_users ) {
+        $query .= " portal_only=0 AND ";
+    }
+    $query .= $inClause;
+    $query .= " ORDER BY last_name ASC";
 
-	$r = $db->query($query);
-	$ret = array();
-	while($a = $db->fetchByAssoc($r)) {
-		$ret[$a['id']] = $locale->getLocaleFormattedName($a['first_name'], $a['last_name']);
-	}
+    $r = $db->query($query);
+    $ret = array();
+    while($a = $db->fetchByAssoc($r)) {
+        $ret[$a['id']] = $locale->getLocaleFormattedName($a['first_name'], $a['last_name']);
+    }
 
-	return $ret;
+    return $ret;
 }
 
 /**
  *
  * based on user pref then system pref
  */
-function showFullName() {
-	global $sugar_config;
-	global $current_user;
-	static $showFullName = null;
+function showFullName()
+{
+    global $sugar_config;
+    global $current_user;
+    static $showFullName = null;
 
-	if (is_null($showFullName)) {
-		$sysPref = !empty($sugar_config['use_real_names']);
-		$userPref = (is_object($current_user)) ? $current_user->getPreference('use_real_names') : null;
+    if (is_null($showFullName)) {
+        $sysPref = !empty($sugar_config['use_real_names']);
+        $userPref = (is_object($current_user)) ? $current_user->getPreference('use_real_names') : null;
 
-		if($userPref != null) {
-			$showFullName = ($userPref == 'on');
-		} else {
-			$showFullName = $sysPref;
-		}
-	}
+        if($userPref != null) {
+            $showFullName = ($userPref == 'on');
+        } else {
+            $showFullName = $sysPref;
+        }
+    }
 
-	return $showFullName;
+    return $showFullName;
 }
 
 function clean($string, $maxLength)
 {
-	$string = substr($string, 0, $maxLength);
-	return escapeshellcmd($string);
+    $string = substr($string, 0, $maxLength);
+    return escapeshellcmd($string);
 }
 
 /**
@@ -793,7 +808,7 @@ function clean($string, $maxLength)
  */
 function safe_map($request_var, & $focus, $always_copy = false)
 {
-	safe_map_named($request_var, $focus, $request_var, $always_copy);
+    safe_map_named($request_var, $focus, $request_var, $always_copy);
 }
 
 /**
@@ -805,10 +820,10 @@ function safe_map($request_var, & $focus, $always_copy = false)
  */
 function safe_map_named($request_var, & $focus, $member_var, $always_copy)
 {
-	if (isset($_REQUEST[$request_var]) && ($always_copy || is_null($focus->$member_var))) {
-		$GLOBALS['log']->debug("safe map named called assigning '{$_REQUEST[$request_var]}' to $member_var");
-		$focus->$member_var = $_REQUEST[$request_var];
-	}
+    if (isset($_REQUEST[$request_var]) && ($always_copy || is_null($focus->$member_var))) {
+        $GLOBALS['log']->debug("safe map named called assigning '{$_REQUEST[$request_var]}' to $member_var");
+        $focus->$member_var = $_REQUEST[$request_var];
+    }
 }
 
 /**
@@ -819,35 +834,35 @@ function safe_map_named($request_var, & $focus, $member_var, $always_copy)
  */
 function return_app_list_strings_language($language)
 {
-	global $app_list_strings;
-	global $sugar_config;
+    global $app_list_strings;
+    global $sugar_config;
 
-	$cache_key = 'app_list_strings.'.$language;
+    $cache_key = 'app_list_strings.'.$language;
 
-	// Check for cached value
-	$cache_entry = sugar_cache_retrieve($cache_key);
-	if(!empty($cache_entry))
-	{
-		return $cache_entry;
-	}
+    // Check for cached value
+    $cache_entry = sugar_cache_retrieve($cache_key);
+    if(!empty($cache_entry))
+    {
+        return $cache_entry;
+    }
 
-	$default_language = $sugar_config['default_language'];
-	$temp_app_list_strings = $app_list_strings;
+    $default_language = $sugar_config['default_language'];
+    $temp_app_list_strings = $app_list_strings;
 
-	$langs = array();
-	if ($language != 'en_us') {
-	    $langs[] = 'en_us';
-	}
-	if ($default_language != 'en_us' && $language != $default_language) {
-	    $langs[] = $default_language;
-	}
-	$langs[] = $language;
+    $langs = array();
+    if ($language != 'en_us') {
+        $langs[] = 'en_us';
+    }
+    if ($default_language != 'en_us' && $language != $default_language) {
+        $langs[] = $default_language;
+    }
+    $langs[] = $language;
 
-	$app_list_strings_array = array();
+    $app_list_strings_array = array();
 
-	foreach ( $langs as $lang ) {
-	    $app_list_strings = array();
-	    if(file_exists("include/language/$lang.lang.php")) {
+    foreach ( $langs as $lang ) {
+        $app_list_strings = array();
+        if(file_exists("include/language/$lang.lang.php")) {
             include("include/language/$lang.lang.php");
             $GLOBALS['log']->info("Found language file: $lang.lang.php");
         }
@@ -879,17 +894,17 @@ function return_app_list_strings_language($language)
         }
     }
 
-	if(!isset($app_list_strings)) {
-		$GLOBALS['log']->fatal("Unable to load the application language file for the selected language ($language) or the default language ($default_language) or the en_us language");
-		return null;
-	}
+    if(!isset($app_list_strings)) {
+        $GLOBALS['log']->fatal("Unable to load the application language file for the selected language ($language) or the default language ($default_language) or the en_us language");
+        return null;
+    }
 
-	$return_value = $app_list_strings;
-	$app_list_strings = $temp_app_list_strings;
+    $return_value = $app_list_strings;
+    $app_list_strings = $temp_app_list_strings;
 
-	sugar_cache_put($cache_key, $return_value);
+    sugar_cache_put($cache_key, $return_value);
 
-	return $return_value;
+    return $return_value;
 }
 
 /**
@@ -900,32 +915,33 @@ function return_app_list_strings_language($language)
  * @return array
  */
  //jchi 25347
-function _mergeCustomAppListStrings($file , $app_list_strings){
-	$app_list_strings_original = $app_list_strings;
-	unset($app_list_strings);
-        // FG - bug 45525 - $exemptDropdown array is defined (once) here, not inside the foreach
-        //                  This way, language file can add items to save specific standard codelist from being overwritten
-        $exemptDropdowns = array();
-	include($file);
-	if(!isset($app_list_strings) || !is_array($app_list_strings)){
-		return $app_list_strings_original;
-	}
-	//Bug 25347: We should not merge custom dropdown fields unless they relate to parent fields or the module list.
+function _mergeCustomAppListStrings($file , $app_list_strings)
+{
+    $app_list_strings_original = $app_list_strings;
+    unset($app_list_strings);
+    // FG - bug 45525 - $exemptDropdown array is defined (once) here, not inside the foreach
+    //                  This way, language file can add items to save specific standard codelist from being overwritten
+    $exemptDropdowns = array();
+    include($file);
+    if(!isset($app_list_strings) || !is_array($app_list_strings)){
+        return $app_list_strings_original;
+    }
+    //Bug 25347: We should not merge custom dropdown fields unless they relate to parent fields or the module list.
 
-        // FG - bug 45525 - Specific codelists must NOT be overwritten
-	$exemptDropdowns[] = "moduleList";
-	$exemptDropdowns[] = "moduleListSingular";
-        $exemptDropdowns = array_merge($exemptDropdowns, getTypeDisplayList());
+    // FG - bug 45525 - Specific codelists must NOT be overwritten
+    $exemptDropdowns[] = "moduleList";
+    $exemptDropdowns[] = "moduleListSingular";
+    $exemptDropdowns = array_merge($exemptDropdowns, getTypeDisplayList());
 
-	foreach($app_list_strings as $key=>$value)
-	{
-		if (!in_array($key, $exemptDropdowns) && array_key_exists($key, $app_list_strings_original))
-		{
-	   		unset($app_list_strings_original["$key"]);
-		}
-   }
-   $app_list_strings = sugarArrayMergeRecursive($app_list_strings_original , $app_list_strings);
-   return $app_list_strings;
+    foreach($app_list_strings as $key=>$value)
+    {
+        if (!in_array($key, $exemptDropdowns) && array_key_exists($key, $app_list_strings_original))
+        {
+            unset($app_list_strings_original["$key"]);
+        }
+    }
+    $app_list_strings = sugarArrayMergeRecursive($app_list_strings_original , $app_list_strings);
+    return $app_list_strings;
 }
 
 /**
@@ -936,35 +952,35 @@ function _mergeCustomAppListStrings($file , $app_list_strings){
  */
 function return_application_language($language)
 {
-	global $app_strings, $sugar_config;
+    global $app_strings, $sugar_config;
 
-	$cache_key = 'app_strings.'.$language;
+    $cache_key = 'app_strings.'.$language;
 
-	// Check for cached value
-	$cache_entry = sugar_cache_retrieve($cache_key);
-	if(!empty($cache_entry))
-	{
-		return $cache_entry;
-	}
+    // Check for cached value
+    $cache_entry = sugar_cache_retrieve($cache_key);
+    if(!empty($cache_entry))
+    {
+        return $cache_entry;
+    }
 
-	$temp_app_strings = $app_strings;
-	$default_language = $sugar_config['default_language'];
+    $temp_app_strings = $app_strings;
+    $default_language = $sugar_config['default_language'];
 
-	$langs = array();
-	if ($language != 'en_us') {
-	    $langs[] = 'en_us';
-	}
-	if ($default_language != 'en_us' && $language != $default_language) {
-	    $langs[] = $default_language;
-	}
+    $langs = array();
+    if ($language != 'en_us') {
+        $langs[] = 'en_us';
+    }
+    if ($default_language != 'en_us' && $language != $default_language) {
+        $langs[] = $default_language;
+    }
 
-	$langs[] = $language;
+    $langs[] = $language;
 
-	$app_strings_array = array();
+    $app_strings_array = array();
 
-	foreach ( $langs as $lang ) {
-	    $app_strings = array();
-	    if(file_exists("include/language/$lang.lang.php")) {
+    foreach ( $langs as $lang ) {
+        $app_strings = array();
+        if(file_exists("include/language/$lang.lang.php")) {
             include("include/language/$lang.lang.php");
             $GLOBALS['log']->info("Found language file: $lang.lang.php");
         }
@@ -985,40 +1001,40 @@ function return_application_language($language)
             $GLOBALS['log']->info("Found custom language file: $lang.lang.php");
         }
         $app_strings_array[] = $app_strings;
-	}
+    }
 
-	$app_strings = array();
+    $app_strings = array();
     foreach ( $app_strings_array as $app_strings_item ) {
         $app_strings = sugarLangArrayMerge($app_strings, $app_strings_item);
     }
 
-	if(!isset($app_strings)) {
-		$GLOBALS['log']->fatal("Unable to load the application language strings");
-		return null;
-	}
+    if(!isset($app_strings)) {
+        $GLOBALS['log']->fatal("Unable to load the application language strings");
+        return null;
+    }
 
-	// If we are in debug mode for translating, turn on the prefix now!
+    // If we are in debug mode for translating, turn on the prefix now!
     if(!empty($sugar_config['translation_string_prefix']))
     {
-		foreach($app_strings as $entry_key=>$entry_value) {
-			$app_strings[$entry_key] = $language.' '.$entry_value;
-		}
-	}
-	if(isset($_SESSION['show_deleted'])) {
-		$app_strings['LBL_DELETE_BUTTON'] = $app_strings['LBL_UNDELETE_BUTTON'];
-		$app_strings['LBL_DELETE_BUTTON_LABEL'] = $app_strings['LBL_UNDELETE_BUTTON_LABEL'];
-		$app_strings['LBL_DELETE_BUTTON_TITLE'] = $app_strings['LBL_UNDELETE_BUTTON_TITLE'];
-		$app_strings['LBL_DELETE'] = $app_strings['LBL_UNDELETE'];
-	}
+        foreach($app_strings as $entry_key=>$entry_value) {
+            $app_strings[$entry_key] = $language.' '.$entry_value;
+        }
+    }
+    if(isset($_SESSION['show_deleted'])) {
+        $app_strings['LBL_DELETE_BUTTON'] = $app_strings['LBL_UNDELETE_BUTTON'];
+        $app_strings['LBL_DELETE_BUTTON_LABEL'] = $app_strings['LBL_UNDELETE_BUTTON_LABEL'];
+        $app_strings['LBL_DELETE_BUTTON_TITLE'] = $app_strings['LBL_UNDELETE_BUTTON_TITLE'];
+        $app_strings['LBL_DELETE'] = $app_strings['LBL_UNDELETE'];
+    }
 
-	$app_strings['LBL_ALT_HOT_KEY'] = get_alt_hot_key();
+    $app_strings['LBL_ALT_HOT_KEY'] = get_alt_hot_key();
 
-	$return_value = $app_strings;
-	$app_strings = $temp_app_strings;
+    $return_value = $app_strings;
+    $app_strings = $temp_app_strings;
 
-	sugar_cache_put($cache_key, $return_value);
+    sugar_cache_put($cache_key, $return_value);
 
-	return $return_value;
+    return $return_value;
 }
 
 /**
@@ -1305,73 +1321,71 @@ function is_guid($guid) {
  */
 function create_guid()
 {
-	$microTime = microtime();
-	list($a_dec, $a_sec) = explode(" ", $microTime);
+    $microTime = microtime();
+    list($a_dec, $a_sec) = explode(" ", $microTime);
 
-	$dec_hex = dechex($a_dec* 1000000);
-	$sec_hex = dechex($a_sec);
+    $dec_hex = dechex($a_dec* 1000000);
+    $sec_hex = dechex($a_sec);
 
-	ensure_length($dec_hex, 5);
-	ensure_length($sec_hex, 6);
+    ensure_length($dec_hex, 5);
+    ensure_length($sec_hex, 6);
 
-	$guid = "";
-	$guid .= $dec_hex;
-	$guid .= create_guid_section(3);
-	$guid .= '-';
-	$guid .= create_guid_section(4);
-	$guid .= '-';
-	$guid .= create_guid_section(4);
-	$guid .= '-';
-	$guid .= create_guid_section(4);
-	$guid .= '-';
-	$guid .= $sec_hex;
-	$guid .= create_guid_section(6);
+    $guid = "";
+    $guid .= $dec_hex;
+    $guid .= create_guid_section(3);
+    $guid .= '-';
+    $guid .= create_guid_section(4);
+    $guid .= '-';
+    $guid .= create_guid_section(4);
+    $guid .= '-';
+    $guid .= create_guid_section(4);
+    $guid .= '-';
+    $guid .= $sec_hex;
+    $guid .= create_guid_section(6);
 
-	return $guid;
-
+    return $guid;
 }
 
 function create_guid_section($characters)
 {
-	$return = "";
-	for($i=0; $i<$characters; $i++)
-	{
-		$return .= dechex(mt_rand(0,15));
-	}
-	return $return;
+    $return = "";
+    for($i=0; $i<$characters; $i++)
+    {
+        $return .= dechex(mt_rand(0,15));
+    }
+    return $return;
 }
 
 function ensure_length(&$string, $length)
 {
-	$strlen = strlen($string);
-	if($strlen < $length)
-	{
-		$string = str_pad($string,$length,"0");
-	}
-	else if($strlen > $length)
-	{
-		$string = substr($string, 0, $length);
-	}
+    $strlen = strlen($string);
+    if($strlen < $length)
+    {
+        $string = str_pad($string,$length,"0");
+    }
+    else if($strlen > $length)
+    {
+        $string = substr($string, 0, $length);
+    }
 }
 
-function microtime_diff($a, $b) {
-	list($a_dec, $a_sec) = explode(" ", $a);
-	list($b_dec, $b_sec) = explode(" ", $b);
-	return $b_sec - $a_sec + $b_dec - $a_dec;
+function microtime_diff($a, $b)
+{
+    list($a_dec, $a_sec) = explode(" ", $a);
+    list($b_dec, $b_sec) = explode(" ", $b);
+    return $b_sec - $a_sec + $b_dec - $a_dec;
 }
 
 // check if Studio is displayed.
 function displayStudioForCurrentUser()
 {
     global $current_user;
-    if ( $current_user->isAdmin() ) {
+    if($current_user->isAdmin())
+    {
         return true;
     }
 
-
-
-	return true;
-
+    return true;
 }
 
 function displayWorkflowForCurrentUser()
@@ -1381,7 +1395,8 @@ function displayWorkflowForCurrentUser()
 }
 
 // return an array with all modules where the user is an admin.
-function get_admin_modules_for_user($user) {
+function get_admin_modules_for_user($user)
+{
     $GLOBALS['log']->deprecated("get_admin_modules_for_user() is deprecated as of 6.2.2 and may disappear in the future, use Users->getDeveloperModules() instead");
 
     if(!isset($user)){
@@ -1393,7 +1408,8 @@ function get_admin_modules_for_user($user) {
 
 }
 
- function get_workflow_admin_modules_for_user($user){
+function get_workflow_admin_modules_for_user($user)
+{
     if (isset($_SESSION['get_workflow_admin_modules_for_user'])) {
         return $_SESSION['get_workflow_admin_modules_for_user'];
     }
@@ -1401,22 +1417,22 @@ function get_admin_modules_for_user($user) {
     global $moduleList;
     $workflow_mod_list = array();
     foreach($moduleList as $module){
-		$workflow_mod_list[$module] = $module;
-	}
+        $workflow_mod_list[$module] = $module;
+    }
 
-	// This list is taken from teh previous version of workflow_utils.php
+    // This list is taken from teh previous version of workflow_utils.php
     $workflow_mod_list['Tasks'] = "Tasks";
     $workflow_mod_list['Calls'] = "Calls";
     $workflow_mod_list['Meetings'] = "Meetings";
     $workflow_mod_list['Notes'] = "Notes";
     $workflow_mod_list['ProjectTask'] = "Project Tasks";
-	$workflow_mod_list['Leads'] = "Leads";
-	$workflow_mod_list['Opportunities'] = "Opportunities";
-	// End of list
+    $workflow_mod_list['Leads'] = "Leads";
+    $workflow_mod_list['Opportunities'] = "Opportunities";
+    // End of list
 
     $workflow_admin_modules = array();
     if(empty($user)) {
-    	return $workflow_admin_modules;
+        return $workflow_admin_modules;
     }
     $actions = ACLAction::getUserActions($user->id);
     //check for ForecastSchedule because it doesn't exist in $workflow_mod_list
@@ -1436,7 +1452,8 @@ function get_admin_modules_for_user($user) {
 }
 
 // Check if user is admin for at least one module.
-function is_admin_for_any_module($user) {
+function is_admin_for_any_module($user)
+{
     if (!isset($user)){
         return false;
     }
@@ -1448,7 +1465,8 @@ function is_admin_for_any_module($user) {
 
 
 // Check if user is admin for a specific module.
-function is_admin_for_module($user,$module) {
+function is_admin_for_module($user, $module)
+{
     if (!isset($user)) {
         return false;
     }
@@ -1463,34 +1481,33 @@ function is_admin_for_module($user,$module) {
  * Check if user id belongs to a system admin.
  * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
  * All Rights Reserved.
- * Contributor(s): ______________________________________..
  */
-function is_admin($user) {
-    if(empty($user)) {
+function is_admin($user)
+{
+    if(empty($user))
+    {
         return false;
     }
 
-	return $user->isAdmin();
+    return $user->isAdmin();
 }
 
 /**
  * Return the display name for a theme if it exists.
  * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
  * All Rights Reserved.
- * Contributor(s): ______________________________________..
  *
  * @deprecated use SugarThemeRegistry::get($theme)->name instead
  */
 function get_theme_display($theme)
 {
-	return SugarThemeRegistry::get($theme)->name;
+    return SugarThemeRegistry::get($theme)->name;
 }
 
 /**
  * Return an array of directory names.
  * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
  * All Rights Reserved.
- * Contributor(s): ______________________________________..
  *
  * @deprecated use SugarThemeRegistry::availableThemes() instead.
  */
@@ -1507,10 +1524,10 @@ function get_themes()
  * param $selected - the string which contains the default value
  * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
  * All Rights Reserved.
- * Contributor(s): ______________________________________..
  */
-function get_select_options ($option_list, $selected) {
-	return get_select_options_with_id($option_list, $selected);
+function get_select_options ($option_list, $selected)
+{
+    return get_select_options_with_id($option_list, $selected);
 }
 
 /**
@@ -1522,8 +1539,9 @@ function get_select_options ($option_list, $selected) {
  * All Rights Reserved.
  * Contributor(s): ______________________________________..
  */
-function get_select_options_with_id ($option_list, $selected_key) {
-	return get_select_options_with_id_separate_key($option_list, $option_list, $selected_key);
+function get_select_options_with_id ($option_list, $selected_key)
+{
+    return get_select_options_with_id_separate_key($option_list, $option_list, $selected_key);
 }
 
 
@@ -1538,40 +1556,40 @@ function get_select_options_with_id ($option_list, $selected_key) {
  * Contributor(s): ______________________________________..
  */
 function get_select_options_with_id_separate_key ($label_list, $key_list, $selected_key, $massupdate=false) {
-	global $app_strings;
-	$select_options = "";
+    global $app_strings;
+    $select_options = "";
 
-	//for setting null selection values to human readable --None--
-	$pattern = "/'0?'></";
-	$replacement = "''>".$app_strings['LBL_NONE']."<";
+    //for setting null selection values to human readable --None--
+    $pattern = "/'0?'></";
+    $replacement = "''>".$app_strings['LBL_NONE']."<";
     if($massupdate){
         $replacement .= "/OPTION>\n<OPTION value='__SugarMassUpdateClearField__'><"; // Giving the user the option to unset a drop down list. I.e. none means that it won't get updated
     }
 
-	if (empty($key_list)) $key_list = array();
-	//create the type dropdown domain and set the selected value if $opp value already exists
-	foreach ($key_list as $option_key=>$option_value) {
+    if (empty($key_list)) $key_list = array();
+    //create the type dropdown domain and set the selected value if $opp value already exists
+    foreach ($key_list as $option_key=>$option_value) {
 
-		$selected_string = '';
-		// the system is evaluating $selected_key == 0 || '' to true.  Be very careful when changing this.  Test all cases.
-		// The bug was only happening with one of the users in the drop down.  It was being replaced by none.
+        $selected_string = '';
+        // the system is evaluating $selected_key == 0 || '' to true.  Be very careful when changing this.  Test all cases.
+        // The bug was only happening with one of the users in the drop down.  It was being replaced by none.
         if (
-            ($option_key != '' && $selected_key == $option_key)
-            || (
-                $option_key == ''
-                && (($selected_key == '' && !$massupdate) || $selected_key == '__SugarMassUpdateClearField__')
-            )
-            || (is_array($selected_key) &&  in_array($option_key, $selected_key))
-        ) {
-			$selected_string = 'selected ';
-		}
+                ($option_key != '' && $selected_key == $option_key)
+                || (
+                    $option_key == ''
+                    && (($selected_key == '' && !$massupdate) || $selected_key == '__SugarMassUpdateClearField__')
+                   )
+                || (is_array($selected_key) &&  in_array($option_key, $selected_key))
+           ) {
+            $selected_string = 'selected ';
+        }
 
-		$html_value = $option_key;
+        $html_value = $option_key;
 
-		$select_options .= "\n<OPTION ".$selected_string."value='$html_value'>$label_list[$option_key]</OPTION>";
-	}
-	$select_options = preg_replace($pattern, $replacement, $select_options);
-	return $select_options;
+        $select_options .= "\n<OPTION ".$selected_string."value='$html_value'>$label_list[$option_key]</OPTION>";
+    }
+    $select_options = preg_replace($pattern, $replacement, $select_options);
+    return $select_options;
 }
 
 
@@ -1582,10 +1600,10 @@ function get_select_options_with_id_separate_key ($label_list, $key_list, $selec
  */
 function sugar_die($error_message, $exit_code = 1)
 {
-	global $focus;
-	sugar_cleanup();
-	echo $error_message;
-	die($exit_code);
+    global $focus;
+    sugar_cleanup();
+    echo $error_message;
+    die($exit_code);
 }
 
 
@@ -1596,7 +1614,7 @@ function sugar_die($error_message, $exit_code = 1)
  * Contributor(s): ______________________________________..
  */
 function get_clear_form_js () {
-	$the_script = <<<EOQ
+    $the_script = <<<EOQ
 <script type="text/javascript" language="JavaScript">
 function clear_form(form) {
 	var newLoc = 'index.php?action=' + form.action.value + '&module=' + form.module.value + '&query=true&clear_query=true';
@@ -1608,7 +1626,7 @@ function clear_form(form) {
 </script>
 EOQ;
 
-	return $the_script;
+    return $the_script;
 }
 
 /**
@@ -1619,12 +1637,14 @@ EOQ;
  * All Rights Reserved.
  * Contributor(s): ______________________________________..
  */
-function get_set_focus_js () {
-	//TODO Clint 5/20 - Make this function more generic so that it can take in the target form and field names as variables
-	$the_script = <<<EOQ
+function get_set_focus_js ()
+ {
+    //TODO Clint 5/20 - Make this function more generic so that it can take in the target form and field names as variables
+    $the_script = <<<EOQ
 <script type="text/javascript" language="JavaScript">
 <!--
-function set_focus() {
+function set_focus()
+{
 	if (document.forms.length > 0) {
 		for (i = 0; i < document.forms.length; i++) {
 			for (j = 0; j < document.forms[i].elements.length; j++) {
@@ -1645,7 +1665,7 @@ function set_focus() {
 </script>
 EOQ;
 
-	return $the_script;
+    return $the_script;
 }
 
 /**
@@ -3442,16 +3462,17 @@ function search_filter_rel_info(& $focus, $tar_rel_module, $relationship_name){
 		}
 	}
 
-	foreach($focus->field_defs as $field_name => $field_def){
-		//Check if the relationship_name matches a "relate" field
+	foreach($focus->field_defs as $field_name => $field_def)
+    {
+		// Check if the relationship_name matches a "relate" field
 		if(!empty($field_def['type']) && $field_def['type'] == 'relate'
 		&& !empty($field_def['id_name']) && !empty($focus->field_defs[$field_def['id_name']])
 		&& !empty($focus->field_defs[$field_def['id_name']]['relationship'])
 		&& $focus->field_defs[$field_def['id_name']]['relationship'] == $relationship_name)
 		{
 			$temp_bean = get_module_info($tar_rel_module);
-		//	echo $focus->$field_def['id_name'];
-			$temp_bean->retrieve($focus->$field_def['id_name']);
+			//echo $focus->{$field_def['id_name']};
+			$temp_bean->retrieve($focus->{$field_def['id_name']});
 			if($temp_bean->id!=""){
 
 				$rel_list[] = $temp_bean;
@@ -3460,8 +3481,8 @@ function search_filter_rel_info(& $focus, $tar_rel_module, $relationship_name){
 		//Check if the relationship_name matches a "link" in a relate field
 		} else if(!empty($rel_value['link']) && !empty($rel_value['id_name']) && $rel_value['link'] == $relationship_name){
 			$temp_bean = get_module_info($tar_rel_module);
-		//	echo $focus->$rel_value['id_name'];
-			$temp_bean->retrieve($focus->$rel_value['id_name']);
+			//echo $focus->{$rel_value['id_name']};
+			$temp_bean->retrieve($focus->{$rel_value['id_name']});
 			if($temp_bean->id!=""){
 
 				$rel_list[] = $temp_bean;
@@ -4469,7 +4490,7 @@ function create_export_query_relate_link_patch($module, $searchFields, $where)
 			{
 				$params['join_table_link_alias'] = 'join_link_'.$field['name'];
 			}
-			$join = $seed->$field['link']->getJoin($params, true);
+			$join = $seed->{$field['link']}->getJoin($params, true);
 			$join_table_alias = 'join_'.$field['name'];
 			if(isset($field['db_concat_fields'])){
 				$db_field = db_concat($join_table_alias, $field['db_concat_fields']);

@@ -52,9 +52,9 @@ class SugarWidget
         $this->layout_manager = $layout_manager;
     }
 
-    function display(&$layout_def)
+    function display(&$layout_def, $additionalFormFields = null, $nonbutton = false)
     {
-        return 'display class undefined';
+        return 'display function undefined in SugarWidget derived class';
     }
 
     /**

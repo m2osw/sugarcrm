@@ -2342,7 +2342,7 @@ class SugarBean
          {
              if(!empty($this->{$rel_field_name['name']}))
              {
-                 $this->fetched_rel_row[$rel_field_name['name']] = $this->$rel_field_name['name'];
+                 $this->fetched_rel_row[$rel_field_name['name']] = $this->{$rel_field_name['name']};
              }
          }
         //make a copy of fields in the relationship_fields array. These field values will be used to
@@ -4378,7 +4378,11 @@ class SugarBean
                 $name = $field['name'];
                 if(empty($this->$name))
                 {
-                    // set the value of this relate field in this bean ($this->$field['name']) to the value of the 'name' field in the related module for the record identified by the value of $this->$field['id_name']
+                    // set the value of this relate field in this bean
+                    // ($this->{$field['name']}) to the value of the 'name'
+                    // field in the related module for the record identified
+                    // by the value of $this->{$field['id_name']}
+                    //
                     $related_module = $field['module'];
                     $id_name = $field['id_name'];
 
@@ -4399,9 +4403,12 @@ class SugarBean
 
                                 $mod->retrieve($this->$id_name);
 
-                                if (!empty($field['rname'])) {
-                                    $this->$name = $mod->$field['rname'];
-                                } else if (isset($mod->name)) {
+                                if(!empty($field['rname']))
+                                {
+                                    $this->$name = $mod->{$field['rname']};
+                                }
+                                elseif(isset($mod->name))
+                                {
                                     $this->$name = $mod->name;
                                 }
                             }

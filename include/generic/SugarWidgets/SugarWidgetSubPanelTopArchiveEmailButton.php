@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,48 +35,49 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-
-
-
+require_once "include/generic/SugarWidgets/SugarWidgetSubPanelTopButton.php";
 
 
 class SugarWidgetSubPanelTopArchiveEmailButton extends SugarWidgetSubPanelTopButton
 {
-	function display($defines)
-	{
-		if((ACLController::moduleSupportsACL($defines['module'])  && !ACLController::checkAccess($defines['module'], 'edit', true) ||
-			$defines['module'] == "History" & !ACLController::checkAccess("Emails", 'edit', true))){
-			$temp = '';
-			return $temp;
-		}
-		
-		global $app_strings;
-		global $mod_strings;
-		global $currentModule;
+    function display(&$layout_def, $additionalFormFields = null, $nonbutton = false)
+    {
+        if(ACLController::moduleSupportsACL($layout_def['module'])
+        && !ACLController::checkAccess($layout_def['module'], 'edit', true)
+        || $layout_def['module'] == "History"
+        && !ACLController::checkAccess("Emails", 'edit', true))
+        {
+            return '';
+        }
 
-		$title = $app_strings['LBL_TRACK_EMAIL_BUTTON_TITLE'];
-		$value = $app_strings['LBL_TRACK_EMAIL_BUTTON_LABEL'];
-		$this->module = 'Emails';
+        global $app_strings, $mod_strings, $currentModule;
 
-		$additionalFormFields = array();
-		$additionalFormFields['type'] = 'archived';
-		// cn: bug 5727 - must override the parents' parent for contacts (which could be an Account)
-		$additionalFormFields['parent_type'] = $defines['focus']->module_dir; 
-		$additionalFormFields['parent_id'] = $defines['focus']->id;
-		$additionalFormFields['parent_name'] = $defines['focus']->name;
+        $title = $app_strings['LBL_TRACK_EMAIL_BUTTON_TITLE'];
+        $value = $app_strings['LBL_TRACK_EMAIL_BUTTON_LABEL'];
+        $this->module = 'Emails';
 
-		if(isset($defines['focus']->email1))
-		{
-			$additionalFormFields['to_email_addrs'] = $defines['focus']->email1;
-		}
-		if(ACLController::moduleSupportsACL($defines['module'])  && !ACLController::checkAccess($defines['module'], 'edit', true)){
-			$button = "<input id='".preg_replace('[ ]', '', $value)."_button'  title='$title' class='button' type='button' name='".preg_replace('[ ]', '', strtolower($value))."_button' value='$value' disabled/>\n";
-			return $button;
-		}
-		$button = $this->_get_form($defines, $additionalFormFields);
-		$button .= "<input id='".preg_replace('[ ]', '', $value)."_button' title='$title' class='button' type='submit' name='".preg_replace('[ ]', '', strtolower($value))."_button' value='$value'/>\n";
-		$button .= "</form>";
-		return $button;
-	}
+        $additionalFormFields = array();
+        $additionalFormFields['type'] = 'archived';
+        // cn: bug 5727 - must override the parents' parent for contacts (which could be an Account)
+        $additionalFormFields['parent_type'] = $layout_def['focus']->module_dir; 
+        $additionalFormFields['parent_id']   = $layout_def['focus']->id;
+        $additionalFormFields['parent_name'] = $layout_def['focus']->name;
+
+        if(isset($layout_def['focus']->email1))
+        {
+            $additionalFormFields['to_email_addrs'] = $layout_def['focus']->email1;
+        }
+        if(ACLController::moduleSupportsACL($layout_def['module'])
+        && !ACLController::checkAccess($layout_def['module'], 'edit', true))
+        {
+            $button = "<input id='".preg_replace('[ ]', '', $value)."_button'  title='$title' class='button' type='button' name='".preg_replace('[ ]', '', strtolower($value))."_button' value='$value' disabled/>\n";
+            return $button;
+        }
+        $button = $this->_get_form($layout_def, $additionalFormFields);
+        $button .= "<input id='".preg_replace('[ ]', '', $value)."_button' title='$title' class='button' type='submit' name='".preg_replace('[ ]', '', strtolower($value))."_button' value='$value'/>\n";
+        $button .= "</form>";
+        return $button;
+    }
 }
-?>
+
+// vim: ts=4 sw=4 et

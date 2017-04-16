@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,45 +35,44 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-
-
-
+require_once "include/generic/SugarWidgets/SugarWidgetSubPanelTopButton.php";
 
 
 class SugarWidgetSubPanelTopSummaryButton extends SugarWidgetSubPanelTopButton
 {
-	function display($widget_data)
-	{
-		
-		
-		global $app_strings;
-		global $currentModule;
+    function display(&$layout_def, $additionalFormFields = null, $nonbutton = false)
+    {
+        global $app_strings;
+        global $currentModule;
 
-		$popup_request_data = array(
-			'call_back_function' => 'set_return',
-			'form_name' => 'EditView',
-			'field_to_name_array' => array(),
-		);
+        $popup_request_data = array(
+                'call_back_function' => 'set_return',
+                'form_name' => 'EditView',
+                'field_to_name_array' => array(),
+                );
 
-		$json_encoded_php_array = $this->_create_json_encoded_popup_request($popup_request_data);
-		$title = $app_strings['LBL_ACCUMULATED_HISTORY_BUTTON_TITLE'];
-		//$accesskey = $app_strings['LBL_ACCUMULATED_HISTORY_BUTTON_KEY'];
-		$value = $app_strings['LBL_ACCUMULATED_HISTORY_BUTTON_LABEL'];
-		$module_name = 'Activities';
-		$id = $widget_data['focus']->id;
-		$initial_filter = "&record=$id&module_name=$currentModule";
-		if(ACLController::moduleSupportsACL($widget_data['module']) && !ACLController::checkAccess($widget_data['module'], 'detail', true)){
-			$temp =  '<input disabled type="button" name="summary_button" id="summary_button"'
-			. ' class="button"'
-			. ' title="' . $title . '"'
-			. ' value="' . $value . '"';
-			return $temp;
-		}
-		return '<input type="button" name="summary_button" id="summary_button"'
-			. ' class="button"'
-			. ' title="' . $title . '"'
-			. ' value="' . $value . '"'
-			. " onclick='open_popup(\"$module_name\",600,400,\"$initial_filter\",false,false,$json_encoded_php_array);' />\n";
-	}
+        $json_encoded_php_array = $this->_create_json_encoded_popup_request($popup_request_data);
+        $title = $app_strings['LBL_ACCUMULATED_HISTORY_BUTTON_TITLE'];
+        //$accesskey = $app_strings['LBL_ACCUMULATED_HISTORY_BUTTON_KEY'];
+        $value = $app_strings['LBL_ACCUMULATED_HISTORY_BUTTON_LABEL'];
+        $module_name = 'Activities';
+        $id = $layout_def['focus']->id;
+        $initial_filter = "&record=$id&module_name=$currentModule";
+        if(ACLController::moduleSupportsACL($layout_def['module'])
+        && !ACLController::checkAccess($layout_def['module'], 'detail', true))
+        {
+            $temp =  '<input disabled type="button" name="summary_button" id="summary_button"'
+                . ' class="button"'
+                . ' title="' . $title . '"'
+                . ' value="' . $value . '"';
+            return $temp;
+        }
+        return '<input type="button" name="summary_button" id="summary_button"'
+            . ' class="button"'
+            . ' title="' . $title . '"'
+            . ' value="' . $value . '"'
+            . " onclick='open_popup(\"$module_name\",600,400,\"$initial_filter\",false,false,$json_encoded_php_array);' />\n";
+    }
 }
-?>
+
+// vim: ts=4 sw=4 et

@@ -26,6 +26,9 @@
  * @package Smarty
  */
 
+require_once "include/Smarty/Smarty.class.php";
+
+
 /**
  * Template compiling class
  * @package Smarty

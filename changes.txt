@@ -5,6 +5,12 @@
 * Made a few more files pass out test.sh script.
 * Fixed several inherited function parameters.
 * Fixed and end() call which had an inline array.
+* Fixed many more accesses of fields by name from an array (missing {})
+* Fixed may display() function declarations for widgets.
+* Fixed the call to display(), the last parameter is a bool.
+* Fixed the formatting of many files.
+* Fixed a certain number of functions that were called statically even though
+  they are using $this.
 
 
 2017/04/15 -- First few check-ins

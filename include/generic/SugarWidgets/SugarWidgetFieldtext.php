@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,19 +35,20 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-
 require_once('include/generic/SugarWidgets/SugarWidgetFieldvarchar.php');
+
 
 class SugarWidgetFieldText extends SugarWidgetFieldVarchar
 {
-    function SugarWidgetFieldText(&$layout_manager) {
+    function SugarWidgetFieldText(&$layout_manager)
+    {
         parent::SugarWidgetFieldVarchar($layout_manager);
     }
 
     function queryFilterEquals($layout_def)
     {
         return $this->reporter->db->convert($this->_get_column_select($layout_def), "text2char").
-        	" = ".$this->reporter->db->quoted($layout_def['input_name0']);
+            " = ".$this->reporter->db->quoted($layout_def['input_name0']);
     }
 
     function queryFilterNot_Equals_Str($layout_def)
@@ -68,8 +69,11 @@ class SugarWidgetFieldText extends SugarWidgetFieldVarchar
         $column = $this->_get_column_select($layout_def);
         return "($column IS NULL OR ".$this->reporter->db->convert($column, "length")." = 0)";
     }
-	
-    function displayList($layout_def) {
+
+    function displayList($layout_def)
+    {
         return nl2br(parent::displayListPlain($layout_def));
     }
 }
+
+// vim: ts=4 sw=4 et

@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -36,6 +36,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  ********************************************************************************/
 
 require_once('include/EditView/SugarVCR.php');
+
+
 /**
  * ListView - list of many objects
  * @api
@@ -86,103 +88,120 @@ class ListView
     var $keep_mass_update_form_open=false;
     var $ignorePopulateOnly = false;
 
-function setDataArray($value) {
-    $this->data_array = $value;
-}
+    /**initializes ListView
+     */
+    function ListView()
+    {
+        if(!$this->initialized)
+        {
+            global $sugar_config, $app_strings, $currentModule;
 
-function processListViewMulti($seed, $xTemplateSection, $html_varName) {
-
-    $this->shouldProcess = true;
-
-    echo "<form name='MassUpdate' method='post' action='index.php'>";
-    $this->processListViewTwo($seed, $xTemplateSection, $html_varName);
-
-    echo "<a href='javascript:" . ((!$this->multi_select_popup) ? 'sListView.' : ''). "check_all(document.MassUpdate, \"mass[]\", true)'>".translate('LBL_CHECKALL')."</a> - <a href='javascript:sListView.check_all(document.MassUpdate, \"mass[]\", false);'>".translate('LBL_CLEARALL')."</a>";
-    echo '<br><br>';
-}
-
-
-function processListView($seed, $xTemplateSection, $html_varName)
-{
-    global $sugar_config;
-
-    $populateOnly = $this->ignorePopulateOnly ? FALSE : (!empty($sugar_config['save_query']) && $sugar_config['save_query'] == 'populate_only');
-    if(isset($seed->module_dir) && $populateOnly) {
-        if(empty($GLOBALS['displayListView']) && strcmp(strtolower($_REQUEST['action']), 'popup') != 0 && (!empty($_REQUEST['clear_query']) || $_REQUEST['module'] == $seed->module_dir && ((empty($_REQUEST['query']) || $_REQUEST['query'] == 'MSI')&& (empty($_SESSION['last_search_mod']) || $_SESSION['last_search_mod'] != $seed->module_dir)))) {
-            $_SESSION['last_search_mod'] = $_REQUEST['module'] ;
-            return;
+            $this->initialized = true;
+            $this->records_per_page = $sugar_config['list_max_entries_per_page'] + 0;
+            $this->local_theme = SugarThemeRegistry::current()->__toString();
+            $this->local_app_strings = $app_strings;
+            $this->local_image_path = SugarThemeRegistry::current()->getImagePath();
+            $this->local_current_module = $currentModule;
         }
     }
-    if(strcmp(strtolower($_REQUEST['action']), 'popup') != 0){
-        $_SESSION['last_search_mod'] = $_REQUEST['module'] ;
-    }
-    //following session variable will track the detail view navigation history.
-    //needs to the reset after each search.
-    $this->setLocalSessionVariable($html_varName,"DETAIL_NAV_HISTORY",false);
 
-    require_once('include/MassUpdate.php');
-    $mass = new MassUpdate();
-    $add_acl_javascript = false;
-    if(!isset($_REQUEST['action'])) {
-        $this->shouldProcess=false;
-    } else {
-    $this->shouldProcess = is_subclass_of($seed, "SugarBean")
-        && (($_REQUEST['action'] == 'index') || ('ListView' == substr($_REQUEST['action'],0,8)) /* cn: to include all ListViewXXX.php type views */)
-        && ($_REQUEST['module'] == $seed->module_dir);
+    function setDataArray($value)
+    {
+        $this->data_array = $value;
     }
 
-    //when processing a multi-select popup.
-    if($this->process_for_popups && $this->multi_select_popup)  $this->shouldProcess =true;
-    //mass update turned off?
-    if(!$this->show_mass_update) $this->shouldProcess = false;
-    if(is_subclass_of($seed, "SugarBean")) {
-        if($seed->bean_implements('ACL')) {
-            if(!ACLController::checkAccess($seed->module_dir,'list',true)) {
-                if($_REQUEST['module'] != 'Home') {
-                    ACLController::displayNoAccess();
-                }
+    function processListViewMulti($seed, $xTemplateSection, $html_varName)
+    {
+        $this->shouldProcess = true;
+
+        echo "<form name='MassUpdate' method='post' action='index.php'>";
+        $this->processListViewTwo($seed, $xTemplateSection, $html_varName);
+
+        echo "<a href='javascript:" . ((!$this->multi_select_popup) ? 'sListView.' : ''). "check_all(document.MassUpdate, \"mass[]\", true)'>".translate('LBL_CHECKALL')."</a> - <a href='javascript:sListView.check_all(document.MassUpdate, \"mass[]\", false);'>".translate('LBL_CLEARALL')."</a>";
+        echo '<br><br>';
+    }
+
+    function processListView($seed, $xTemplateSection, $html_varName)
+    {
+        global $sugar_config;
+
+        $populateOnly = $this->ignorePopulateOnly ? FALSE : (!empty($sugar_config['save_query']) && $sugar_config['save_query'] == 'populate_only');
+        if(isset($seed->module_dir) && $populateOnly) {
+            if(empty($GLOBALS['displayListView']) && strcmp(strtolower($_REQUEST['action']), 'popup') != 0 && (!empty($_REQUEST['clear_query']) || $_REQUEST['module'] == $seed->module_dir && ((empty($_REQUEST['query']) || $_REQUEST['query'] == 'MSI')&& (empty($_SESSION['last_search_mod']) || $_SESSION['last_search_mod'] != $seed->module_dir)))) {
+                $_SESSION['last_search_mod'] = $_REQUEST['module'] ;
                 return;
             }
-            if(!ACLController::checkAccess($seed->module_dir,'export',true)) {
-                $sugar_config['disable_export']= true;
+        }
+        if(strcmp(strtolower($_REQUEST['action']), 'popup') != 0){
+            $_SESSION['last_search_mod'] = $_REQUEST['module'] ;
+        }
+        //following session variable will track the detail view navigation history.
+        //needs to the reset after each search.
+        $this->setLocalSessionVariable($html_varName,"DETAIL_NAV_HISTORY",false);
+
+        require_once('include/MassUpdate.php');
+        $mass = new MassUpdate();
+        $add_acl_javascript = false;
+        if(!isset($_REQUEST['action'])) {
+            $this->shouldProcess=false;
+        } else {
+            $this->shouldProcess = is_subclass_of($seed, "SugarBean")
+                && (($_REQUEST['action'] == 'index') || ('ListView' == substr($_REQUEST['action'],0,8)) /* cn: to include all ListViewXXX.php type views */)
+                && ($_REQUEST['module'] == $seed->module_dir);
+        }
+
+        //when processing a multi-select popup.
+        if($this->process_for_popups && $this->multi_select_popup)  $this->shouldProcess =true;
+        //mass update turned off?
+        if(!$this->show_mass_update) $this->shouldProcess = false;
+        if(is_subclass_of($seed, "SugarBean")) {
+            if($seed->bean_implements('ACL')) {
+                if(!ACLController::checkAccess($seed->module_dir,'list',true)) {
+                    if($_REQUEST['module'] != 'Home') {
+                        ACLController::displayNoAccess();
+                    }
+                    return;
+                }
+                if(!ACLController::checkAccess($seed->module_dir,'export',true)) {
+                    $sugar_config['disable_export']= true;
+                }
+
             }
+        }
 
+        //force mass update form if requested.
+        if($this->force_mass_update) {
+            $this->shouldProcess = true;
+        }
+
+        if($this->shouldProcess) {
+            echo $mass->getDisplayMassUpdateForm(true, $this->multi_select_popup);
+            echo $mass->getMassUpdateFormHeader($this->multi_select_popup);
+            $mass->setSugarBean($seed);
+
+            //C.L. Fix for 10048, do not process handleMassUpdate for multi select popups
+            if(!$this->multi_select_popup) {
+                $mass->handleMassUpdate();
+            }
+        }
+
+        $this->processListViewTwo($seed,$xTemplateSection, $html_varName);
+
+        if($this->shouldProcess && empty($this->process_for_popups)) {
+            //echo "<a href='javascript:sListView.clear_all(document.MassUpdate, \"mass[]\");'>".translate('LBL_CLEARALL')."</a>";
+            // cn: preserves current functionality, exception is InboundEmail
+            if($this->show_mass_update_form) {
+                echo $mass->getMassUpdateForm();
+            }
+            if(!$this->keep_mass_update_form_open) {
+                echo $mass->endMassUpdateForm();
+            }
         }
     }
 
-    //force mass update form if requested.
-    if($this->force_mass_update) {
-        $this->shouldProcess = true;
-    }
 
-    if($this->shouldProcess) {
-        echo $mass->getDisplayMassUpdateForm(true, $this->multi_select_popup);
-        echo $mass->getMassUpdateFormHeader($this->multi_select_popup);
-        $mass->setSugarBean($seed);
-
-        //C.L. Fix for 10048, do not process handleMassUpdate for multi select popups
-        if(!$this->multi_select_popup) {
-            $mass->handleMassUpdate();
-        }
-    }
-
-    $this->processListViewTwo($seed,$xTemplateSection, $html_varName);
-
-    if($this->shouldProcess && empty($this->process_for_popups)) {
-        //echo "<a href='javascript:sListView.clear_all(document.MassUpdate, \"mass[]\");'>".translate('LBL_CLEARALL')."</a>";
-        // cn: preserves current functionality, exception is InboundEmail
-        if($this->show_mass_update_form) {
-            echo $mass->getMassUpdateForm();
-        }
-        if(!$this->keep_mass_update_form_open) {
-            echo $mass->endMassUpdateForm();
-        }
-    }
-}
-
-
-function process_dynamic_listview($source_module, $sugarbean,$subpanel_def)
-{
+    function process_dynamic_listview($source_module, $sugarbean,$subpanel_def)
+    {
         $this->source_module = $source_module;
         $this->subpanel_module = $subpanel_def->name;
         if(!isset($this->xTemplate))
@@ -226,403 +245,375 @@ function process_dynamic_listview($source_module, $sugarbean,$subpanel_def)
         }
     }
 
-/**
- * @return void
- * @param unknown $data
- * @param unknown $xTemplateSection
- * @param unknown $html_varName
- * @desc INTERNAL FUNCTION handles the rows
- */
- function process_dynamic_listview_rows($data,$parent_data, $xtemplateSection, $html_varName, $subpanel_def)
- {
-    global $subpanel_item_count;
-    global $odd_bg;
-    global $even_bg;
-    global $hilite_bg;
-    global $click_bg;
-
-    $this->xTemplate->assign("BG_HILITE", $hilite_bg);
-    $this->xTemplate->assign('CHECKALL', SugarThemeRegistry::current()->getImage('blank', '', 1, 1, ".gif", ''));
-    //$this->xTemplate->assign("BG_CLICK", $click_bg);
-    $subpanel_item_count = 0;
-    $oddRow = true;
-    $count = 0;
-    reset($data);
-
-    //GETTING OFFSET
-    $offset = $this->getOffset($html_varName);
-    //$totaltime = 0;
-    $processed_ids = array();
-
-    $fill_additional_fields = array();
-    //Either retrieve the is_fill_in_additional_fields property from the lone
-    //subpanel or visit each subpanel's subpanels to retrieve the is_fill_in_addition_fields
-    //property
-    $subpanel_list=array();
-    if($subpanel_def->isCollection()) {
-        $subpanel_list=$subpanel_def->sub_subpanels;
-    } else {
-        $subpanel_list[]= $subpanel_def;
-    }
-
-    foreach($subpanel_list as $this_subpanel)
+    /**
+     * @return void
+     * @param unknown $data
+     * @param unknown $xTemplateSection
+     * @param unknown $html_varName
+     * @desc INTERNAL FUNCTION handles the rows
+     */
+    function process_dynamic_listview_rows($data,$parent_data, $xtemplateSection, $html_varName, $subpanel_def)
     {
-        if($this_subpanel->is_fill_in_additional_fields())
-        {
-            $fill_additional_fields[] = $this_subpanel->bean_name;
-            $fill_additional_fields[$this_subpanel->bean_name] = true;
-        }
-    }
+        global $subpanel_item_count;
+        global $odd_bg;
+        global $even_bg;
+        global $hilite_bg;
+        global $click_bg;
 
-    if ( empty($data) ) {
-        $this->xTemplate->assign("ROW_COLOR", 'oddListRow');
-        $thepanel=$subpanel_def;
-        if($subpanel_def->isCollection())
-            $thepanel=$subpanel_def->get_header_panel_def();
-        $this->xTemplate->assign("COL_COUNT", count($thepanel->get_list_fields()));
-        $this->xTemplate->parse($xtemplateSection.".nodata");
-    }
-    while(list($aVal, $aItem) = each($data))
-    {
-        $subpanel_item_count++;
-        $aItem->check_date_relationships_load();
-        // TODO: expensive and needs to be removed and done better elsewhere
+        $this->xTemplate->assign("BG_HILITE", $hilite_bg);
+        $this->xTemplate->assign('CHECKALL', SugarThemeRegistry::current()->getImage('blank', '', 1, 1, ".gif", ''));
+        //$this->xTemplate->assign("BG_CLICK", $click_bg);
+        $subpanel_item_count = 0;
+        $oddRow = true;
+        $count = 0;
+        reset($data);
 
-        if(!empty($fill_additional_fields[$aItem->object_name])
-        || ($aItem->object_name == 'Case' && !empty($fill_additional_fields['aCase']))
-        )
-        {
-            $aItem->fill_in_additional_list_fields();
-            //$aItem->fill_in_additional_detail_fields();
-        }
-        //rrs bug: 25343
-        $aItem->call_custom_logic("process_record");
+        //GETTING OFFSET
+        $offset = $this->getOffset($html_varName);
+        //$totaltime = 0;
+        $processed_ids = array();
 
-        if(isset($parent_data[$aItem->id])) {
-
-            $aItem->parent_name = $parent_data[$aItem->id]['parent_name'];
-            if(!empty($parent_data[$aItem->id]['parent_name_owner'])) {
-            $aItem->parent_name_owner =  $parent_data[$aItem->id]['parent_name_owner'];
-            $aItem->parent_name_mod =  $parent_data[$aItem->id]['parent_name_mod'];
-        }}
-        $fields = $aItem->get_list_view_data();
-        if(isset($processed_ids[$aItem->id])) {
-            continue;
-
-        } else {
-            $processed_ids[$aItem->id] = 1;
-        }
-
-
-        //ADD OFFSET TO ARRAY
-        $fields['OFFSET'] = ($offset + $count + 1);
-
-        if($this->shouldProcess) {
-            if($aItem->ACLAccess('EditView')) {
-            $this->xTemplate->assign('PREROW', "<input type='checkbox' class='checkbox' name='mass[]' value='". $fields['ID']. "' />");
-            } else {
-                $this->xTemplate->assign('PREROW', '');
-
-            }
-            if($aItem->ACLAccess('DetailView')) {
-                $this->xTemplate->assign('TAG_NAME','a');
-            } else {
-                $this->xTemplate->assign('TAG_NAME','span');
-            }
-            $this->xTemplate->assign('CHECKALL', "<input type='checkbox'  title='".$GLOBALS['app_strings']['LBL_SELECT_ALL_TITLE']."' class='checkbox' name='massall' id='massall' value='' onclick='sListView.check_all(document.MassUpdate, \"mass[]\", this.checked);' />");
-        }
-
-        if($oddRow)
-        {
-            $ROW_COLOR = 'oddListRow';
-            $BG_COLOR =  $odd_bg;
-        }
-        else
-        {
-            $ROW_COLOR = 'evenListRow';
-            $BG_COLOR =  $even_bg;
-        }
-        $oddRow = !$oddRow;
-		$button_contents = array();
-        $this->xTemplate->assign("ROW_COLOR", $ROW_COLOR);
-        $this->xTemplate->assign("BG_COLOR", $BG_COLOR);
-        $layout_manager = $this->getLayoutManager();
-        $layout_manager->setAttribute('context','List');
-        $layout_manager->setAttribute('image_path',$this->local_image_path);
-        $layout_manager->setAttribute('module_name', $subpanel_def->_instance_properties['module']);
-        if(!empty($this->child_focus))
-            $layout_manager->setAttribute('related_module_name',$this->child_focus->module_dir);
-
-        //AG$subpanel_data = $this->list_field_defs;
-        //$bla = array_pop($subpanel_data);
-        //select which sub-panel to display here, the decision will be made based on the type of
-        //the sub-panel and panel in the bean being processed.
+        $fill_additional_fields = array();
+        //Either retrieve the is_fill_in_additional_fields property from the lone
+        //subpanel or visit each subpanel's subpanels to retrieve the is_fill_in_addition_fields
+        //property
+        $subpanel_list=array();
         if($subpanel_def->isCollection()) {
-            $thepanel=$subpanel_def->sub_subpanels[$aItem->panel_name];
+            $subpanel_list=$subpanel_def->sub_subpanels;
         } else {
-            $thepanel=$subpanel_def;
+            $subpanel_list[]= $subpanel_def;
         }
-        //get data source name
-        $linked_field=$thepanel->get_data_source_name();
-        $linked_field_set=$thepanel->get_data_source_name(true);
-        static $count;
-        if(!isset($count))$count = 0;
 
-        $field_acl['DetailView'] = $aItem->ACLAccess('DetailView');
-        $field_acl['ListView'] = $aItem->ACLAccess('ListView');
-        $field_acl['EditView'] = $aItem->ACLAccess('EditView');
-        $field_acl['Delete'] = $aItem->ACLAccess('Delete');
-        foreach($thepanel->get_list_fields() as $field_name=>$list_field)
+        foreach($subpanel_list as $this_subpanel)
         {
-            //add linked field attribute to the array.
-            $list_field['linked_field']=$linked_field;
-            $list_field['linked_field_set']=$linked_field_set;
-
-            $usage = empty($list_field['usage']) ? '' : $list_field['usage'];
-            if($usage == 'query_only' && !empty($list_field['force_query_only_display'])){
-                //if you are here you have column that is query only but needs to be displayed as blank.  This is helpful
-                //for collections such as Activities where you have a field in only one object and wish to show it in the subpanel list
-                $count++;
-                $widget_contents = '&nbsp;';
-                $this->xTemplate->assign('CLASS', "");
-                $this->xTemplate->assign('CELL_COUNT', $count);
-                $this->xTemplate->assign('CELL', $widget_contents);
-                $this->xTemplate->parse($xtemplateSection.".row.cell");
-
-            }else if($usage != 'query_only')
+            if($this_subpanel->is_fill_in_additional_fields())
             {
-                $list_field['name']=$field_name;
-
-                $module_field = $field_name.'_mod';
-                $owner_field = $field_name.'_owner';
-                if(!empty($aItem->$module_field)) {
-
-                    $list_field['owner_id'] = $aItem->$owner_field;
-                    $list_field['owner_module'] = $aItem->$module_field;
-
-                } else {
-                    $list_field['owner_id'] = false;
-                    $list_field['owner_module'] = false;
-                }
-                if(isset($list_field['alias'])) $list_field['name'] = $list_field['alias'];
-                else $list_field['name']=$field_name;
-                $list_field['fields'] = $fields;
-                $list_field['module'] = $aItem->module_dir;
-                $list_field['start_link_wrapper'] = $this->start_link_wrapper;
-                $list_field['end_link_wrapper'] = $this->end_link_wrapper;
-                $list_field['subpanel_id'] = $this->subpanel_id;
-                $list_field += $field_acl;
-                if ( isset($aItem->field_defs[strtolower($list_field['name'])])) {
-                    require_once('include/SugarFields/SugarFieldHandler.php');
-                    // We need to see if a sugar field exists for this field type first,
-                    // if it doesn't, toss it at the old sugarWidgets. This is for
-                    // backwards compatibility and will be removed in a future release
-                    $vardef = $aItem->field_defs[strtolower($list_field['name'])];
-                    if ( isset($vardef['type']) ) {
-                        $fieldType = isset($vardef['custom_type'])?$vardef['custom_type']:$vardef['type'];
-                        $tmpField = SugarFieldHandler::getSugarField($fieldType,true);
-                    } else {
-                        $tmpField = NULL;
-                    }
-
-                    if ( $tmpField != NULL ) {
-                        $widget_contents = SugarFieldHandler::displaySmarty($list_field['fields'],$vardef,'ListView',$list_field);
-                    } else {
-                        // No SugarField for this particular type
-                        // Use the old, icky, SugarWidget for now
-                        $widget_contents = $layout_manager->widgetDisplay($list_field);
-                    }
-
-                    if ( isset($list_field['widget_class']) && $list_field['widget_class'] == 'SubPanelDetailViewLink' ) {
-                        // We need to call into the old SugarWidgets for the time being, so it can generate a proper link with all the various corner-cases handled
-                        // So we'll populate the field data with the pre-rendered display for the field
-                        $list_field['fields'][$field_name] = $widget_contents;
-                        if('full_name' == $field_name){//bug #32465
-                           $list_field['fields'][strtoupper($field_name)] = $widget_contents;
-                        }
-
-                        //vardef source is non db, assign the field name to varname for processing of column.
-                        if(!empty($vardef['source']) && $vardef['source']=='non-db'){
-                            $list_field['varname'] = $field_name;
-
-                        }
-                        $widget_contents = $layout_manager->widgetDisplay($list_field);
-                    } else if(isset($list_field['widget_class']) && $list_field['widget_class'] == 'SubPanelEmailLink' ) {
-                        $widget_contents = $layout_manager->widgetDisplay($list_field);
-                    }
-
-                 $count++;
-                $this->xTemplate->assign('CELL_COUNT', $count);
-                $this->xTemplate->assign('CLASS', "");
-                if ( empty($widget_contents) ) $widget_contents = '&nbsp;';
-                $this->xTemplate->assign('CELL', $widget_contents);
-                $this->xTemplate->parse($xtemplateSection.".row.cell");
-                } else {
-                    // This handles the edit and remove buttons and icon widget
-                	if( isset($list_field['widget_class']) && $list_field['widget_class'] == "SubPanelIcon") {
-		                $count++;
-		                $widget_contents = $layout_manager->widgetDisplay($list_field);
-		                $this->xTemplate->assign('CELL_COUNT', $count);
-		                $this->xTemplate->assign('CLASS', "");
-		                if ( empty($widget_contents) ) $widget_contents = '&nbsp;';
-		                $this->xTemplate->assign('CELL', $widget_contents);
-		                $this->xTemplate->parse($xtemplateSection.".row.cell");
-                	} elseif (preg_match("/button/i", $list_field['name'])) {
-                        if ((($list_field['name'] === 'edit_button' && $field_acl['EditView']) || ($list_field['name'] === 'close_button' && $field_acl['EditView']) || ($list_field['name'] === 'remove_button' && $field_acl['Delete'])) && '' != ($_content = $layout_manager->widgetDisplay($list_field)) )
-                        {
-                            $button_contents[] = $_content;
-                            unset($_content);
-                        }
-                        else
-                        {
-                            $button_contents[] = '';
-                        }
-                	} else {
-               			$count++;
-               			$this->xTemplate->assign('CLASS', "");
-               			$widget_contents = $layout_manager->widgetDisplay($list_field);
-		                $this->xTemplate->assign('CELL_COUNT', $count);
-		                if ( empty($widget_contents) ) $widget_contents = '&nbsp;';
-		                $this->xTemplate->assign('CELL', $widget_contents);
-		                $this->xTemplate->parse($xtemplateSection.".row.cell");
-                	}
-                }
-
+                $fill_additional_fields[] = $this_subpanel->bean_name;
+                $fill_additional_fields[$this_subpanel->bean_name] = true;
             }
         }
 
-
-        // Make sure we have at least one button before rendering a column for
-        // the action buttons in a list view. Relevant bugs: #51647 and #51640.
-        if(!empty($button_contents))
+        if ( empty($data) ) {
+            $this->xTemplate->assign("ROW_COLOR", 'oddListRow');
+            $thepanel=$subpanel_def;
+            if($subpanel_def->isCollection())
+                $thepanel=$subpanel_def->get_header_panel_def();
+            $this->xTemplate->assign("COL_COUNT", count($thepanel->get_list_fields()));
+            $this->xTemplate->parse($xtemplateSection.".nodata");
+        }
+        while(list($aVal, $aItem) = each($data))
         {
-            $button_contents = array_filter($button_contents);
-            if (!empty($button_contents))
+            $subpanel_item_count++;
+            $aItem->check_date_relationships_load();
+            // TODO: expensive and needs to be removed and done better elsewhere
+
+            if(!empty($fill_additional_fields[$aItem->object_name])
+                    || ($aItem->object_name == 'Case' && !empty($fill_additional_fields['aCase']))
+              )
             {
-            // this is for inline buttons on listviews
-            // bug#51275: smarty widget to help provide the action menu functionality as it is currently sprinkled throughout the app with html
-                require_once('include/Smarty/plugins/function.sugar_action_menu.php');
-                $tempid = create_guid();
-                array_unshift($button_contents, "<div style='display: inline' id='$tempid'>" . array_shift($button_contents) . "</div>");
-                $action_button = smarty_function_sugar_action_menu(array(
-                    'id' => $tempid,
-                    'buttons' => $button_contents,
-                    'class' => 'clickMenu subpanel records fancymenu button',
-                    'flat' => false //assign flat value as false to display dropdown menu at any other preferences.
-                ), $this->xTemplate);
+                $aItem->fill_in_additional_list_fields();
+                //$aItem->fill_in_additional_detail_fields();
+            }
+            //rrs bug: 25343
+            $aItem->call_custom_logic("process_record");
+
+            if(isset($parent_data[$aItem->id])) {
+
+                $aItem->parent_name = $parent_data[$aItem->id]['parent_name'];
+                if(!empty($parent_data[$aItem->id]['parent_name_owner'])) {
+                    $aItem->parent_name_owner =  $parent_data[$aItem->id]['parent_name_owner'];
+                    $aItem->parent_name_mod =  $parent_data[$aItem->id]['parent_name_mod'];
+                }}
+            $fields = $aItem->get_list_view_data();
+            if(isset($processed_ids[$aItem->id])) {
+                continue;
+
+            } else {
+                $processed_ids[$aItem->id] = 1;
+            }
+
+
+            //ADD OFFSET TO ARRAY
+            $fields['OFFSET'] = ($offset + $count + 1);
+
+            if($this->shouldProcess) {
+                if($aItem->ACLAccess('EditView')) {
+                    $this->xTemplate->assign('PREROW', "<input type='checkbox' class='checkbox' name='mass[]' value='". $fields['ID']. "' />");
+                } else {
+                    $this->xTemplate->assign('PREROW', '');
+
+                }
+                if($aItem->ACLAccess('DetailView')) {
+                    $this->xTemplate->assign('TAG_NAME','a');
+                } else {
+                    $this->xTemplate->assign('TAG_NAME','span');
+                }
+                $this->xTemplate->assign('CHECKALL', "<input type='checkbox'  title='".$GLOBALS['app_strings']['LBL_SELECT_ALL_TITLE']."' class='checkbox' name='massall' id='massall' value='' onclick='sListView.check_all(document.MassUpdate, \"mass[]\", this.checked);' />");
+            }
+
+            if($oddRow)
+            {
+                $ROW_COLOR = 'oddListRow';
+                $BG_COLOR =  $odd_bg;
             }
             else
             {
-                $action_button = '';
+                $ROW_COLOR = 'evenListRow';
+                $BG_COLOR =  $even_bg;
             }
-            $this->xTemplate->assign('CLASS', "inlineButtons");
-            $this->xTemplate->assign('CELL_COUNT', ++$count);
-            //Bug#51275 for beta3 pre_script is not required any more
-            $this->xTemplate->assign('CELL', $action_button);
-            $this->xTemplate->parse($xtemplateSection . ".row.cell");
+            $oddRow = !$oddRow;
+            $button_contents = array();
+            $this->xTemplate->assign("ROW_COLOR", $ROW_COLOR);
+            $this->xTemplate->assign("BG_COLOR", $BG_COLOR);
+            $layout_manager = $this->getLayoutManager();
+            $layout_manager->setAttribute('context','List');
+            $layout_manager->setAttribute('image_path',$this->local_image_path);
+            $layout_manager->setAttribute('module_name', $subpanel_def->_instance_properties['module']);
+            if(!empty($this->child_focus))
+                $layout_manager->setAttribute('related_module_name',$this->child_focus->module_dir);
+
+            //AG$subpanel_data = $this->list_field_defs;
+            //$bla = array_pop($subpanel_data);
+            //select which sub-panel to display here, the decision will be made based on the type of
+            //the sub-panel and panel in the bean being processed.
+            if($subpanel_def->isCollection()) {
+                $thepanel=$subpanel_def->sub_subpanels[$aItem->panel_name];
+            } else {
+                $thepanel=$subpanel_def;
+            }
+            //get data source name
+            $linked_field=$thepanel->get_data_source_name();
+            $linked_field_set=$thepanel->get_data_source_name(true);
+            static $count;
+            if(!isset($count))$count = 0;
+
+            $field_acl['DetailView'] = $aItem->ACLAccess('DetailView');
+            $field_acl['ListView'] = $aItem->ACLAccess('ListView');
+            $field_acl['EditView'] = $aItem->ACLAccess('EditView');
+            $field_acl['Delete'] = $aItem->ACLAccess('Delete');
+            foreach($thepanel->get_list_fields() as $field_name=>$list_field)
+            {
+                //add linked field attribute to the array.
+                $list_field['linked_field']=$linked_field;
+                $list_field['linked_field_set']=$linked_field_set;
+
+                $usage = empty($list_field['usage']) ? '' : $list_field['usage'];
+                if($usage == 'query_only' && !empty($list_field['force_query_only_display'])){
+                    //if you are here you have column that is query only but needs to be displayed as blank.  This is helpful
+                    //for collections such as Activities where you have a field in only one object and wish to show it in the subpanel list
+                    $count++;
+                    $widget_contents = '&nbsp;';
+                    $this->xTemplate->assign('CLASS', "");
+                    $this->xTemplate->assign('CELL_COUNT', $count);
+                    $this->xTemplate->assign('CELL', $widget_contents);
+                    $this->xTemplate->parse($xtemplateSection.".row.cell");
+
+                }else if($usage != 'query_only')
+                {
+                    $list_field['name']=$field_name;
+
+                    $module_field = $field_name.'_mod';
+                    $owner_field = $field_name.'_owner';
+                    if(!empty($aItem->$module_field)) {
+
+                        $list_field['owner_id'] = $aItem->$owner_field;
+                        $list_field['owner_module'] = $aItem->$module_field;
+
+                    } else {
+                        $list_field['owner_id'] = false;
+                        $list_field['owner_module'] = false;
+                    }
+                    if(isset($list_field['alias'])) $list_field['name'] = $list_field['alias'];
+                    else $list_field['name']=$field_name;
+                    $list_field['fields'] = $fields;
+                    $list_field['module'] = $aItem->module_dir;
+                    $list_field['start_link_wrapper'] = $this->start_link_wrapper;
+                    $list_field['end_link_wrapper'] = $this->end_link_wrapper;
+                    $list_field['subpanel_id'] = $this->subpanel_id;
+                    $list_field += $field_acl;
+                    if ( isset($aItem->field_defs[strtolower($list_field['name'])])) {
+                        require_once('include/SugarFields/SugarFieldHandler.php');
+                        // We need to see if a sugar field exists for this field type first,
+                        // if it doesn't, toss it at the old sugarWidgets. This is for
+                        // backwards compatibility and will be removed in a future release
+                        $vardef = $aItem->field_defs[strtolower($list_field['name'])];
+                        if ( isset($vardef['type']) ) {
+                            $fieldType = isset($vardef['custom_type'])?$vardef['custom_type']:$vardef['type'];
+                            $tmpField = SugarFieldHandler::getSugarField($fieldType,true);
+                        } else {
+                            $tmpField = NULL;
+                        }
+
+                        if ( $tmpField != NULL ) {
+                            $widget_contents = SugarFieldHandler::displaySmarty($list_field['fields'], $vardef, 'ListView', $list_field);
+                        } else {
+                            // No SugarField for this particular type
+                            // Use the old, icky, SugarWidget for now
+                            $widget_contents = $layout_manager->widgetDisplay($list_field);
+                        }
+
+                        if ( isset($list_field['widget_class']) && $list_field['widget_class'] == 'SubPanelDetailViewLink' ) {
+                            // We need to call into the old SugarWidgets for the time being, so it can generate a proper link with all the various corner-cases handled
+                            // So we'll populate the field data with the pre-rendered display for the field
+                            $list_field['fields'][$field_name] = $widget_contents;
+                            if('full_name' == $field_name){//bug #32465
+                                $list_field['fields'][strtoupper($field_name)] = $widget_contents;
+                            }
+
+                            //vardef source is non db, assign the field name to varname for processing of column.
+                            if(!empty($vardef['source']) && $vardef['source']=='non-db'){
+                                $list_field['varname'] = $field_name;
+
+                            }
+                            $widget_contents = $layout_manager->widgetDisplay($list_field);
+                        } else if(isset($list_field['widget_class']) && $list_field['widget_class'] == 'SubPanelEmailLink' ) {
+                            $widget_contents = $layout_manager->widgetDisplay($list_field);
+                        }
+
+                        $count++;
+                        $this->xTemplate->assign('CELL_COUNT', $count);
+                        $this->xTemplate->assign('CLASS', "");
+                        if ( empty($widget_contents) ) $widget_contents = '&nbsp;';
+                        $this->xTemplate->assign('CELL', $widget_contents);
+                        $this->xTemplate->parse($xtemplateSection.".row.cell");
+                    } else {
+                        // This handles the edit and remove buttons and icon widget
+                        if( isset($list_field['widget_class']) && $list_field['widget_class'] == "SubPanelIcon") {
+                            $count++;
+                            $widget_contents = $layout_manager->widgetDisplay($list_field);
+                            $this->xTemplate->assign('CELL_COUNT', $count);
+                            $this->xTemplate->assign('CLASS', "");
+                            if ( empty($widget_contents) ) $widget_contents = '&nbsp;';
+                            $this->xTemplate->assign('CELL', $widget_contents);
+                            $this->xTemplate->parse($xtemplateSection.".row.cell");
+                        } elseif (preg_match("/button/i", $list_field['name'])) {
+                            if ((($list_field['name'] === 'edit_button' && $field_acl['EditView']) || ($list_field['name'] === 'close_button' && $field_acl['EditView']) || ($list_field['name'] === 'remove_button' && $field_acl['Delete'])) && '' != ($_content = $layout_manager->widgetDisplay($list_field)) )
+                            {
+                                $button_contents[] = $_content;
+                                unset($_content);
+                            }
+                            else
+                            {
+                                $button_contents[] = '';
+                            }
+                        } else {
+                            $count++;
+                            $this->xTemplate->assign('CLASS', "");
+                            $widget_contents = $layout_manager->widgetDisplay($list_field);
+                            $this->xTemplate->assign('CELL_COUNT', $count);
+                            if ( empty($widget_contents) ) $widget_contents = '&nbsp;';
+                            $this->xTemplate->assign('CELL', $widget_contents);
+                            $this->xTemplate->parse($xtemplateSection.".row.cell");
+                        }
+                    }
+
+                }
+            }
+
+
+            // Make sure we have at least one button before rendering a column for
+            // the action buttons in a list view. Relevant bugs: #51647 and #51640.
+            if(!empty($button_contents))
+            {
+                $button_contents = array_filter($button_contents);
+                if (!empty($button_contents))
+                {
+                    // this is for inline buttons on listviews
+                    // bug#51275: smarty widget to help provide the action menu functionality as it is currently sprinkled throughout the app with html
+                    require_once('include/Smarty/plugins/function.sugar_action_menu.php');
+                    $tempid = create_guid();
+                    array_unshift($button_contents, "<div style='display: inline' id='$tempid'>" . array_shift($button_contents) . "</div>");
+                    $action_button = smarty_function_sugar_action_menu(array(
+                                'id' => $tempid,
+                                'buttons' => $button_contents,
+                                'class' => 'clickMenu subpanel records fancymenu button',
+                                'flat' => false //assign flat value as false to display dropdown menu at any other preferences.
+                                ), $this->xTemplate);
+                }
+                else
+                {
+                    $action_button = '';
+                }
+                $this->xTemplate->assign('CLASS', "inlineButtons");
+                $this->xTemplate->assign('CELL_COUNT', ++$count);
+                //Bug#51275 for beta3 pre_script is not required any more
+                $this->xTemplate->assign('CELL', $action_button);
+                $this->xTemplate->parse($xtemplateSection . ".row.cell");
+            }
+
+
+            $aItem->setupCustomFields($aItem->module_dir);
+            $aItem->custom_fields->populateAllXTPL($this->xTemplate, 'detail', $html_varName, $fields);
+
+            $count++;
+
+            $this->xTemplate->parse($xtemplateSection.".row");
         }
 
-
-        $aItem->setupCustomFields($aItem->module_dir);
-        $aItem->custom_fields->populateAllXTPL($this->xTemplate, 'detail', $html_varName, $fields);
-
-        $count++;
-
-        $this->xTemplate->parse($xtemplateSection.".row");
+        $this->xTemplate->parse($xtemplateSection);
     }
 
-    $this->xTemplate->parse($xtemplateSection);
-}
-
-/**sets whether or not to display the xtemplate header and footer
- * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
- * All Rights Reserved.
- * Contributor(s): ______________________________________.
-*/
-function setDisplayHeaderAndFooter($bool) {
+    /**sets whether or not to display the xtemplate header and footer
+     */
+    function setDisplayHeaderAndFooter($bool)
+    {
         $this->display_header_and_footer = $bool;
-}
-
-/**initializes ListView
- * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
- * All Rights Reserved.
- * Contributor(s): ______________________________________.
-*/
- function ListView() {
-
-
-    if(!$this->initialized) {
-        global $sugar_config;
-        $this->records_per_page = $sugar_config['list_max_entries_per_page'] + 0;
-        $this->initialized = true;
-        global $app_strings, $currentModule;
-        $this->local_theme = SugarThemeRegistry::current()->__toString();
-        $this->local_app_strings =$app_strings;
-        $this->local_image_path = SugarThemeRegistry::current()->getImagePath();
-        $this->local_current_module = $currentModule;
-    }
-}
-/**sets how many records should be displayed per page in the list view
- * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
- * All Rights Reserved.
- * Contributor(s): ______________________________________.
-*/
- function setRecordsPerPage($count) {
-    $this->records_per_page = $count;
-}
-/**sets the header title */
- function setHeaderTitle($value) {
-    $this->header_title = $value;
-}
-/**sets the header text this is text that's appended to the header table and is usually used for the creation of buttons
- * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
- * All Rights Reserved.
- * Contributor(s): ______________________________________.
-*/
- function setHeaderText($value) {
-    $this->header_text = $value;
-}
-/**sets the path for the XTemplate HTML file to be used this is only needed to be set if you are allowing ListView to create the XTemplate
- * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
- * All Rights Reserved.
- * Contributor(s): ______________________________________.
-*/
- function setXTemplatePath($value) {
-    $this->xTemplatePath= $value;
-}
-
-/**this is a helper function for allowing ListView to create a new XTemplate it groups parameters that should be set into a single function
- * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
- * All Rights Reserved.
- * Contributor(s): ______________________________________.
-*/
- function initNewXTemplate($XTemplatePath, $modString, $imagePath = null) {
-    $this->setXTemplatePath($XTemplatePath);
-    if(isset($modString))
-        $this->setModStrings($modString);
-    if(isset($imagePath))
-        $this->setImagePath($imagePath);
-}
-
-
-function getOrderBy($varName, $defaultOrderBy='', $force_sortorder='') {
-    $sortBy = $this->getSessionVariable($varName, "ORDER_BY") ;
-
-    $orderByDirection = $this->getSessionVariableName($varName, "order_by_direction");
-    $orderByColumn = $this->getSessionVariableName($varName, "ORDER_BY");
-    $lastEqualsSortBy = false;
-    $defaultOrder = false; //ascending
-
-    if(empty($sortBy)) {
-        $this->setUserVariable($varName, "ORDER_BY", $defaultOrderBy);
-        $sortBy = $defaultOrderBy;
-    } else {
-        $this->setUserVariable($varName, "ORDER_BY", $sortBy);
     }
 
-    $desc = $this->getSessionVariable($varName, $sortBy."S");
+    /**sets how many records should be displayed per page in the list view
+     */
+    function setRecordsPerPage($count) {
+        $this->records_per_page = $count;
+    }
 
-    if (empty($desc))
+    /**sets the header title */
+    function setHeaderTitle($value) {
+        $this->header_title = $value;
+    }
+
+    /**sets the header text this is text that's appended to the header table and is usually used for the creation of buttons
+     */
+    function setHeaderText($value) {
+        $this->header_text = $value;
+    }
+
+    /**sets the path for the XTemplate HTML file to be used this is only needed to be set if you are allowing ListView to create the XTemplate
+     */
+    function setXTemplatePath($value) {
+        $this->xTemplatePath= $value;
+    }
+
+    /**this is a helper function for allowing ListView to create a new XTemplate it groups parameters that should be set into a single function
+     */
+    function initNewXTemplate($XTemplatePath, $modString, $imagePath = null)
+    {
+        $this->setXTemplatePath($XTemplatePath);
+        if(isset($modString))
+            $this->setModStrings($modString);
+        if(isset($imagePath))
+            $this->setImagePath($imagePath);
+    }
+
+
+    function getOrderBy($varName, $defaultOrderBy='', $force_sortorder='')
+    {
+        $sortBy = $this->getSessionVariable($varName, "ORDER_BY") ;
+
+        $orderByDirection = $this->getSessionVariableName($varName, "order_by_direction");
+        $orderByColumn = $this->getSessionVariableName($varName, "ORDER_BY");
+        $lastEqualsSortBy = false;
+        $defaultOrder = false; //ascending
+
+        if(empty($sortBy)) {
+            $this->setUserVariable($varName, "ORDER_BY", $defaultOrderBy);
+            $sortBy = $defaultOrderBy;
+        } else {
+            $this->setUserVariable($varName, "ORDER_BY", $sortBy);
+        }
+
+        $desc = $this->getSessionVariable($varName, $sortBy."S");
+
+        if (empty($desc))
         {
             $desc = $defaultOrder;
         }
@@ -683,219 +674,181 @@ function getOrderBy($varName, $defaultOrderBy='', $force_sortorder='') {
             }
             //Just clear from url...
             $this->appendToBaseUrl[$orderByColumn] = false;
-    }else {
-        $this->query_orderby = "";
-    }
-    $this->sortby = $sortBy;
-    return $this->query_orderby;
+        }else {
+            $this->query_orderby = "";
+        }
+        $this->sortby = $sortBy;
+        return $this->query_orderby;
 
-}
-
-
-/**sets the parameters dealing with the db
- * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
- * All Rights Reserved.
- * Contributor(s): ______________________________________.
-*/
- function setQuery($where, $limit, $orderBy, $varName, $allowOrderByOveride=true) {
-    $this->query_where = $where;
-    if($this->getSessionVariable("query", "where") != $where) {
-        $this->query_where_has_changed = true;
-        $this->setSessionVariable("query", "where", $where);
     }
 
-    $this->query_limit = $limit;
-    if(!$allowOrderByOveride) {
-        $this->query_orderby = $orderBy;
-        return;
+
+    /**sets the parameters dealing with the db
+     */
+    function setQuery($where, $limit, $orderBy, $varName, $allowOrderByOveride=true)
+    {
+        $this->query_where = $where;
+        if($this->getSessionVariable("query", "where") != $where) {
+            $this->query_where_has_changed = true;
+            $this->setSessionVariable("query", "where", $where);
+        }
+
+        $this->query_limit = $limit;
+        if(!$allowOrderByOveride) {
+            $this->query_orderby = $orderBy;
+            return;
+        }
+        $this->getOrderBy($varName, $orderBy);
+
+        $this->setLocalSessionVariable($varName, "QUERY_WHERE", $where);
+
+        //SETTING ORDER_BY FOR USE IN DETAILVIEW
+        $this->setLocalSessionVariable($varName, "ORDER_BY_DETAIL", $this->query_orderby);
     }
-    $this->getOrderBy($varName, $orderBy);
 
-    $this->setLocalSessionVariable($varName, "QUERY_WHERE", $where);
-
-    //SETTING ORDER_BY FOR USE IN DETAILVIEW
-    $this->setLocalSessionVariable($varName, "ORDER_BY_DETAIL", $this->query_orderby);
-}
-
-function displayArrow() {
-
-}
-
-/**sets the theme used only use if it is different from the global
- * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
- * All Rights Reserved.
- * Contributor(s): ______________________________________.
-*/
- function setTheme($theme) {
-    $this->local_theme = $theme;
-    if(isset($this->xTemplate))$this->xTemplate->assign("THEME", $this->local_theme);
-}
-
-/**sets the AppStrings used only use if it is different from the global
- * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
- * All Rights Reserved.
- * Contributor(s): ______________________________________.
-*/
- function setAppStrings($app_strings) {
-    unset($this->local_app_strings);
-    $this->local_app_strings = $app_strings;
-    if(isset($this->xTemplate))$this->xTemplate->assign("APP", $this->local_app_strings);
-}
-
-/**sets the ModStrings used
- * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
- * All Rights Reserved.
- * Contributor(s): ______________________________________.
-*/
- function setModStrings($mod_strings) {
-    unset($this->local_module_strings);
-    $this->local_mod_strings = $mod_strings;
-    if(isset($this->xTemplate))$this->xTemplate->assign("MOD", $this->local_mod_strings);
-}
-
-/**sets the ImagePath used
- * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
- * All Rights Reserved.
- * Contributor(s): ______________________________________.
-*/
- function setImagePath($image_path) {
-    $this->local_image_path = $image_path;
-    if(empty($this->local_image_path)) {
-        $this->local_image_path = SugarThemeRegistry::get($this->local_theme)->getImagePath();
+    function displayArrow()
+    {
     }
-    if(isset($this->xTemplate))$this->xTemplate->assign("IMAGE_PATH", $this->local_image_path);
-}
 
-/**sets the currentModule only use if this is different from the global
- * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
- * All Rights Reserved.
- * Contributor(s): ______________________________________.
-*/
- function setCurrentModule($currentModule) {
-    unset($this->local_current_module);
-    $this->local_current_module = $currentModule;
-    if(isset($this->xTemplate))$this->xTemplate->assign("MODULE_NAME", $this->local_current_module);
-}
+    /**sets the theme used only use if it is different from the global
+     */
+    function setTheme($theme)
+    {
+        $this->local_theme = $theme;
+        if(isset($this->xTemplate))$this->xTemplate->assign("THEME", $this->local_theme);
+    }
 
-/**INTERNAL FUNCTION creates an XTemplate DO NOT CALL THIS THIS IS AN INTERNAL FUNCTION
- * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
- * All Rights Reserved.
- * Contributor(s): ______________________________________.
-*/
- function createXTemplate() {
-    if(!isset($this->xTemplate)) {
-        if(isset($this->xTemplatePath)) {
+    /**sets the AppStrings used only use if it is different from the global
+     */
+    function setAppStrings($app_strings) {
+        unset($this->local_app_strings);
+        $this->local_app_strings = $app_strings;
+        if(isset($this->xTemplate))$this->xTemplate->assign("APP", $this->local_app_strings);
+    }
 
-            $this->xTemplate = new XTemplate($this->xTemplatePath);
-            $this->xTemplate->assign("APP", $this->local_app_strings);
-            if(isset($this->local_mod_strings))$this->xTemplate->assign("MOD", $this->local_mod_strings);
-            $this->xTemplate->assign("THEME", $this->local_theme);
-            $this->xTemplate->assign("IMAGE_PATH", $this->local_image_path);
-            $this->xTemplate->assign("MODULE_NAME", $this->local_current_module);
-        } else {
-            $GLOBALS['log']->error("NO XTEMPLATEPATH DEFINED CANNOT CREATE XTEMPLATE");
+    /**sets the ModStrings used
+     */
+    function setModStrings($mod_strings) {
+        unset($this->local_module_strings);
+        $this->local_mod_strings = $mod_strings;
+        if(isset($this->xTemplate))$this->xTemplate->assign("MOD", $this->local_mod_strings);
+    }
+
+    /**sets the ImagePath used
+     */
+    function setImagePath($image_path) {
+        $this->local_image_path = $image_path;
+        if(empty($this->local_image_path)) {
+            $this->local_image_path = SugarThemeRegistry::get($this->local_theme)->getImagePath();
+        }
+        if(isset($this->xTemplate))$this->xTemplate->assign("IMAGE_PATH", $this->local_image_path);
+    }
+
+    /**sets the currentModule only use if this is different from the global
+     */
+    function setCurrentModule($currentModule) {
+        unset($this->local_current_module);
+        $this->local_current_module = $currentModule;
+        if(isset($this->xTemplate))$this->xTemplate->assign("MODULE_NAME", $this->local_current_module);
+    }
+
+    /**INTERNAL FUNCTION creates an XTemplate DO NOT CALL THIS THIS IS AN INTERNAL FUNCTION
+     */
+    function createXTemplate() {
+        if(!isset($this->xTemplate)) {
+            if(isset($this->xTemplatePath)) {
+
+                $this->xTemplate = new XTemplate($this->xTemplatePath);
+                $this->xTemplate->assign("APP", $this->local_app_strings);
+                if(isset($this->local_mod_strings))$this->xTemplate->assign("MOD", $this->local_mod_strings);
+                $this->xTemplate->assign("THEME", $this->local_theme);
+                $this->xTemplate->assign("IMAGE_PATH", $this->local_image_path);
+                $this->xTemplate->assign("MODULE_NAME", $this->local_current_module);
+            } else {
+                $GLOBALS['log']->error("NO XTEMPLATEPATH DEFINED CANNOT CREATE XTEMPLATE");
+            }
         }
     }
-}
 
-/**sets the XTemplate telling ListView to use newXTemplate as its current XTemplate
- * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
- * All Rights Reserved.
- * Contributor(s): ______________________________________.
-*/
- function setXTemplate($newXTemplate) {
-    $this->xTemplate = $newXTemplate;
-}
+    /**sets the XTemplate telling ListView to use newXTemplate as its current XTemplate
+     */
+    function setXTemplate($newXTemplate) {
+        $this->xTemplate = $newXTemplate;
+    }
 
-/**returns the XTemplate
- * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
- * All Rights Reserved.
- * Contributor(s): ______________________________________.
-*/
- function getXTemplate() {
-    return $this->xTemplate;
-}
+    /**returns the XTemplate
+     */
+    function getXTemplate() {
+        return $this->xTemplate;
+    }
 
-/**assigns a name value pair to the XTemplate
- * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
- * All Rights Reserved.
- * Contributor(s): ______________________________________.
-*/
- function xTemplateAssign($name, $value) {
+    /**assigns a name value pair to the XTemplate
+     */
+    function xTemplateAssign($name, $value) {
 
         if(!isset($this->xTemplate)) {
             $this->createXTemplate();
         }
         $this->xTemplate->assign($name, $value);
 
-}
+    }
 
-/**INTERNAL FUNCTION returns the offset first checking the query then checking the session if the where clause has changed from the last time it returns 0
- * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
- * All Rights Reserved.
- * Contributor(s): ______________________________________.
-*/
- function getOffset($localVarName) {
- 	if($this->query_where_has_changed || isset($GLOBALS['record_has_changed'])) {
- 		$this->setSessionVariable($localVarName,"offset", 0);
- 	}
-	$offset = $this->getSessionVariable($localVarName,"offset");
-	if(isset($offset)) {
-		return $offset;
-	}
-	return 0;
-}
+    /**INTERNAL FUNCTION returns the offset first checking the query then checking the session if the where clause has changed from the last time it returns 0
+     */
+    function getOffset($localVarName) {
+        if($this->query_where_has_changed || isset($GLOBALS['record_has_changed'])) {
+            $this->setSessionVariable($localVarName,"offset", 0);
+        }
+        $offset = $this->getSessionVariable($localVarName,"offset");
+        if(isset($offset)) {
+            return $offset;
+        }
+        return 0;
+    }
 
-/**INTERNAL FUNCTION sets the offset in the session
- * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
- * All Rights Reserved.
- * Contributor(s): ______________________________________.
-*/
- function setOffset($localVarName, $value) {
+    /**INTERNAL FUNCTION sets the offset in the session
+     */
+    function setOffset($localVarName, $value) {
         $this->setSessionVariable($localVarName, "offset", $value);
-}
+    }
 
-/**INTERNAL FUNCTION sets a session variable
- * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
- * All Rights Reserved.
- * Contributor(s): ______________________________________.
-*/
- function setSessionVariable($localVarName,$varName, $value) {
-    $_SESSION[$this->local_current_module."_".$localVarName."_".$varName] = $value;
-}
+    /**INTERNAL FUNCTION sets a session variable
+     */
+    function setSessionVariable($localVarName,$varName, $value) {
+        $_SESSION[$this->local_current_module."_".$localVarName."_".$varName] = $value;
+    }
 
-function setUserVariable($localVarName,$varName, $value) {
+    function setUserVariable($localVarName,$varName, $value) {
         if($this->is_dynamic ||  $localVarName == 'CELL')return;
         global $current_user;
         $current_user->setPreference($this->local_current_module."_".$localVarName."_".$varName, $value);
-}
-
-/**INTERNAL FUNCTION returns a session variable first checking the query for it then checking the session
- * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
- * All Rights Reserved.
- * Contributor(s): ______________________________________.
-*/
- function getSessionVariable($localVarName,$varName) {
-    //Set any variables pass in through request first
-    if(isset($_REQUEST[$this->getSessionVariableName($localVarName, $varName)])) {
-        $this->setSessionVariable($localVarName,$varName,$_REQUEST[$this->getSessionVariableName($localVarName, $varName)]);
     }
 
-    if(isset($_SESSION[$this->getSessionVariableName($localVarName, $varName)])) {
-        return $_SESSION[$this->getSessionVariableName($localVarName, $varName)];
-    }
-    return "";
-}
+    /**INTERNAL FUNCTION returns a session variable first checking the query for it then checking the session
+     */
+    function getSessionVariable($localVarName,$varName)
+    {
+        //Set any variables pass in through request first
+        if(isset($_REQUEST[$this->getSessionVariableName($localVarName, $varName)])) {
+            $this->setSessionVariable($localVarName,$varName,$_REQUEST[$this->getSessionVariableName($localVarName, $varName)]);
+        }
 
-function getUserVariable($localVarName, $varName) {
-    global $current_user;
-    if($this->is_dynamic ||  $localVarName == 'CELL')return;
-    if(isset($_REQUEST[$this->getSessionVariableName($localVarName, $varName)])) {
+        if(isset($_SESSION[$this->getSessionVariableName($localVarName, $varName)])) {
+            return $_SESSION[$this->getSessionVariableName($localVarName, $varName)];
+        }
+        return "";
+    }
+
+    function getUserVariable($localVarName, $varName)
+    {
+        global $current_user;
+        if($this->is_dynamic ||  $localVarName == 'CELL')return;
+        if(isset($_REQUEST[$this->getSessionVariableName($localVarName, $varName)])) {
 
             $this->setUserVariable($localVarName,$varName,$_REQUEST[$this->getSessionVariableName($localVarName, $varName)]);
+        }
+        return $current_user->getPreference($this->getSessionVariableName($localVarName, $varName));
     }
-    return $current_user->getPreference($this->getSessionVariableName($localVarName, $varName));
-}
 
 
     /**
@@ -910,11 +863,11 @@ function getUserVariable($localVarName, $varName) {
     function calculateSortOrder($sortOrderList)
     {
         $priority_map = array(
-          'request',
-          'session',
-          'subpaneldefs',
-          'default',
-        );
+                'request',
+                'session',
+                'subpaneldefs',
+                'default',
+                );
 
         foreach($priority_map as $p) {
             if (key_exists($p, $sortOrderList)) {
@@ -929,33 +882,27 @@ function getUserVariable($localVarName, $varName) {
 
 
     /**
-
-    * @return void
-    * @param unknown $localVarName
-    * @param unknown $varName
-    * @desc INTERNAL FUNCTION returns the session/query variable name
-    * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
-    * All Rights Reserved.
-    * Contributor(s): ______________________________________..
-    */
-    function getSessionVariableName($localVarName,$varName) {
+     * @return void
+     * @param unknown $localVarName
+     * @param unknown $varName
+     * @desc INTERNAL FUNCTION returns the session/query variable name
+     */
+    function getSessionVariableName($localVarName, $varName)
+    {
         return $this->local_current_module."_".$localVarName."_".$varName;
     }
 
     /**
-
-    * @return void
-    * @param unknown $seed
-    * @param unknown $xTemplateSection
-    * @param unknown $html_varName
-    * @desc INTERNAL FUNCTION Handles List Views using seeds that extend SugarBean
-        $XTemplateSection is the section in the XTemplate file that should be parsed usually main
-        $html_VarName is the variable name used in the XTemplateFile e.g. TASK
-        $seed is a seed that extends SugarBean
-        * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc..
-        * All Rights Reserved..
-        * Contributor(s): ______________________________________..
-    */
+     * @return void
+     * @param unknown $seed
+     * @param unknown $xTemplateSection
+     * @param unknown $html_varName
+     * @desc INTERNAL FUNCTION Handles List Views using seeds that extend
+     *       SugarBean $XTemplateSection is the section in the XTemplate
+     *       file that should be parsed usually main $html_VarName is the
+     *       variable name used in the XTemplateFile e.g. TASK
+     *       $seed is a seed that extends SugarBean
+     */
     function processSugarBean($xtemplateSection, $html_varName, $seed) {
         global $list_view_row_count;
 
@@ -982,7 +929,7 @@ function getUserVariable($localVarName, $varName) {
         } else {
             $related_field_name = $this->related_field_name;
             $response = $seed->get_related_list($this->child_focus,$related_field_name, $this->query_orderby,
-            $this->query_where, $current_offset, $this->query_limit);
+                    $this->query_where, $current_offset, $this->query_limit);
         }
 
         $list = $response['list'];
@@ -1004,15 +951,15 @@ function getUserVariable($localVarName, $varName) {
 
     function processUnionBeans($sugarbean, $subpanel_def, $html_var = 'CELL') {
 
-		$last_detailview_record = $this->getSessionVariable("detailview", "record");
-		if(!empty($last_detailview_record) && $last_detailview_record != $sugarbean->id){
-			$GLOBALS['record_has_changed'] = true;
-		}
-		$this->setSessionVariable("detailview", "record", $sugarbean->id);
+        $last_detailview_record = $this->getSessionVariable("detailview", "record");
+        if(!empty($last_detailview_record) && $last_detailview_record != $sugarbean->id){
+            $GLOBALS['record_has_changed'] = true;
+        }
+        $this->setSessionVariable("detailview", "record", $sugarbean->id);
 
-		$current_offset = $this->getOffset($html_var);
-		$module = isset($_REQUEST['module']) ? $_REQUEST['module'] : '';
-		$response = array();
+        $current_offset = $this->getOffset($html_var);
+        $module = isset($_REQUEST['module']) ? $_REQUEST['module'] : '';
+        $response = array();
 
         // choose sort order
         $sort_order = array();
@@ -1057,11 +1004,11 @@ function getUserVariable($localVarName, $varName) {
         $_SESSION['last_sub' .$this->subpanel_module. '_order'] = $this->sort_order;
         $_SESSION['last_sub' .$this->subpanel_module. '_url'] = $this->getBaseURL($html_var);
 
-		// Bug 8139 - Correct Subpanel sorting on 'name', when subpanel sorting default is 'last_name, first_name'
-		if (($this->sortby == 'name' || $this->sortby == 'last_name') &&
-			str_replace(' ', '', trim($subpanel_def->_instance_properties['sort_by'])) == 'last_name,first_name') {
-			$this->sortby = 'last_name '.$this->sort_order.', first_name ';
-		}
+        // Bug 8139 - Correct Subpanel sorting on 'name', when subpanel sorting default is 'last_name, first_name'
+        if (($this->sortby == 'name' || $this->sortby == 'last_name') &&
+                str_replace(' ', '', trim($subpanel_def->_instance_properties['sort_by'])) == 'last_name,first_name') {
+            $this->sortby = 'last_name '.$this->sort_order.', first_name ';
+        }
 
         if(!empty($this->response)){
             $response =& $this->response;
@@ -1082,70 +1029,104 @@ function getUserVariable($localVarName, $varName) {
         return array('list'=>$list, 'parent_data'=>$response['parent_data'], 'query'=>$response['query']);
     }
 
-    function getBaseURL($html_varName) {
+    function getBaseURL($html_varName)
+    {
         static $cache = array();
 
-        if(!empty($cache[$html_varName]))return $cache[$html_varName];
+        if(!empty($cache[$html_varName]))
+        {
+            return $cache[$html_varName];
+        }
+
         $blockVariables = array('mass', 'uid', 'massupdate', 'delete', 'merge', 'selectCount','current_query_by_page');
-        if(!empty($this->base_URL)) {
+
+        if(!empty($this->base_URL))
+        {
             return $this->base_URL;
         }
 
-            $baseurl = $_SERVER['PHP_SELF'];
-            if(empty($baseurl)) {
-                $baseurl = 'index.php';
-            }
+        $baseurl = $_SERVER['PHP_SELF'];
+        if(empty($baseurl))
+        {
+            $baseurl = 'index.php';
+        }
 
-            /*fixes an issue with deletes when doing a search*/
-            foreach(array_merge($_GET, $_POST) as $name=>$value) {
-                //echo ("$name = $value <br/>");
-                if(!empty($value) && $name != 'sort_order' //&& $name != ListView::getSessionVariableName($html_varName,"ORDER_BY")
-                        && $name != ListView::getSessionVariableName($html_varName,"offset")
-                        /*&& substr_count($name, "ORDER_BY")==0*/ && !in_array($name, $blockVariables))
+        // fixes an issue with deletes when doing a search
+        foreach(array_merge($_GET, $_POST) as $name => $value)
+        {
+            //echo "$name = $value <br/>";
+            if(!empty($value)
+            && $name != 'sort_order'
+            //&& $name != $this->getSessionVariableName($html_varName,"ORDER_BY")
+            && $name != $this->getSessionVariableName($html_varName,"offset")
+            //&& substr_count($name, "ORDER_BY")==0
+            && !in_array($name, $blockVariables))
+            {
+                if(is_array($value))
                 {
-                    if(is_array($value)) {
-                        foreach($value as $valuename=>$valuevalue) {
-                            if(substr_count($baseurl, '?') > 0)
-                                $baseurl	.= "&{$name}[]=".$valuevalue;
-                            else
-                                $baseurl	.= "?{$name}[]=".$valuevalue;
+                    foreach($value as $valuename => $valuevalue)
+                    {
+                        if(substr_count($baseurl, '?') > 0)
+                        {
+                            $baseurl .= "&{$name}[]=".$valuevalue;
                         }
-                    } else {
-                        $value = urlencode($value);
-                        if(substr_count($baseurl, '?') > 0) {
-                            $baseurl	.= "&$name=$value";
-                        } else {
-                            $baseurl	.= "?$name=$value";
+                        else
+                        {
+                            $baseurl .= "?{$name}[]=".$valuevalue;
                         }
                     }
                 }
-            }
-
-
-            if($_SERVER['REQUEST_METHOD'] == 'POST') {
-                // at this point it is possible that the above foreach already executed resulting in double ?'s in the url
-                if(substr_count($baseurl, '?') == 0) {
-                    $baseurl .= '?';
+                else
+                {
+                    $value = urlencode($value);
+                    if(substr_count($baseurl, '?') > 0)
+                    {
+                        $baseurl .= "&$name=$value";
+                    }
+                    else
+                    {
+                        $baseurl .= "?$name=$value";
+                    }
                 }
-                if(isset($_REQUEST['action'])) $baseurl.= '&action='.$_REQUEST['action'];
-                if(isset($_REQUEST['record'])) $baseurl .= '&record='.$_REQUEST['record'];
-                if(isset($_REQUEST['module'])) $baseurl .= '&module='.$_REQUEST['module'];
             }
+        }
 
-            $baseurl .= "&".ListView::getSessionVariableName($html_varName,"offset")."=";
-            $cache[$html_varName] = $baseurl;
-            return $baseurl;
+        if($_SERVER['REQUEST_METHOD'] == 'POST')
+        {
+            // at this point it is possible that the above foreach already executed resulting in double ?'s in the url
+            if(substr_count($baseurl, '?') == 0)
+            {
+                $baseurl .= '?';
+            }
+            if(isset($_REQUEST['action']))
+            {
+                $baseurl .= '&action=' . $_REQUEST['action'];
+            }
+            if(isset($_REQUEST['record']))
+            {
+                $baseurl .= '&record=' . $_REQUEST['record'];
+            }
+            if(isset($_REQUEST['module']))
+            {
+                $baseurl .= '&module=' . $_REQUEST['module'];
+            }
+        }
+
+        $baseurl .= "&".$this->getSessionVariableName($html_varName, "offset")."=";
+        $cache[$html_varName] = $baseurl;
+        return $baseurl;
     }
+
     /**
-    * @return void
-    * @param unknown $data
-    * @param unknown $xTemplateSection
-    * @param unknown $html_varName
-    * @desc INTERNAL FUNCTION process the List Navigation
-    * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
-    * All Rights Reserved.
-    * Contributor(s): ______________________________________..
-    */
+     * @return void
+     * @param unknown $data
+     * @param unknown $xTemplateSection
+     * @param unknown $html_varName
+     * @desc INTERNAL FUNCTION process the List Navigation
+     * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
+     * All Rights Reserved.
+     * Contributor(s): ______________________________________..
+     */
     function processListNavigation($xtemplateSection, $html_varName, $current_offset, $next_offset, $previous_offset, $row_count, $sugarbean=null, $subpanel_def=null, $col_count = 20) {
 
         global $export_module;
@@ -1180,7 +1161,7 @@ function getUserVariable($localVarName, $varName) {
             $dynamic_url = '';
 
             if($this->is_dynamic) {
-                $dynamic_url .='&'. $this->getSessionVariableName($html_varName,'ORDER_BY') . '='. $this->getSessionVariable($html_varName,'ORDER_BY').'&sort_order='.$this->sort_order.'&to_pdf=true&action=SubPanelViewer&subpanel=' . $this->subpanel_module;
+                $dynamic_url .='&'. $this->getSessionVariableName($html_varName, 'ORDER_BY') . '='. $this->getSessionVariable($html_varName,'ORDER_BY').'&sort_order='.$this->sort_order.'&to_pdf=true&action=SubPanelViewer&subpanel=' . $this->subpanel_module;
             }
 
             $current_URL = htmlentities($this->base_URL.$current_offset.$dynamic_url);
@@ -1284,37 +1265,40 @@ function getUserVariable($localVarName, $varName) {
 
             $end_record = $end_record-1;
 
-$script_href = "<a style=\'width: 150px\' name=\"thispage\" class=\'menuItem\' onmouseover=\'hiliteItem(this,\"yes\");\' onmouseout=\'unhiliteItem(this);\' onclick=\'if (document.MassUpdate.select_entire_list.value==1){document.MassUpdate.select_entire_list.value=0;sListView.check_all(document.MassUpdate, \"mass[]\", true, $this->records_per_page)}else {sListView.check_all(document.MassUpdate, \"mass[]\", true)};\' href=\'#\'>{$this->local_app_strings['LBL_LISTVIEW_OPTION_CURRENT']}&nbsp;&#x28;{$this->records_per_page}&#x29;&#x200E;</a>"
- . "<a style=\'width: 150px\' name=\"selectall\" class=\'menuItem\' onmouseover=\'hiliteItem(this,\"yes\");\' onmouseout=\'unhiliteItem(this);\' onclick=\'sListView.check_entire_list(document.MassUpdate, \"mass[]\",true,{$row_count});\' href=\'#\'>{$this->local_app_strings['LBL_LISTVIEW_OPTION_ENTIRE']}&nbsp;&#x28;{$row_count}&#x29;&#x200E;</a>"
- . "<a style=\'width: 150px\' name=\"deselect\" class=\'menuItem\' onmouseover=\'hiliteItem(this,\"yes\");\' onmouseout=\'unhiliteItem(this);\' onclick=\'sListView.clear_all(document.MassUpdate, \"mass[]\", false);\' href=\'#\'>{$this->local_app_strings['LBL_LISTVIEW_NONE']}</a>";
+            $script_href = "<a style=\'width: 150px\' name=\"thispage\" class=\'menuItem\' onmouseover=\'hiliteItem(this,\"yes\");\' onmouseout=\'unhiliteItem(this);\' onclick=\'if (document.MassUpdate.select_entire_list.value==1){document.MassUpdate.select_entire_list.value=0;sListView.check_all(document.MassUpdate, \"mass[]\", true, $this->records_per_page)}else {sListView.check_all(document.MassUpdate, \"mass[]\", true)};\' href=\'#\'>{$this->local_app_strings['LBL_LISTVIEW_OPTION_CURRENT']}&nbsp;&#x28;{$this->records_per_page}&#x29;&#x200E;</a>"
+                . "<a style=\'width: 150px\' name=\"selectall\" class=\'menuItem\' onmouseover=\'hiliteItem(this,\"yes\");\' onmouseout=\'unhiliteItem(this);\' onclick=\'sListView.check_entire_list(document.MassUpdate, \"mass[]\",true,{$row_count});\' href=\'#\'>{$this->local_app_strings['LBL_LISTVIEW_OPTION_ENTIRE']}&nbsp;&#x28;{$row_count}&#x29;&#x200E;</a>"
+                . "<a style=\'width: 150px\' name=\"deselect\" class=\'menuItem\' onmouseover=\'hiliteItem(this,\"yes\");\' onmouseout=\'unhiliteItem(this);\' onclick=\'sListView.clear_all(document.MassUpdate, \"mass[]\", false);\' href=\'#\'>{$this->local_app_strings['LBL_LISTVIEW_NONE']}</a>";
 
-$close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'border=0', null, null, ".gif", $app_strings['LBL_CLOSEINLINE']);
+            $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'border=0', null, null, ".gif", $app_strings['LBL_CLOSEINLINE']);
 
             echo "<script>
                 function select_dialog() {
-                	var \$dialog = \$('<div></div>')
-					.html('<a style=\'width: 150px\' name=\"thispage\" class=\'menuItem\' onmouseover=\'hiliteItem(this,\"yes\");\' onmouseout=\'unhiliteItem(this);\' onclick=\'if (document.MassUpdate.select_entire_list.value==1){document.MassUpdate.select_entire_list.value=0;sListView.check_all(document.MassUpdate, \"mass[]\", true, $this->records_per_page)}else {sListView.check_all(document.MassUpdate, \"mass[]\", true)};\' href=\'javascript:void(0)\'>{$this->local_app_strings['LBL_LISTVIEW_OPTION_CURRENT']}&nbsp;&#x28;{$this->records_per_page}&#x29;&#x200E;</a>"
-                . "<a style=\'width: 150px\' name=\"selectall\" class=\'menuItem\' onmouseover=\'hiliteItem(this,\"yes\");\' onmouseout=\'unhiliteItem(this);\' onclick=\'sListView.check_entire_list(document.MassUpdate, \"mass[]\",true,{$row_count});\' href=\'javascript:void(0)\'>{$this->local_app_strings['LBL_LISTVIEW_OPTION_ENTIRE']}&nbsp;&#x28;{$row_count}&#x29;&#x200E;</a>"
-                . "<a style=\'width: 150px\' name=\"deselect\" class=\'menuItem\' onmouseover=\'hiliteItem(this,\"yes\");\' onmouseout=\'unhiliteItem(this);\' onclick=\'sListView.clear_all(document.MassUpdate, \"mass[]\", false);\' href=\'javascript:void(0)\'>{$this->local_app_strings['LBL_LISTVIEW_NONE']}</a>')
-					.dialog({
-						autoOpen: false,
-						width: 150
-					});
-					\$dialog.dialog('open');
+                    var \$dialog = \$('<div></div>')
+                        .html('<a style=\'width: 150px\' name=\"thispage\" class=\'menuItem\' onmouseover=\'hiliteItem(this,\"yes\");\' onmouseout=\'unhiliteItem(this);\' onclick=\'if (document.MassUpdate.select_entire_list.value==1){document.MassUpdate.select_entire_list.value=0;sListView.check_all(document.MassUpdate, \"mass[]\", true, $this->records_per_page)}else {sListView.check_all(document.MassUpdate, \"mass[]\", true)};\' href=\'javascript:void(0)\'>{$this->local_app_strings['LBL_LISTVIEW_OPTION_CURRENT']}&nbsp;&#x28;{$this->records_per_page}&#x29;&#x200E;</a>"
+                                . "<a style=\'width: 150px\' name=\"selectall\" class=\'menuItem\' onmouseover=\'hiliteItem(this,\"yes\");\' onmouseout=\'unhiliteItem(this);\' onclick=\'sListView.check_entire_list(document.MassUpdate, \"mass[]\",true,{$row_count});\' href=\'javascript:void(0)\'>{$this->local_app_strings['LBL_LISTVIEW_OPTION_ENTIRE']}&nbsp;&#x28;{$row_count}&#x29;&#x200E;</a>"
+                                . "<a style=\'width: 150px\' name=\"deselect\" class=\'menuItem\' onmouseover=\'hiliteItem(this,\"yes\");\' onmouseout=\'unhiliteItem(this);\' onclick=\'sListView.clear_all(document.MassUpdate, \"mass[]\", false);\' href=\'javascript:void(0)\'>{$this->local_app_strings['LBL_LISTVIEW_NONE']}</a>')
+                        .dialog({
+autoOpen: false,
+width: 150
+});
+\$dialog.dialog('open');
 
-                }
-                </script>";
+}
+</script>";
 
             if($this->show_select_menu)
             {
                 $total_label = "";
                 $total = $row_count;
                 $pageTotal = ($row_count > 0) ? $end_record - $start_record + 1 : 0;
-                if (!empty($GLOBALS['sugar_config']['disable_count_query']) && $GLOBALS['sugar_config']['disable_count_query'] === true && $total > $pageTotal) {
+                if(!empty($GLOBALS['sugar_config']['disable_count_query']) && $GLOBALS['sugar_config']['disable_count_query'] === true && $total > $pageTotal)
+                {
                     $this->show_plus = true;
                     $total =  $pageTotal;
                     $total_label = $total.'+';
-                } else {
+                }
+                else
+                {
                     $this->show_plus = false;
                     $total_label = $total;
                 }
@@ -1323,20 +1307,22 @@ $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'bor
                 //Bug#52931: Replace with actionMenu
                 //$select_link = "<a id='select_link' onclick='return select_dialog();' href=\"javascript:void(0)\">".$this->local_app_strings['LBL_LINK_SELECT']."&nbsp;".SugarThemeRegistry::current()->getImage('MoreDetail', 'border=0', 11, 7, '.png', $app_strings['LBL_MOREDETAIL'])."</a>";
                 $menuItems = array(
-                    "<input title=\"".$app_strings['LBL_SELECT_ALL_TITLE']."\" type='checkbox' class='checkbox massall' name='massall' id='massall' value='' onclick='sListView.check_all(document.MassUpdate, \"mass[]\", this.checked);' /><a href='javascript: void(0);'></a>",
-                    "<a  name='thispage' id='button_select_this_page' class='menuItem' onmouseover='hiliteItem(this,\"yes\");' onmouseout='unhiliteItem(this);' onclick='if (document.MassUpdate.select_entire_list.value==1){document.MassUpdate.select_entire_list.value=0;sListView.check_all(document.MassUpdate, \"mass[]\", true, $pageTotal)}else {sListView.check_all(document.MassUpdate, \"mass[]\", true)};' href='#'>{$app_strings['LBL_LISTVIEW_OPTION_CURRENT']}&nbsp;&#x28;{$pageTotal}&#x29;&#x200E;</a>",
-                    "<a  name='selectall' id='button_select_all' class='menuItem' onmouseover='hiliteItem(this,\"yes\");' onmouseout='unhiliteItem(this);' onclick='sListView.check_entire_list(document.MassUpdate, \"mass[]\",true,{$total});' href='#'>{$app_strings['LBL_LISTVIEW_OPTION_ENTIRE']}&nbsp;&#x28;{$total_label}&#x29;&#x200E;</a>",
-                    "<a name='deselect' id='button_deselect' class='menuItem' onmouseover='hiliteItem(this,\"yes\");' onmouseout='unhiliteItem(this);' onclick='sListView.clear_all(document.MassUpdate, \"mass[]\", false);' href='#'>{$app_strings['LBL_LISTVIEW_NONE']}</a>",
-                );
+                        "<input title=\"".$app_strings['LBL_SELECT_ALL_TITLE']."\" type='checkbox' class='checkbox massall' name='massall' id='massall' value='' onclick='sListView.check_all(document.MassUpdate, \"mass[]\", this.checked);' /><a href='javascript: void(0);'></a>",
+                        "<a  name='thispage' id='button_select_this_page' class='menuItem' onmouseover='hiliteItem(this,\"yes\");' onmouseout='unhiliteItem(this);' onclick='if (document.MassUpdate.select_entire_list.value==1){document.MassUpdate.select_entire_list.value=0;sListView.check_all(document.MassUpdate, \"mass[]\", true, $pageTotal)}else {sListView.check_all(document.MassUpdate, \"mass[]\", true)};' href='#'>{$app_strings['LBL_LISTVIEW_OPTION_CURRENT']}&nbsp;&#x28;{$pageTotal}&#x29;&#x200E;</a>",
+                        "<a  name='selectall' id='button_select_all' class='menuItem' onmouseover='hiliteItem(this,\"yes\");' onmouseout='unhiliteItem(this);' onclick='sListView.check_entire_list(document.MassUpdate, \"mass[]\",true,{$total});' href='#'>{$app_strings['LBL_LISTVIEW_OPTION_ENTIRE']}&nbsp;&#x28;{$total_label}&#x29;&#x200E;</a>",
+                        "<a name='deselect' id='button_deselect' class='menuItem' onmouseover='hiliteItem(this,\"yes\");' onmouseout='unhiliteItem(this);' onclick='sListView.clear_all(document.MassUpdate, \"mass[]\", false);' href='#'>{$app_strings['LBL_LISTVIEW_NONE']}</a>",
+                        );
                 require_once('include/Smarty/plugins/function.sugar_action_menu.php');
                 $select_link = smarty_function_sugar_action_menu(array(
-                    'class' => 'clickMenu selectmenu',
-                    'id' => 'selectLink',
-                    'buttons' => $menuItems,
-                    'flat' => false,
-                ),$this->xTemplate);
+                            'class' => 'clickMenu selectmenu',
+                            'id' => 'selectLink',
+                            'buttons' => $menuItems,
+                            'flat' => false,
+                            ),$this->xTemplate);
 
-            } else {
+            }
+            else
+            {
                 $select_link = "&nbsp;";
             }
 
@@ -1353,56 +1339,72 @@ $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'bor
             $admin->retrieveSettings('system');
 
             $user_merge = $current_user->getPreference('mailmerge_on');
-            if($user_merge == 'on' && isset($admin->settings['system_mailmerge_on']) && $admin->settings['system_mailmerge_on']) {
+            if($user_merge == 'on' && isset($admin->settings['system_mailmerge_on']) && $admin->settings['system_mailmerge_on'])
+            {
                 echo "<script>
-                function mailmerge_dialog(el) {
-                   	var \$dialog = \$('<div></div>')
-					.html('<a style=\'width: 150px\' class=\'menuItem\' onmouseover=\'hiliteItem(this,\"yes\");\' onmouseout=\'unhiliteItem(this);\' onclick=\'return sListView.send_form(true, \"MailMerge\", \"index.php\", \"{$this->local_app_strings['LBL_LISTVIEW_NO_SELECTED']}\")\' href=\'javascript:void(0)\'>{$this->local_app_strings['LBL_LISTVIEW_OPTION_SELECTED']}</a>"
+        function mailmerge_dialog(el) {
+            var \$dialog = \$('<div></div>')
+                .html('<a style=\'width: 150px\' class=\'menuItem\' onmouseover=\'hiliteItem(this,\"yes\");\' onmouseout=\'unhiliteItem(this);\' onclick=\'return sListView.send_form(true, \"MailMerge\", \"index.php\", \"{$this->local_app_strings['LBL_LISTVIEW_NO_SELECTED']}\")\' href=\'javascript:void(0)\'>{$this->local_app_strings['LBL_LISTVIEW_OPTION_SELECTED']}</a>"
                         . "<a style=\'width: 150px\' class=\'menuItem\' onmouseover=\'hiliteItem(this,\"yes\");\' onmouseout=\'unhiliteItem(this);\' href=\'index.php?action=index&module=MailMerge\'>{$this->local_app_strings['LBL_LISTVIEW_OPTION_CURRENT']}</a>"
                         . "<a style=\'width: 150px\' class=\'menuItem\' onmouseover=\'hiliteItem(this,\"yes\");\' onmouseout=\'unhiliteItem(this);\' href=\'index.php?action=index&module=MailMerge&entire=true\'>{$this->local_app_strings['LBL_LISTVIEW_OPTION_ENTIRE']}</a>')
-					.dialog({
-						autoOpen: false,
-						title: '". $this->local_app_strings['LBL_MAILMERGE']."',
-						width: 150,
-						position: {
-						    my: myPos,
-						    at: atPos,
-						    of: \$(el)
-					 	}
-					});
+                .dialog({
+autoOpen: false,
+title: '". $this->local_app_strings['LBL_MAILMERGE']."',
+width: 150,
+position: {
+my: myPos,
+at: atPos,
+of: \$(el)
+}
+});
 
-                }
-            </script>";
+}
+</script>";
                 $merge_link = "&nbsp;|&nbsp;<a id='mailmerge_link' onclick='return mailmerge_dialog(this)'; href=\"javascript:void(0)\">".$this->local_app_strings['LBL_MAILMERGE']."</a>";
-            } else {
+            }
+            else
+            {
                 $merge_link = "&nbsp;";
             }
 
             $selected_objects_span = "&nbsp;|&nbsp;{$this->local_app_strings['LBL_LISTVIEW_SELECTED_OBJECTS']}<input  style='border: 0px; background: transparent; font-size: inherit; color: inherit' type='text' readonly name='selectCount[]' value='" . ((isset($_POST['mass'])) ? count($_POST['mass']): 0) . "' />";
 
-            if($_REQUEST['module'] == 'Home' || $this->local_current_module == 'Import'
-                || $this->show_export_button == false
-                || (!empty($sugar_config['disable_export']))
-                || (!empty($sugar_config['admin_export_only'])
+            if($_REQUEST['module'] == 'Home'
+            || $this->local_current_module == 'Import'
+            || $this->show_export_button == false
+            || !empty($sugar_config['disable_export'])
+            || (!empty($sugar_config['admin_export_only'])
                 && !(
-                        is_admin($current_user)
-                        || (ACLController::moduleSupportsACL($_REQUEST['module'])
-                            && ACLAction::getUserAccessLevel($current_user->id,$_REQUEST['module'], 'access') == ACL_ALLOW_ENABLED
-                            && (ACLAction::getUserAccessLevel($current_user->id, $_REQUEST['module'], 'admin') == ACL_ALLOW_ADMIN ||
-                                ACLAction::getUserAccessLevel($current_user->id, $_REQUEST['module'], 'admin') == ACL_ALLOW_ADMIN_DEV)))))
+                    is_admin($current_user)
+                    || (ACLController::moduleSupportsACL($_REQUEST['module'])
+                        && ACLAction::getUserAccessLevel($current_user->id,$_REQUEST['module'], 'access') == ACL_ALLOW_ENABLED
+                        && (ACLAction::getUserAccessLevel($current_user->id, $_REQUEST['module'], 'admin') == ACL_ALLOW_ADMIN ||
+                            ACLAction::getUserAccessLevel($current_user->id, $_REQUEST['module'], 'admin') == ACL_ALLOW_ADMIN_DEV)))))
             {
-                if ($_REQUEST['module'] != 'InboundEmail' && $_REQUEST['module'] != 'EmailMan' && $_REQUEST['module'] != 'iFrames') {
+                if($_REQUEST['module'] != 'InboundEmail'
+                && $_REQUEST['module'] != 'EmailMan'
+                && $_REQUEST['module'] != 'iFrames')
+                {
                     $selected_objects_span = '';
                 }
                 $export_link = "&nbsp;";
                 $merge_link = "&nbsp;";
-            } elseif($_REQUEST['module'] != "Accounts" && $_REQUEST['module'] != "Cases" && $_REQUEST['module'] != "Contacts" && $_REQUEST['module'] != "Leads" && $_REQUEST['module'] != "Opportunities") {
+            }
+            elseif($_REQUEST['module'] != "Accounts"
+                && $_REQUEST['module'] != "Cases"
+                && $_REQUEST['module'] != "Contacts"
+                && $_REQUEST['module'] != "Leads"
+                && $_REQUEST['module'] != "Opportunities")
+            {
                 $merge_link = "&nbsp;";
             }
 
-            if($this->show_paging == true) {
-                if(!empty($sugar_config['disable_count_query'])) {
-                    if($row_count > $end_record) {
+            if($this->show_paging)
+            {
+                if(!empty($sugar_config['disable_count_query']))
+                {
+                    if($row_count > $end_record)
+                    {
                         $row_count .= '+';
                     }
                 }
@@ -1412,15 +1414,19 @@ $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'bor
                 $html_text .= "<td COLSPAN=\"$col_count\" align=\"right\">\n";
                 //$html_text .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td align=\"left\"  >$export_link$merge_link$selected_objects_span</td>\n";
                 //$html_text .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td align=\"left\"  >";
-                if ($subpanel_def != null) {
-                    include_once('include/SubPanel/SubPanelTiles.php');
+                if($subpanel_def != null)
+                {
+                    include_once "include/SubPanel/SubPanelTiles.php";
                     $subpanelTiles = new SubPanelTiles($sugarbean);
                     $html_text .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td align=\"left\"  >";
 
                     //attempt to get the query to recreate this subpanel
-                    if(!empty($this->response)){
+                    if(!empty($this->response))
+                    {
                         $response =& $this->response;
-                    }else{
+                    }
+                    else
+                    {
                         $response = SugarBean::get_union_related_list($sugarbean,$this->sortby, $this->sort_order, $this->query_where, $current_offset, -1, $this->records_per_page,$this->query_limit,$subpanel_def);
                         $this->response = $response;
                     }
@@ -1441,21 +1447,24 @@ $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'bor
             }
 
             //C.L. - Fix for 23461
-            if(empty($_REQUEST['action']) || $_REQUEST['action'] != 'Popup') {
+            if(empty($_REQUEST['action']) || $_REQUEST['action'] != 'Popup')
+            {
                 $_SESSION['export_where'] = $this->query_where;
             }
             $this->xTemplate->parse($xtemplateSection.".list_nav_row");
         }
     } // end processListNavigation
 
-    function processOrderBy($html_varName) {
 
-        if(!isset($this->base_URL)) {
+    function processOrderBy($html_varName)
+    {
+        if(!isset($this->base_URL))
+        {
             $this->base_URL = $_SERVER['PHP_SELF'];
 
             if(isset($_SERVER['QUERY_STRING'])) {
-                $this->base_URL = preg_replace("/\&".$this->getSessionVariableName($html_varName,"ORDER_BY")."=[0-9a-zA-Z\_\.]*/","",$this->base_URL .'?'.$_SERVER['QUERY_STRING']);
-                $this->base_URL = preg_replace("/\&".$this->getSessionVariableName($html_varName,"offset")."=[0-9]*/","",$this->base_URL);
+                $this->base_URL = preg_replace("/\&".$this->getSessionVariableName($html_varName, "ORDER_BY")."=[0-9a-zA-Z\_\.]*/","",$this->base_URL .'?'.$_SERVER['QUERY_STRING']);
+                $this->base_URL = preg_replace("/\&".$this->getSessionVariableName($html_varName, "offset")."=[0-9]*/","",$this->base_URL);
             }
             if($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $this->base_URL .= '?';
@@ -1463,35 +1472,39 @@ $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'bor
                 if(isset($_REQUEST['record'])) $this->base_URL .= '&record='.$_REQUEST['record'];
                 if(isset($_REQUEST['module'])) $this->base_URL .= '&module='.$_REQUEST['module'];
             }
-            $this->base_URL .= "&".$this->getSessionVariableName($html_varName,"offset")."=";
+            $this->base_URL .= "&".$this->getSessionVariableName($html_varName, "offset")."=";
         }
 
-        if($this->is_dynamic) {
+        if($this->is_dynamic)
+        {
             $this->base_URL.='&to_pdf=true&action=SubPanelViewer&subpanel=' . $this->source_module;
         }
 
         //bug43465 start
-        if (isset($this->appendToBaseUrl) && is_array($this->appendToBaseUrl))
+        if(isset($this->appendToBaseUrl)
+        && is_array($this->appendToBaseUrl))
         {
-            foreach ($this->appendToBaseUrl as $key => $value)
+            foreach($this->appendToBaseUrl as $key => $value)
             {
                 $fullRequestString = $key . '=' . $value;
 
-                if ($this->base_URL == "/index.php")
+                if($this->base_URL == "/index.php")
                 {
                     $this->base_URL .= "?";
-                } else
+                }
+                else
                 {
-                    if ($fullRequestString == substr($this->baseURL, '-' . strlen($fullRequestString)))
+                    if($fullRequestString == substr($this->baseURL, '-' . strlen($fullRequestString)))
                     {
                         $this->base_URL = preg_replace("/&" . $key . "\=.*/", "", $this->base_URL);
-                    } else
+                    }
+                    else
                     {
                         $this->base_URL = preg_replace("/&" . $key . "\=.*?&/", "&", $this->base_URL);
                     }
                     $this->base_URL .= "&";
                 }
-                if (!empty($value))
+                if(!empty($value))
                 {
                     $this->base_URL .= "{$key}={$value}";
                 }
@@ -1499,7 +1512,7 @@ $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'bor
         }
         //bug43465 end
 
-        $sort_URL_base = $this->base_URL. "&".$this->getSessionVariableName($html_varName,"ORDER_BY")."=";
+        $sort_URL_base = $this->base_URL. "&".$this->getSessionVariableName($html_varName, "ORDER_BY")."=";
 
         if($sort_URL_base !== "")
         {
@@ -1511,21 +1524,21 @@ $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'bor
     }
 
 
-    function getAdditionalHeader() {
-
+    function getAdditionalHeader()
+    {
     }
 
 
     /**
-    * @return void
-    * @param unknown $data
-    * @param unknown $xTemplateSection
-    * @param unknown $html_varName
-    * @desc INTERNAL FUNCTION handles the rows
-    * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
-    * All Rights Reserved.
-    * Contributor(s): ______________________________________..
-    */
+     * @return void
+     * @param unknown $data
+     * @param unknown $xTemplateSection
+     * @param unknown $html_varName
+     * @desc INTERNAL FUNCTION handles the rows
+     * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
+     * All Rights Reserved.
+     * Contributor(s): ______________________________________..
+     */
     function processListRows($data, $xtemplateSection, $html_varName)
     {
         global $odd_bg;
@@ -1536,7 +1549,7 @@ $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'bor
 
         $this->xTemplate->assign('BG_HILITE', $hilite_bg);
         $this->xTemplate->assign('CHECKALL', SugarThemeRegistry::current()->getImage('blank', '', 1, 1, ".gif", ''));
-    //$this->xTemplate->assign("BG_CLICK", $click_bg);
+        //$this->xTemplate->assign("BG_CLICK", $click_bg);
         $oddRow = true;
         $count = 0;
         reset($data);
@@ -1570,18 +1583,18 @@ $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'bor
             }
             //ADD OFFSET TO ARRAY
 
-                $fields['OFFSET'] = ($offset + $count + 1);
+            $fields['OFFSET'] = ($offset + $count + 1);
 
             $fields['STAMP'] = $timeStamp;
             if($this->shouldProcess) {
 
-            $prerow = '';
-            if(!isset($this->data_array)) {
-                $prerow .= "<input onclick='sListView.check_item(this, document.MassUpdate)' type='checkbox' class='checkbox' name='mass[]' value='". $fields['ID']. "'>";
-            }
-            $this->xTemplate->assign('PREROW', $prerow);
+                $prerow = '';
+                if(!isset($this->data_array)) {
+                    $prerow .= "<input onclick='sListView.check_item(this, document.MassUpdate)' type='checkbox' class='checkbox' name='mass[]' value='". $fields['ID']. "'>";
+                }
+                $this->xTemplate->assign('PREROW', $prerow);
 
-            $this->xTemplate->assign('CHECKALL', "<input type='checkbox' class='checkbox'  title='".$GLOBALS['app_strings']['LBL_SELECT_ALL_TITLE']."'  name='massall' id='massall' value='' onclick='sListView.check_all(document.MassUpdate, \"mass[]\", this.checked)'>");
+                $this->xTemplate->assign('CHECKALL', "<input type='checkbox' class='checkbox'  title='".$GLOBALS['app_strings']['LBL_SELECT_ALL_TITLE']."'  name='massall' id='massall' value='' onclick='sListView.check_all(document.MassUpdate, \"mass[]\", this.checked)'>");
             }
             if(!isset($this->data_array)) {
                 $tag = $aItem->listviewACLHelper();
@@ -1612,8 +1625,8 @@ $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'bor
             }
             else
             {
-    //AED -- some modules do not have their additionalDetails.php established. Add a check to ensure require_once does not fail
-    // Bug #2786
+                //AED -- some modules do not have their additionalDetails.php established. Add a check to ensure require_once does not fail
+                // Bug #2786
                 if($this->_additionalDetails && $aItem->ACLAccess('DetailView') && (file_exists('modules/' . $aItem->module_dir . '/metadata/additionalDetails.php') || file_exists('custom/modules/' . $aItem->module_dir . '/metadata/additionalDetails.php'))) {
 
                     $additionalDetailsFile = 'modules/' . $aItem->module_dir . '/metadata/additionalDetails.php';
@@ -1634,9 +1647,9 @@ $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'bor
                     $delete = '<a class="listViewTdToolsS1" onclick="return confirm(\''.$this->local_app_strings['NTC_DELETE_CONFIRMATION'].'\')" href="'.'index.php?action=Delete&module='.$aItem->module_dir.'&record='.$fields['ID'].'&return_module='.$aItem->module_dir.'&return_action=index&return_id=">'.$this->local_app_strings['LBL_DELETE_INLINE'].'</a>';
                     require_once('include/Smarty/plugins/function.sugar_action_menu.php');
                     $fields['DELETE_BUTTON'] = smarty_function_sugar_action_menu(array(
-                        'id' => $aItem->module_dir.'_'.$fields['ID'].'_create_button',
-                        'buttons' => array($delete),
-                    ), $this);
+                                'id' => $aItem->module_dir.'_'.$fields['ID'].'_create_button',
+                                'buttons' => array($delete),
+                                ), $this);
 
                 }
 
@@ -1722,7 +1735,7 @@ $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'bor
         {
             $orderBy=  'amount';
         }
-		$buttons = false;
+        $buttons = false;
         foreach($subpanel_def->get_list_fields() as $column_name=>$widget_args)
         {
             $usage = empty($widget_args['usage']) ? '' : $widget_args['usage'];
@@ -1739,50 +1752,50 @@ $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'bor
                 }
 
                 if (!preg_match("/_button/i", $column_name)) {
-	                $widget_args['name']=$column_name;
-	                $widget_args['sort'] = $imgArrow;
-	                $widget_args['start_link_wrapper'] = $this->start_link_wrapper;
-	                $widget_args['end_link_wrapper'] = $this->end_link_wrapper;
-	                $widget_args['subpanel_module'] = $this->subpanel_module;
+                    $widget_args['name']=$column_name;
+                    $widget_args['sort'] = $imgArrow;
+                    $widget_args['start_link_wrapper'] = $this->start_link_wrapper;
+                    $widget_args['end_link_wrapper'] = $this->end_link_wrapper;
+                    $widget_args['subpanel_module'] = $this->subpanel_module;
 
-	                $widget_contents = $layout_manager->widgetDisplay($widget_args);
-	                $cell_width = empty($widget_args['width']) ? '' : $widget_args['width'];
-	                $this->xTemplate->assign('HEADER_CELL', $widget_contents);
-	                static $count;
-	            if(!isset($count))$count = 0; else $count++;
-	                $this->xTemplate->assign('CELL_COUNT', $count);
-	                $this->xTemplate->assign('CELL_WIDTH', $cell_width);
-	                $this->xTemplate->parse('dyn_list_view.header_cell');
+                    $widget_contents = $layout_manager->widgetDisplay($widget_args);
+                    $cell_width = empty($widget_args['width']) ? '' : $widget_args['width'];
+                    $this->xTemplate->assign('HEADER_CELL', $widget_contents);
+                    static $count;
+                    if(!isset($count))$count = 0; else $count++;
+                    $this->xTemplate->assign('CELL_COUNT', $count);
+                    $this->xTemplate->assign('CELL_WIDTH', $cell_width);
+                    $this->xTemplate->parse('dyn_list_view.header_cell');
                 } else {
-                	$buttons = true;
+                    $buttons = true;
                 }
             }
         }
 
         if($buttons) {
-        			$this->xTemplate->assign('HEADER_CELL', "&nbsp;");
-        			$this->xTemplate->assign('CELL_COUNT', $count);
-	                $this->xTemplate->assign('CELL_WIDTH', $cell_width);
-	                $this->xTemplate->parse('dyn_list_view.header_cell');
+            $this->xTemplate->assign('HEADER_CELL', "&nbsp;");
+            $this->xTemplate->assign('CELL_COUNT', $count);
+            $this->xTemplate->assign('CELL_WIDTH', $cell_width);
+            $this->xTemplate->parse('dyn_list_view.header_cell');
         }
 
     }
 
 
     /**
-    * @return void
-    * @param unknown $seed
-    * @param unknown $xTemplateSection
-    * @param unknown $html_varName
-    * @desc PUBLIC FUNCTION Handles List Views using seeds that extend SugarBean
-        $XTemplateSection is the section in the XTemplate file that should be parsed usually main
-        $html_VarName is the variable name used in the XTemplateFile e.g. TASK
-        $seed is a seed there are two types of seeds one is a subclass of SugarBean, the other is a list usually created from a sugar bean using get_list
-        if no XTemplate is set it will create  a new XTemplate
-        * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc..
-        * All Rights Reserved..
-        * Contributor(s): ______________________________________..
-    */
+     * @return void
+     * @param unknown $seed
+     * @param unknown $xTemplateSection
+     * @param unknown $html_varName
+     * @desc PUBLIC FUNCTION Handles List Views using seeds that extend SugarBean
+     $XTemplateSection is the section in the XTemplate file that should be parsed usually main
+     $html_VarName is the variable name used in the XTemplateFile e.g. TASK
+     $seed is a seed there are two types of seeds one is a subclass of SugarBean, the other is a list usually created from a sugar bean using get_list
+     if no XTemplate is set it will create  a new XTemplate
+     * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc..
+     * All Rights Reserved..
+     * Contributor(s): ______________________________________..
+     */
 
     function processListViewTwo($seed, $xTemplateSection, $html_varName) {
         global $current_user;
@@ -1848,7 +1861,8 @@ $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'bor
         return "&nbsp;<!--not_in_theme!--><img border='0' src='".$imgFileParts['dirname']."/".$imgFileParts['filename']."";
     }
 
-    function getArrowUpDownStart($upDown) {
+    function getArrowUpDownStart($upDown)
+    {
         $ext = ( SugarThemeRegistry::current()->pngSupport ? "png" : "gif" );
 
         if (!isset($upDown) || empty($upDown)) {
@@ -1857,12 +1871,12 @@ $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'bor
         return "&nbsp;<img border='0' src='".SugarThemeRegistry::current()->getImageURL("arrow{$upDown}.{$ext}")."' ";
     }
 
-	function getArrowEnd() {
-		$imgFileParts = pathinfo(SugarThemeRegistry::current()->getImageURL("arrow.gif"));
+    function getArrowEnd() {
+        $imgFileParts = pathinfo(SugarThemeRegistry::current()->getImageURL("arrow.gif"));
 
         list($width,$height) = ListView::getArrowImageSize();
 
-		return '.'.$imgFileParts['extension']."' width='$width' height='$height' align='absmiddle' alt=".translate('LBL_SORT').">";
+        return '.'.$imgFileParts['extension']."' width='$width' height='$height' align='absmiddle' alt=".translate('LBL_SORT').">";
     }
 
     function getArrowUpDownEnd($upDown) {
@@ -1883,16 +1897,16 @@ $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'bor
         return " width='$width' height='$height' align='absmiddle' alt='$sortStr'>";
     }
 
-	function getArrowImageSize() {
-	    // jbasicChartDashletsExpColust get the non-sort image's size.. the up and down have be the same.
-		$image = SugarThemeRegistry::current()->getImageURL("arrow.gif",false);
+    function getArrowImageSize() {
+        // jbasicChartDashletsExpColust get the non-sort image's size.. the up and down have be the same.
+        $image = SugarThemeRegistry::current()->getImageURL("arrow.gif",false);
 
         $cache_key = 'arrow_size.'.$image;
 
         // Check the cache
         $result = sugar_cache_retrieve($cache_key);
         if(!empty($result))
-        return $result;
+            return $result;
 
         // No cache hit.  Calculate the value and return.
         $result = getimagesize($image);
@@ -1909,7 +1923,7 @@ $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'bor
         // Check the cache
         $result = sugar_cache_retrieve($cache_key);
         if(!empty($result))
-        return $result;
+            return $result;
 
         // No cache hit.  Calculate the value and return.
         $result = getimagesize($image);
@@ -1917,13 +1931,13 @@ $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'bor
         return $result;
     }
 
-	function getOrderByInfo($html_varName)
-	{
-		$orderBy = $this->getSessionVariable($html_varName, "OBL");
-		$desc = $this->getSessionVariable($html_varName, $orderBy.'S');
-		$orderBy = str_replace('.', '_', $orderBy);
-		return array($orderBy,$desc);
-	}
+    function getOrderByInfo($html_varName)
+    {
+        $orderBy = $this->getSessionVariable($html_varName, "OBL");
+        $desc = $this->getSessionVariable($html_varName, $orderBy.'S');
+        $orderBy = str_replace('.', '_', $orderBy);
+        return array($orderBy,$desc);
+    }
 
     function processSortArrows($html_varName)
     {
@@ -1932,25 +1946,25 @@ $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'bor
 
         list($orderBy,$desc) = $this->getOrderByInfo($html_varName);
 
-		$imgArrow = "_up";
-		if($desc) {
-			$imgArrow = "_down";
-		}
-		/**
-		 * @deprecated only used by legacy opportunites listview, nothing current. Leaving for BC
-		 */
-		if($orderBy == 'amount')
-		{
-			$this->xTemplateAssign('amount_arrow', $imgArrow);
-		}
-		else if($orderBy == 'amount_usdollar')
-		{
-			$this->xTemplateAssign('amount_usdollar_arrow', $imgArrow);
-		}
-		else
-		{
-			$this->xTemplateAssign($orderBy.'_arrow', $imgArrow);
-		}
+        $imgArrow = "_up";
+        if($desc) {
+            $imgArrow = "_down";
+        }
+        /**
+         * @deprecated only used by legacy opportunites listview, nothing current. Leaving for BC
+         */
+        if($orderBy == 'amount')
+        {
+            $this->xTemplateAssign('amount_arrow', $imgArrow);
+        }
+        else if($orderBy == 'amount_usdollar')
+        {
+            $this->xTemplateAssign('amount_usdollar_arrow', $imgArrow);
+        }
+        else
+        {
+            $this->xTemplateAssign($orderBy.'_arrow', $imgArrow);
+        }
 
         $this->xTemplateAssign('arrow_end', $this->getArrowEnd());
     }
@@ -1970,8 +1984,8 @@ $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'bor
                 $key = $list_field['vname'];
             } else if(isset($list_field['name']) &&  isset($child_focus->field_defs[$list_field['name']]))
             {
-                    $field_def = $child_focus->field_defs[$list_field['name']];
-                    $key = $field_def['vname'];
+                $field_def = $child_focus->field_defs[$list_field['name']];
+                $key = $field_def['vname'];
             }
             if(!empty($key))
             {
@@ -1989,37 +2003,38 @@ $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'bor
         return sugar_microtime();
     }
 
-     /**INTERNAL FUNCTION sets a session variable keeping it local to the listview
-     not the current_module
+    /**INTERNAL FUNCTION sets a session variable keeping it local to the listview
+      not the current_module
      * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
      * All Rights Reserved.
      * Contributor(s): ______________________________________.
      */
-     function setLocalSessionVariable($localVarName,$varName, $value) {
+    function setLocalSessionVariable($localVarName,$varName, $value) {
         $_SESSION[$localVarName."_".$varName] = $value;
-     }
+    }
 
-     /**INTERNAL FUNCTION returns a session variable that is local to the listview,
-     not the current_module
+    /**INTERNAL FUNCTION returns a session variable that is local to the listview,
+      not the current_module
      * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
      * All Rights Reserved.
      * Contributor(s): ______________________________________.
      */
- function getLocalSessionVariable($localVarName,$varName) {
-    if(isset($_SESSION[$localVarName."_".$varName])) {
-        return $_SESSION[$localVarName."_".$varName];
+    function getLocalSessionVariable($localVarName,$varName) {
+        if(isset($_SESSION[$localVarName."_".$varName])) {
+            return $_SESSION[$localVarName."_".$varName];
+        }
+        else{
+            return "";
+        }
     }
-    else{
-        return "";
-    }
- }
 
- /* Set to true if you want Additional Details to appear in the listview
-  */
- function setAdditionalDetails($value = true, $function = '') {
-    if(!empty($function)) $this->additionalDetailsFunction = $function;
-    $this->_additionalDetails = $value;
- }
+    /* Set to true if you want Additional Details to appear in the listview
+     */
+    function setAdditionalDetails($value = true, $function = '') {
+        if(!empty($function)) $this->additionalDetailsFunction = $function;
+        $this->_additionalDetails = $value;
+    }
 
 }
-?>
+
+// vim: ts=4 sw=4 et

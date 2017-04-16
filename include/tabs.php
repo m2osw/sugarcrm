@@ -50,7 +50,7 @@ class SugarWidgetTabs extends SugarWidget
         $this->jscallback = $jscallback;
     }
 
-    function display(&$layout_def)
+    function display(&$layout_def, $additionalFormFields = null, $nonbutton = false)
     {
         ob_start();
 ?>

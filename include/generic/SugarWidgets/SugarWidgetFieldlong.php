@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,6 +35,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+require_once "include/generic/SugarWidgets/SugarWidgetFielddecimal.php";
+
 
 /*********************************************************************************
  * This resolves SugarCRM Bug # 52929
@@ -48,9 +50,10 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
 
 class SugarWidgetFieldLong extends SugarWidgetFieldDecimal
 {
-	function SugarWidgetFieldLong(&$layout_manager) {
-		parent::SugarWidgetFieldDecimal($layout_manager);
-	}	
+    function SugarWidgetFieldLong(&$layout_manager)
+    {
+        parent::SugarWidgetFieldDecimal($layout_manager);
+    }	
 }
 
-?>
+// vim: ts=4 sw=4 et

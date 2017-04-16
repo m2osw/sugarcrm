@@ -73,7 +73,6 @@
  */
 class HTMLPurifier
 {
-
     /** Version of HTML Purifier */
     public $version = '4.3.0';
 
@@ -251,7 +250,6 @@ class HTMLPurifier
     public static function getInstance($prototype = null) {
         return HTMLPurifier::instance($prototype);
     }
-
 }
 
 

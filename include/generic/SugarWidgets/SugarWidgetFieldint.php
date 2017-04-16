@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,64 +35,63 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+require_once "include/generic/SugarWidgets/SugarWidgetReportField.php";
 
 
 class SugarWidgetFieldInt extends SugarWidgetReportField
 {
- function displayList($layout_def)
- {
+    function displayList($layout_def)
+    {
+        return $this->displayListPlain($layout_def);
+    }
 
- 	return $this->displayListPlain($layout_def);
- }
+    function queryFilterEquals(&$layout_def)
+    {
+        return $this->_get_column_select($layout_def)."= '".$GLOBALS['db']->quote($layout_def['input_name0'])."'\n";
+    }
 
- function queryFilterEquals(&$layout_def)
- {
-                return $this->_get_column_select($layout_def)."= '".$GLOBALS['db']->quote($layout_def['input_name0'])."'\n";
- }
+    function queryFilterNot_Equals(&$layout_def)
+    {
+        return $this->_get_column_select($layout_def)."!='".$GLOBALS['db']->quote($layout_def['input_name0'])."'\n";
+    }
 
- function queryFilterNot_Equals(&$layout_def)
- {
-                return $this->_get_column_select($layout_def)."!='".$GLOBALS['db']->quote($layout_def['input_name0'])."'\n";
- }
+    function queryFilterGreater(&$layout_def)
+    {
+        return $this->_get_column_select($layout_def)." > '".$GLOBALS['db']->quote($layout_def['input_name0'])."'\n";
+    }
 
- function queryFilterGreater(&$layout_def)
- {
-                return $this->_get_column_select($layout_def)." > '".$GLOBALS['db']->quote($layout_def['input_name0'])."'\n";
- }
+    function queryFilterLess(&$layout_def)
+    {
+        return $this->_get_column_select($layout_def)." < '".$GLOBALS['db']->quote($layout_def['input_name0'])."'\n";
+    }
 
- function queryFilterLess(&$layout_def)
- {
-                return $this->_get_column_select($layout_def)." < '".$GLOBALS['db']->quote($layout_def['input_name0'])."'\n";
- }
+    function queryFilterBetween(&$layout_def)
+    {
+        return $this->_get_column_select($layout_def)." BETWEEN '".$GLOBALS['db']->quote($layout_def['input_name0']). "' AND '" . $GLOBALS['db']->quote($layout_def['input_name1']) . "'\n";
+    }
 
- function queryFilterBetween(&$layout_def)
- {
- 	             return $this->_get_column_select($layout_def)." BETWEEN '".$GLOBALS['db']->quote($layout_def['input_name0']). "' AND '" . $GLOBALS['db']->quote($layout_def['input_name1']) . "'\n";
- }
+    function queryFilterStarts_With(&$layout_def)
+    {
+        return $this->queryFilterEquals($layout_def);
+    }
 
- function queryFilterStarts_With(&$layout_def)
- {
- 	return $this->queryFilterEquals($layout_def);
- }
+    function displayInput($layout_def)
+    {
+        return '<input type="text" size="20" value="' . $layout_def['input_name0'] . '" name="' . $layout_def['name'] . '">';
 
- function displayInput(&$layout_def)
- {
- 	 return '<input type="text" size="20" value="' . $layout_def['input_name0'] . '" name="' . $layout_def['name'] . '">';
+    }
 
- }
- 
- function display($layout_def)
- {
-	   //Bug40995
-	   if(isset($obj->layout_manager->defs['reporter']->focus->field_name_map[$layout_def['name']]['precision']))
-	   {
-		   $precision=$obj->layout_manager->defs['reporter']->focus->field_name_map[$layout_def['name']]['precision'];
-		   $layout_def['precision']=$precision;
-	   }
-	   //Bug40995
-       return parent::display($layout_def);
- } 
-
+    function display(&$layout_def, $additionalFormFields = null, $nonbutton = false)
+    {
+        //Bug40995
+        if(isset($obj->layout_manager->defs['reporter']->focus->field_name_map[$layout_def['name']]['precision']))
+        {
+            $precision = $obj->layout_manager->defs['reporter']->focus->field_name_map[$layout_def['name']]['precision'];
+            $layout_def['precision'] = $precision;
+        }
+        //Bug40995
+        return parent::display($layout_def, $additionalFormFields, $nonbutton);
+    } 
 }
 
-?>
+// vim: ts=4 sw=4 et

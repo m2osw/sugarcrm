@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,6 +35,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+require_once "include/generic/SugarWidgets/SugarWidgetField.php";
+
 
 $used_aliases = array();
 $alias_map = array();
@@ -69,18 +71,19 @@ class SugarWidgetReportField extends SugarWidgetField
         }
     }
 
-    function display(&$layout_def)
+    function display(&$layout_def, $additionalFormFields = null, $nonbutton = false)
     {
         $obj = $this->getSubClass($layout_def);
 
         $context = $this->layout_manager->getAttribute('context');//_ppd($context);
         $func_name = 'display'.$context;
 
-
-        if ( ! empty($context) && method_exists($obj,$func_name))
+        if(!empty($context)
+        && method_exists($obj,$func_name))
         {
-                return  $obj->$func_name($layout_def);
-        } else
+                return  $obj->$func_name($layout_def, $additionalFormFields, $nonbutton);
+        }
+        else
         {
                 return 'display not found:'.$func_name;
         }

@@ -737,8 +737,11 @@ class SugarView
             if ( typeof(SUGAR.themes) == 'undefined' ) SUGAR.themes = {};
         </script>
 EOQ;
-        if(isset( $sugar_config['disc_client']) && $sugar_config['disc_client'])
+        if(isset( $sugar_config['disc_client'])
+        && $sugar_config['disc_client'])
+        {
             echo getVersionedScript('modules/Sync/headersync.js');
+        }
     }
 
     /**
@@ -785,8 +788,10 @@ EOQ;
         global $locale, $sugar_config, $timedate;
 
 
-        if ($this->_getOption('show_javascript')) {
-            if (!$this->_getOption('show_header')) {
+        if ($this->_getOption('show_javascript'))
+        {
+            if (!$this->_getOption('show_header'))
+            {
                 $langHeader = get_language_header();
 
                 echo <<<EOHTML
@@ -1661,6 +1666,6 @@ EOHTML;
         }
         return false;
     }
-
-
 }
+
+// vim: ts=4 sw=4 et
