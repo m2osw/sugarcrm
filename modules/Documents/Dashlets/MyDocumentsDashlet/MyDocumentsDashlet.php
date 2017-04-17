@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,15 +35,15 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-
 require_once('include/Dashlets/DashletGeneric.php');
 
-class MyDocumentsDashlet extends DashletGeneric { 
 
-	function MyDocumentsDashlet($id, $def = null)
-	{
-		global $current_user, $app_strings;
-		require('modules/Documents/Dashlets/MyDocumentsDashlet/MyDocumentsDashlet.data.php');
+class MyDocumentsDashlet extends DashletGeneric
+{ 
+    function MyDocumentsDashlet($id, $def = null)
+    {
+        global $current_user, $app_strings;
+        require('modules/Documents/Dashlets/MyDocumentsDashlet/MyDocumentsDashlet.data.php');
 
         parent::DashletGeneric($id, $def);
 
@@ -55,17 +55,18 @@ class MyDocumentsDashlet extends DashletGeneric {
         $this->seedBean = new Document();        
     }
 
-    function displayOptions() {
+    function displayOptions()
+    {
         $this->processDisplayOptions();
         require_once('modules/Documents/Document.php');
 
         $types = getDocumentsExternalApiDropDown();
         $this->currentSearchFields['doc_type']['input'] = '<select size="3" multiple="true" name="doc_type[]">'
-	                                              . get_select_options_with_id($types, (empty($this->filters['doc_type']) ? '' : $this->filters['doc_type']))
-	                                              . '</select>';
+            . get_select_options_with_id($types, (empty($this->filters['doc_type']) ? '' : $this->filters['doc_type']))
+            . '</select>';
         $this->configureSS->assign('searchFields', $this->currentSearchFields);
         return $this->configureSS->fetch($this->configureTpl);
     }
 }
 
-?>
+// vim: ts=4 sw=4 et

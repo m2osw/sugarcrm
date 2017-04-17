@@ -1,6 +1,5 @@
 <?php
-if (!defined('sugarEntry') || !sugarEntry)
-    die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -44,9 +43,9 @@ if (!defined('sugarEntry') || !sugarEntry)
  * Contributor(s): ______________________________________..
  ********************************************************************************/
 
-
-
 require_once ('include/JSON.php');
+
+
 $timedate = TimeDate::getInstance();
 global $app_strings;
 global $mod_strings;
@@ -59,7 +58,7 @@ global $filter_for_valid_editable_attributes;
 //filter condition for fields in vardefs that can participate in merge.
 $filter_for_valid_editable_attributes =
     array(
-		array('type'=>'datetimecombo','source'=>'db'),
+         array('type'=>'datetimecombo','source'=>'db'),
          array('type'=>'datetime','source'=>'db'),
          array('type'=>'varchar','source'=>'db'),
          array('type'=>'enum','source'=>'db'),
@@ -168,11 +167,16 @@ foreach ($temp_field_array as $field_array) {
         $section_name='merge_row_similar';
 
         //Prcoess locaton of the field. if values are different show field in first section. else 2nd.
-        $select_row_curr_field_value = $focus->merge_bean->$field_array['name'];
-        foreach ($merge_ids_array as $id) {
-            if (($mergeBeanArray[$id]-> $field_array['name']=='' and $select_row_curr_field_value =='') or $mergeBeanArray[$id]-> $field_array['name'] == $select_row_curr_field_value ) {
+        $select_row_curr_field_value = $focus->merge_bean->{$field_array['name']};
+        foreach($merge_ids_array as $id)
+        {
+            if(($mergeBeanArray[$id]->{$field_array['name']} == '' && $select_row_curr_field_value == '')
+            || $mergeBeanArray[$id]->{$field_array['name']} == $select_row_curr_field_value)
+            {
                 $section_name='merge_row_similar';
-            } else  {
+            }
+            else
+            {
                 $section_name='merge_row_diff';
                 $diff_field_count++;
                 break; //foreach
@@ -304,40 +308,53 @@ foreach ($temp_field_array as $field_array) {
                 $xtpl->parse("main.".$section_name.".merge_cell_edit_multidropdown");
                 break;
                 //popup fields need to be fixed.., cant automate with vardefs
+
             case ('relate') :
-                if(!empty($field_array['link'])) {
+                if(!empty($field_array['link']))
+                {
                     $exclude[$field_array['link']] = $field_array['link'];
                 }
             case ('link') :
                 //get_related_name
-                if (empty($select_row_curr_field_value)) {
-                    $related_name=get_related_name($field_array,$focus->merge_bean->$field_array['id_name']);
-                    if ($related_name !== false ) {
-                       $select_row_curr_field_value=$related_name;
+                if(empty($select_row_curr_field_value))
+                {
+                    $related_name = get_related_name($field_array, $focus->merge_bean->{$field_array['id_name']});
+                    if($related_name !== false )
+                    {
+                       $select_row_curr_field_value = $related_name;
                     }
                 }
-                if($field_check == 'link') {//relate type should not enter this.
+                if($field_check == 'link')
+                {//relate type should not enter this.
                     $exclude[$field_array['name']] = $field_array['name'];
                 }
                 $xtpl->assign("POPUP_ID_FIELD", $field_array['id_name']);
                 $xtpl->assign("POPUP_NAME_FIELD", $field_array['name']);
                 $xtpl->assign("POPUP_NAME_VALUE", $select_row_curr_field_value);
-                $xtpl->assign("POPUP_ID_VALUE", $focus->merge_bean-> $field_array['id_name']);
+                $xtpl->assign("POPUP_ID_VALUE", $focus->merge_bean->{$field_array['id_name']});
                 $xtpl->assign("POPUP_MODULE", $field_array['module']);
                 $xtpl->assign("CELL_WIDTH", $col_width);
                 $xtpl->assign("MERGED_LINKS", implode(',', $exclude));
 
-                $popup_data = array ('call_back_function' => 'set_return', 'form_name' => 'EditView', 'field_to_name_array' => array ('id' => $field_array['id_name'], 'name' => $field_array['name'],),);
+                $popup_data = array(
+                        'call_back_function' => 'set_return',
+                        'form_name' => 'EditView',
+                        'field_to_name_array' => array('id' => $field_array['id_name'], 'name' => $field_array['name']),
+                        );
                 $xtpl->assign('ENCODED_POPUP_DATA', $json->encode($popup_data));
 
                 $xtpl->parse("main.".$section_name.".merge_cell_edit_popup");
                 break;
-            case ('bool') :
-                if (($select_row_curr_field_value == '1' || $select_row_curr_field_value == 'yes' || $select_row_curr_field_value == 'on') && !empty($select_row_curr_field_value))
-                    $xtpl->assign("EDIT_FIELD_VALUE", " checked");
-                else
-                    $xtpl->assign("EDIT_FIELD_VALUE", "");
 
+            case ('bool') :
+                if(($select_row_curr_field_value == '1' || $select_row_curr_field_value == 'yes' || $select_row_curr_field_value == 'on') && !empty($select_row_curr_field_value))
+                {
+                    $xtpl->assign("EDIT_FIELD_VALUE", " checked");
+                }
+                else
+                {
+                    $xtpl->assign("EDIT_FIELD_VALUE", "");
+                }
                 $xtpl->assign("CELL_WIDTH", $col_width);
                 $xtpl->parse("main.".$section_name.".merge_cell_edit_checkbox");
                 break;
@@ -351,8 +368,8 @@ foreach ($temp_field_array as $field_array) {
                 $xtpl->assign("THEME", $theme);
                 $xtpl->parse("main.".$section_name.".merge_cell_edit_date");
                 break;
-			case ('datetimecombo') :
-				$xtpl->assign("CALENDAR_LANG", "en");
+            case ('datetimecombo') :
+                $xtpl->assign("CALENDAR_LANG", "en");
                 $xtpl->assign("USER_DATEFORMAT", $timedate->get_user_time_format());
                 $xtpl->assign("CALENDAR_DATEFORMAT", $timedate->get_cal_date_format());
                 $xtpl->assign("EDIT_FIELD_VALUE", $select_row_curr_field_value);
@@ -365,12 +382,18 @@ foreach ($temp_field_array as $field_array) {
         }
 
         //render a column for each selected record to merge
-        foreach ($merge_ids_array as $id) {
+        foreach ($merge_ids_array as $id)
+        {
             $xtpl->assign("CELL_WIDTH", $col_width);
             $field_name=null;
-            switch ($field_check) {
+            switch($field_check)
+            {
                 case ('bool') :
-                    if (($mergeBeanArray[$id]->$field_array['name'] == '1' || $mergeBeanArray[$id]->$field_array['name'] == 'yes' || $mergeBeanArray[$id]->$field_array['name'] == 'on') && !empty($mergeBeanArray[$id]->$field_array['name'])) {
+                    if(($mergeBeanArray[$id]->{$field_array['name']} == '1'
+                            || $mergeBeanArray[$id]->{$field_array['name']} == 'yes'
+                            || $mergeBeanArray[$id]->{$field_array['name']} == 'on')
+                    && !empty($mergeBeanArray[$id]->{$field_array['name']}))
+                    {
                         $xtpl->assign("FIELD_VALUE", " checked");
                     } else {
                         $xtpl->assign("FIELD_VALUE", "");
@@ -416,7 +439,7 @@ foreach ($temp_field_array as $field_array) {
                             $mergeBeanArray[$id]-> $field_array['name']=$related_name;
                        }
                     }
-               	    display_field_value($mergeBeanArray[$id]-> $field_array['name']);
+                    display_field_value($mergeBeanArray[$id]-> $field_array['name']);
                     $field_name="main.".$section_name.".merge_cell_field_value";
                     break;
                 default :
@@ -432,9 +455,9 @@ foreach ($temp_field_array as $field_array) {
                 $temp_array = Array ();
                 $json_data['popup_fields'] = Array ($field_array['name'] => $mergeBeanArray[$id]-> $field_array['name'], $field_array['id_name'] => $mergeBeanArray[$id]-> $field_array['id_name'],);
             } else if($field_check == 'teamset') {
-            	$json_data['field_value'] = TeamSetManager::getCommaDelimitedTeams($mergeBeanArray[$id]->team_set_id, $mergeBeanArray[$id]->team_id, true);
-            	$json_data['field_value2'] = TeamSetManager::getTeamsFromSet($mergeBeanArray[$id]->team_set_id);
-            	$json_data['field_value3'] =  $mergeBeanArray[$id]->team_set_id;
+                $json_data['field_value'] = TeamSetManager::getCommaDelimitedTeams($mergeBeanArray[$id]->team_set_id, $mergeBeanArray[$id]->team_id, true);
+                $json_data['field_value2'] = TeamSetManager::getTeamsFromSet($mergeBeanArray[$id]->team_set_id);
+                $json_data['field_value3'] =  $mergeBeanArray[$id]->team_set_id;
             } else if($field_check == 'multienum') {
                 $json_data['field_value'] = unencodeMultienum($mergeBeanArray[$id]-> $field_array['name']);
             } else {
@@ -469,7 +492,7 @@ if ($diff_field_count>0) {
 }
 $merge_verify=$mod_strings['LBL_DELETE_MESSAGE'].'\\n';
 foreach ($merge_records_names as $name) {
-	$merge_verify.= $name."\\n";
+    $merge_verify.= $name."\\n";
 }
 $merge_verify.='\\n'.$mod_strings['LBL_PROCEED'];
 $xtpl->assign("MERGE_VERIFY",$merge_verify);
@@ -522,7 +545,7 @@ function show_field($field_def) {
     }
     //field has 'duplicate_merge property set to disabled?'
     if (isset($field_def['duplicate_merge']) ) {
-    	if ($field_def['duplicate_merge']=='disabled' or $field_def['duplicate_merge']==false) {
+        if ($field_def['duplicate_merge']=='disabled' or $field_def['duplicate_merge']==false) {
             return false;
         }
         if ($field_def['duplicate_merge']=='enabled' or $field_def['duplicate_merge']==true) {
@@ -578,11 +601,11 @@ function get_related_name($field_def,$id_value) {
                   require_once ($beanFiles[$bean]);
                   $focus = new $bean();
                   if(!empty( $focus->field_defs[$field_def['rname']])){
-	                $related_def = $focus->field_defs[$field_def['rname']];
-	                //if field defs has concat field array set, then concatenate values
-	                if(isset($related_def['db_concat_fields']) && !empty($related_def['db_concat_fields'])){
+                    $related_def = $focus->field_defs[$field_def['rname']];
+                    //if field defs has concat field array set, then concatenate values
+                    if(isset($related_def['db_concat_fields']) && !empty($related_def['db_concat_fields'])){
                         $col_name = $focus->db->concat($field_def['table'], $related_def['db_concat_fields']);
-	                }
+                    }
                   }
             }
 
@@ -597,4 +620,5 @@ function get_related_name($field_def,$id_value) {
     }
     return false;
 }
-?>
+
+// vim: ts=4 sw=4 et

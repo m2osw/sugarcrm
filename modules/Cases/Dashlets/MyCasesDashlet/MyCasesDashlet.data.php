@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,20 +35,17 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-
-
-
 global $current_user;
 
 $dashletData['MyCasesDashlet']['searchFields'] = array('date_entered'     => array('default' => ''),
-													   'priority'         => array('default' => ''),
+                                                       'priority'         => array('default' => ''),
                                                        'status'           => array('default' => array('Assigned', 'New', 'Pending Input')),
                                                        
-													   'name'             => array('default' => ''),
-												       'type'             => array('default' => ''),
+                                                       'name'             => array('default' => ''),
+                                                       'type'             => array('default' => ''),
                                                        //'date_modified'    => array('default' => ''),
                                                        'assigned_user_id' => array('type'    => 'assigned_user_name',
-																				   'label'   => 'LBL_ASSIGNED_TO',
+                                                                                   'label'   => 'LBL_ASSIGNED_TO',
                                                                                    'default' => $current_user->name));
 $dashletData['MyCasesDashlet']['columns'] = array('case_number' => array('width'   => '6',
                                                                          'label'   => 'LBL_NUMBER',
@@ -81,4 +78,5 @@ $dashletData['MyCasesDashlet']['columns'] = array('case_number' => array('width'
                                                   'assigned_user_name' => array('width'   => '8', 
                                                                                 'label'   => 'LBL_LIST_ASSIGNED_USER'),
                                                  );
-?>
+
+// vim: ts=4 sw=4 et

@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,8 +35,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-require_once('include/Sugar_Smarty.php');
-require_once('include/utils/layout_utils.php');
+require_once "include/Sugar_Smarty.php";
+
 
 /**
  * Basic Dashlet
@@ -113,9 +113,9 @@ class Dashlet
         }
         else {
             $additionalTitle = '<td nowrap width="1%" style="padding-right: 0px;"><div class="dashletToolSet">';
-    	}
+        }
 
-    	return $additionalTitle;
+        return $additionalTitle;
     }
 
     /**
@@ -125,7 +125,7 @@ class Dashlet
      */
     public function setRefreshIcon()
     {
-    	$additionalTitle = '';
+        $additionalTitle = '';
         if($this->isRefreshable) {
             $additionalTitle .= '<a href="javascript:void(0)" onclick="SUGAR.mySugar.retrieveDashlet(\''
                                 . $this->id . '\'); return false;">'
@@ -143,16 +143,16 @@ class Dashlet
      */
     public function setDeleteIcon()
     {
-    	global $sugar_config;
+        global $sugar_config;
 
-    	if (!empty($sugar_config['lock_homepage']) && $sugar_config['lock_homepage'] == true) {
-			return '</div></td></tr></table>';
-		}
-    	$additionalTitle = '<a href="javascript:void(0)" onclick="SUGAR.mySugar.deleteDashlet(\''
+        if (!empty($sugar_config['lock_homepage']) && $sugar_config['lock_homepage'] == true) {
+            return '</div></td></tr></table>';
+        }
+        $additionalTitle = '<a href="javascript:void(0)" onclick="SUGAR.mySugar.deleteDashlet(\''
                             . $this->id . '\'); return false;">'
                             . SugarThemeRegistry::current()->getImage('dashlet-header-close','border="0" align="absmiddle" title="' . translate('LBL_DASHLET_DELETE', 'Home') . '"',null,null,'.gif',translate('LBL_DASHLET_DELETE', 'Home'))
                             . '</a></div></td></tr></table>';
-		return $additionalTitle;
+        return $additionalTitle;
     }
 
     /**
@@ -239,7 +239,7 @@ class Dashlet
             $dashletOffset = 0;
             $module = $_REQUEST['module'];
             if(isset($_REQUEST[$module.'2_'.strtoupper($this->seedBean->object_name).'_offset'])) {
-            	$dashletOffset = $_REQUEST[$module.'2_'.strtoupper($this->seedBean->object_name).'_offset'];
+                $dashletOffset = $_REQUEST[$module.'2_'.strtoupper($this->seedBean->object_name).'_offset'];
             }
         }
 
@@ -366,7 +366,7 @@ class Dashlet
      */
     public function hasAccess()
     {
-    	return true;
+        return true;
     }
 
     /**
@@ -401,3 +401,5 @@ class Dashlet
                 $GLOBALS['sugar_config']['dashlet_auto_refresh_min'] != -1 : true );
     }
 }
+
+// vim: ts=4 sw=4 et

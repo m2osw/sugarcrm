@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,8 +35,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+include_once "include/database/MssqlManager.php";
 
-include_once('include/database/MssqlManager.php');
 
 /**
  * SQL Server driver for FreeTDS
@@ -69,8 +69,8 @@ class FreeTDSManager extends MssqlManager
             'relate'   => 'nvarchar',
             'multienum'=> 'nvarchar(max)',
             'html'     => 'nvarchar(max)',
-			'longhtml' => 'text',
-    		'datetime' => 'datetime',
+            'longhtml' => 'text',
+            'datetime' => 'datetime',
             'datetimecombo' => 'datetime',
             'time'     => 'datetime',
             'bool'     => 'bit',
@@ -85,18 +85,20 @@ class FreeTDSManager extends MssqlManager
             'url'      => 'nvarchar',
             'encrypt'  => 'nvarchar',
             'file'     => 'nvarchar',
-	        'decimal_tpl' => 'decimal(%d, %d)',
+            'decimal_tpl' => 'decimal(%d, %d)',
     );
 
     public function query($sql, $dieOnError = false, $msg = '', $suppress = false, $keepResult = false)
     {
-		global $app_strings;
-        if(is_array($sql)) {
+        global $app_strings;
+
+        if(is_array($sql))
+        {
             return $this->queryArray($sql, $dieOnError, $msg, $suppress);
         }
 
-		$sql = $this->_appendN($sql);
-		return parent::query($sql, $dieOnError, $msg, $suppress, $keepResult);
+        $sql = $this->_appendN($sql);
+        return parent::query($sql, $dieOnError, $msg, $suppress, $keepResult);
     }
 
     /**
@@ -108,3 +110,5 @@ class FreeTDSManager extends MssqlManager
         return function_exists("mssql_connect") && DBManagerFactory::isFreeTDS();
     }
 }
+
+// vim: ts=4 sw=4 et

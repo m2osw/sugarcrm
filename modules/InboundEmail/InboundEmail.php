@@ -35,10 +35,12 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+require_once "data/SugarBean.php";
+require_once "include/OutboundEmail/OutboundEmail.php";
 
-require_once('include/OutboundEmail/OutboundEmail.php');
 
-function this_callback($str) {
+function this_callback($str)
+{
 	foreach($str as $match) {
 		$ret .= chr(hexdec(str_replace("%","",$match)));
 	}
@@ -48,11 +50,13 @@ function this_callback($str) {
 /**
  * Stub for certain interactions;
  */
-class temp {
+class temp
+{
 	var $name;
 }
 
-class InboundEmail extends SugarBean {
+class InboundEmail extends SugarBean
+{
 	// module specific
 	var $conn;
 	var $purifier; // HTMLPurifier object placeholder
@@ -794,19 +798,21 @@ class InboundEmail extends SugarBean {
 						$values .= ", ";
 					}
 
-					// trim values for Oracle/MSSql
-					if(	isset($colDef['len']) && !empty($colDef['len']) &&
-						isset($colDef['type']) && !empty($colDef['type']) &&
-						$colDef['type'] == 'varchar'
-					)
+                    // trim values for Oracle/MSSql
+                    if(isset($colDef['len'])
+                    && !empty($colDef['len'])
+                    && isset($colDef['type'])
+                    && !empty($colDef['type'])
+                    && $colDef['type'] == 'varchar')
                     {
-                        if (isset($overview->$colDef['name']))
+                        if (isset($overview->{$colDef['name']}))
                         {
-                            $overview->$colDef['name'] = substr($overview->$colDef['name'], 0, $colDef['len']);
+                            $overview->{$colDef['name']} = substr($overview->{$colDef['name']}, 0, $colDef['len']);
                         }
                     }
 
-					switch($colDef['name']) {
+                    switch($colDef['name'])
+                    {
 						case "imap_uid":
 							if(isset($overview->uid) && !empty($overview->uid)) {
 								$this->imap_uid = $overview->uid;
@@ -848,8 +854,8 @@ class InboundEmail extends SugarBean {
 						break;
 
 						default:
-							$overview->$colDef['name'] = SugarCleaner::cleanHtml(from_html($overview->$colDef['name']));
-							$values .= $this->db->quoted($overview->$colDef['name']);
+							$overview->{$colDef['name']} = SugarCleaner::cleanHtml(from_html($overview->{$colDef['name']}));
+							$values .= $this->db->quoted($overview->{$colDef['name']});
 						break;
 					}
 				}
@@ -891,9 +897,9 @@ class InboundEmail extends SugarBean {
                                 $set .= ",";
                             }
                             $value = '';
-                            if (isset($overview->$colDef['name']))
+                            if (isset($overview->{$colDef['name']}))
                             {
-                                $value = $this->db->quoted($overview->$colDef['name']);
+                                $value = $this->db->quoted($overview->{$colDef['name']});
                             }
                             else
                             {
@@ -3438,15 +3444,19 @@ class InboundEmail extends SugarBean {
 			7 => other
 		*/
 
-		foreach($parts as $k => $part) {
+		foreach($parts as $k => $part)
+        {
 			$thisBc = $k+1;
 			if($breadcrumb != '0') {
 				$thisBc = $breadcrumb.'.'.$thisBc;
 			}
 			$attach = null;
 			// check if we need to recurse into the object
-			//if($part->type == 1 && !empty($part->parts)) {
-			if(isset($part->parts) && !empty($part->parts) && !( isset($part->subtype) && strtolower($part->subtype) == 'rfc822')  ) {
+			//if($part->type == 1 && !empty($part->parts))
+			if(isset($part->parts)
+            && !empty($part->parts)
+            && !(isset($part->subtype) && strtolower($part->subtype) == 'rfc822'))
+            {
 				$this->saveAttachments($msgNo, $part->parts, $emailId, $thisBc, $forDisplay);
                 continue;
 			} elseif($part->ifdisposition) {
@@ -3661,7 +3671,8 @@ class InboundEmail extends SugarBean {
 	 * @param string textHeader Headers in normal text format
 	 * @return bool
 	 */
-	function importDupeCheck($message_id, $header, $textHeader) {
+	function importDupeCheck($message_id, $header, $textHeader)
+    {
 		$GLOBALS['log']->debug('*********** InboundEmail doing dupe check.');
 
 		// generate "delivered-to" seed for email duplicate check
@@ -3678,8 +3689,9 @@ class InboundEmail extends SugarBean {
 			}
 		}
 
-		//if(empty($message_id) && !isset($message_id)) {
-		if(empty($message_id) || !isset($message_id)) {
+		//if(empty($message_id) && !isset($message_id))
+		if(empty($message_id) || !isset($message_id))
+        {
 			$GLOBALS['log']->debug('*********** NO MESSAGE_ID.');
 			$message_id = $this->getMessageId($header);
 		}
@@ -4423,7 +4435,8 @@ class InboundEmail extends SugarBean {
 	 * returns the HTML for InboundEmail system settings
 	 * @return string HTML
 	 */
-	function getSystemSettingsForm() {
+	function getSystemSettingsForm()
+	{
 		global $sugar_config;
 		global $mod_strings;
 		global $app_strings;
@@ -6474,7 +6487,8 @@ eoq;
 /**
  * Simple class to mirror the passed object from an imap_fetch_overview() call
  */
-class Overview {
+class Overview
+{
 	var $subject;
 	var $from;
 	var $fromaddr;
@@ -6611,20 +6625,25 @@ class Overview {
 			),
 		);
 	*/
-	function Overview() {
-		global $dictionary;
+    function Overview()
+    {
+        global $dictionary;
 
-		if(!isset($dictionary['email_cache']) || empty($dictionary['email_cache'])) {
-			if(file_exists('custom/metadata/email_cacheMetaData.php')) {
-			   include('custom/metadata/email_cacheMetaData.php');
-			} else {
-			   include('metadata/email_cacheMetaData.php');
-			}
-		}
+        if(!isset($dictionary['email_cache']) || empty($dictionary['email_cache']))
+        {
+            if(file_exists('custom/metadata/email_cacheMetaData.php'))
+            {
+               include('custom/metadata/email_cacheMetaData.php');
+            }
+            else
+            {
+               include('metadata/email_cacheMetaData.php');
+            }
+        }
 
-		$this->fieldDefs = $dictionary['email_cache']['fields'];
-		$this->indices = $dictionary['email_cache']['indices'];
-	}
+        $this->fieldDefs = $dictionary['email_cache']['fields'];
+        $this->indices = $dictionary['email_cache']['indices'];
+    }
 }
 
-// vim: ts=4 sw=4
+// vim: ts=4 sw=4 et

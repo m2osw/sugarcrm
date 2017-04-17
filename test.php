@@ -1,3 +1,3 @@
 <?php
 define('sugarEntry', true);
-require('./cron.php');
+require('./modules/ModuleBuilder/MB/ModuleBuilder.php');

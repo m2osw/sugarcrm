@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -61,7 +61,7 @@ $xtpl->assign("APP", $app_strings);
 
 if(!empty($_POST['document_id']))
 {
-	$_SESSION['MAILMERGE_DOCUMENT_ID'] = $_POST['document_id'];
+    $_SESSION['MAILMERGE_DOCUMENT_ID'] = $_POST['document_id'];
 }
 $document_id = $_SESSION['MAILMERGE_DOCUMENT_ID'];
 $revision = new DocumentRevision();
@@ -150,4 +150,5 @@ $xtpl->assign("STEP_NUM", "Step ".$step_num.":");
 $xtpl->parse("main");
 $xtpl->out("main");
 
-?>
+
+// vim: ts=4 sw=4 et

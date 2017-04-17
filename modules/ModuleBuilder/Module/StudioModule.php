@@ -148,37 +148,40 @@ class StudioModule
         return array ( 'name' => $this->name , 'module' => $this->module , 'type' => 'StudioModule' , 'action' => "module=ModuleBuilder&action=wizard&view_module={$this->module}" , 'children' => $this->getModule() ) ;
     }
 
-    function getModule ()
+    function getModule()
     {
-        $sources = array (	translate('LBL_LABELS') => array ( 'action' => "module=ModuleBuilder&action=editLabels&view_module={$this->module}" , 'imageTitle' => 'Labels' , 'help' => 'labelsBtn' ) ,
+        $sources = array(translate('LBL_LABELS') => array('action' => "module=ModuleBuilder&action=editLabels&view_module={$this->module}" , 'imageTitle' => 'Labels' , 'help' => 'labelsBtn'),
                 translate('LBL_FIELDS') => array ( 'action' => "module=ModuleBuilder&action=modulefields&view_package=studio&view_module={$this->module}" , 'imageTitle' => 'Fields' , 'help' => 'fieldsBtn'  ) ,
                 translate('LBL_RELATIONSHIPS') => array ( 'action' => "get_tpl=true&module=ModuleBuilder&action=relationships&view_module={$this->module}" , 'imageTitle' => 'Relationships' , 'help' => 'relationshipsBtn' ) ,
                 translate('LBL_LAYOUTS') => array ( 'children' => 'getLayouts' , 'action' => "module=ModuleBuilder&action=wizard&view=layouts&view_module={$this->module}" , 'imageTitle' => 'Layouts' , 'help' => 'layoutsBtn' ) ,
                 translate('LBL_SUBPANELS') => array ( 'children' => 'getSubpanels' , 'action' => "module=ModuleBuilder&action=wizard&view=subpanels&view_module={$this->module}" , 'imageTitle' => 'Subpanels' , 'help' => 'subpanelsBtn' ) ) ;
 
-        $nodes = array () ;
-        foreach ( $sources as $source => $def )
+        $nodes = array();
+        foreach($sources as $source => $def)
         {
-            $nodes [ $source ] = $def ;
-            $nodes [ $source ] [ 'name' ] = translate ( $source ) ;
-            if ( isset ( $def [ 'children' ] ) )
+            $nodes[$source] = $def;
+            $nodes[$source]['name'] = translate($source);
+            if(isset($def['children']))
             {
-                $childNodes = $this->$def [ 'children' ] () ;
-                if ( !empty ( $childNodes ) )
+                $childNodes = $this->{$def['children']}();
+                if(!empty($childNodes))
                 {
-                    $nodes [ $source ] [ 'type' ] = 'Folder' ;
-                    $nodes [ $source ] [ 'children' ] = $childNodes ;
+                    $nodes[$source]['type'] = 'Folder';
+                    $nodes[$source]['children'] = $childNodes;
                 }
                 else
-                    unset ( $nodes [ $source ] ) ;
+                {
+                    unset($nodes[$source]);
+                }
             }
         }
 
-        return $nodes ;
+        return $nodes;
     }
 
-    function getViews() {
-        $views = array () ;
+    function getViews()
+    {
+        $views = array();
         foreach ( $this->sources as $file => $def )
         {
             if (file_exists ( "modules/{$this->module}/metadata/$file" )

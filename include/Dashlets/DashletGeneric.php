@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -38,6 +38,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
 require_once('include/Dashlets/Dashlet.php');
 require_once('include/ListView/ListViewSmarty.php');
 require_once('include/generic/LayoutManager.php');
+
 
 /**
  * Generic Dashlet class
@@ -351,8 +352,8 @@ class DashletGeneric extends Dashlet
                         if(isset($widgetDef['link'])
                         && $this->seedBean->load_relationship($widgetDef['link']))
                         {
-                            $widgetDef['module'] = $this->seedBean->$widgetDef['link']->focus->module_name;
-                            $widgetDef['link'] = $this->seedBean->$widgetDef['link']->getRelationshipObject()->name;
+                            $widgetDef['module'] = $this->seedBean->{$widgetDef['link']}->focus->module_name;
+                            $widgetDef['link'] = $this->seedBean->{$widgetDef['link']}->getRelationshipObject()->name;
                         }
                         // No break - run through the default handler
                     default:

@@ -88,6 +88,9 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
 * Contributor(s): ______________________________________..
 ********************************************************************************/
 
+require_once "include/database/DBManager.php";
+
+
 /**
  * MySQL manager implementation for mysql extension
  */

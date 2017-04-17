@@ -35,11 +35,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-
-
-
-
 require_once('modules/Versions/DefaultVersions.php');
+
 
 foreach($default_versions as $default_version)
 {

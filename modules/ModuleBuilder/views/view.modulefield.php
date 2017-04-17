@@ -143,40 +143,61 @@ class ViewModulefield extends SugarView
             }
         }
 
-        if(empty($_REQUEST['view_package']) || $_REQUEST['view_package'] == 'studio') {
+        if(empty($_REQUEST['view_package'])
+        || $_REQUEST['view_package'] == 'studio')
+        {
             $moduleName = $_REQUEST['view_module'];
             $objectName = BeanFactory::getObjectName($moduleName);
             $module = BeanFactory::getBean($moduleName);
 
-            VardefManager::loadVardef($moduleName, $objectName,true);
+            VardefManager::loadVardef($moduleName, $objectName, true);
             global $dictionary;
-            $module->mbvardefs->vardefs =  $dictionary[$objectName];
+            if(!isset($module->mbvardefs))
+            {
+                $module->mbvardefs = new stdClass();
+            }
+            $module->mbvardefs->vardefs = $dictionary[$objectName];
 
             $module->name = $moduleName;
-            if(!$ac){
+            if(!$ac)
+            {
                 $ac = new AjaxCompose();
             }
-            $vardef = (!empty($module->mbvardefs->vardefs['fields'][$field_name]))? $module->mbvardefs->vardefs['fields'][$field_name]: array();
-            if($isClone){
+            $vardef = !empty($module->mbvardefs->vardefs['fields'][$field_name])
+                    ? $module->mbvardefs->vardefs['fields'][$field_name]
+                    : array();
+            if($isClone)
+            {
                 unset($vardef['name']);
             }
 
-            if(empty($vardef['name'])){
+            if(empty($vardef['name']))
+            {
                 if(!empty($_REQUEST['type']))
+                {
                     $vardef['type'] = $_REQUEST['type'];
+                }
                 $fv->ss->assign('hideLevel', 0);
-            }elseif(isset($vardef['custom_module'])){
+            }
+            elseif(isset($vardef['custom_module']))
+            {
                 $fv->ss->assign('hideLevel', 2);
-            }else{
+            }
+            else
+            {
                 $action = 'saveSugarField'; // tyoung - for OOB fields we currently only support modifying the label
                 $fv->ss->assign('hideLevel', 3);
             }
-            if($isClone && isset($vardef['type']) && $vardef['type'] == 'datetime'){
+            if($isClone
+            && isset($vardef['type'])
+            && $vardef['type'] == 'datetime')
+            {
                 $vardef['type'] = 'datetimecombo';
             }
 
-            require_once ('modules/DynamicFields/FieldCases.php') ;
-            $tf = get_widget ( empty($vardef [ 'type' ]) ?  "" : $vardef [ 'type' ]) ;
+            require_once "modules/DynamicFields/FieldCases.php";
+
+            $tf = get_widget(empty($vardef['type']) ?  "" : $vardef['type']);
             $tf->module = $module;
             $tf->populateFromRow($vardef);
             $vardef = array_merge($vardef, $tf->get_field_def());
@@ -212,8 +233,8 @@ class ViewModulefield extends SugarView
                 $field_types['parent'] = $GLOBALS['mod_strings']['parent'];
 
             $edit_or_add = 'editField' ;
-
-        } else
+        }
+        else
         {
             require_once('modules/ModuleBuilder/MB/ModuleBuilder.php');
             $mb = new ModuleBuilder();
@@ -221,8 +242,13 @@ class ViewModulefield extends SugarView
             $module =& $mb->getPackageModule($_REQUEST['view_package'], $moduleName);
             $package =& $mb->packages[$_REQUEST['view_package']];
             $module->getVardefs();
-            if(!$ac){
+            if(!$ac)
+            {
                 $ac = new AjaxCompose();
+            }
+            if(!isset($module->mbvardefs))
+            {
+                $module->mbvardefs = new stdClass();
             }
             $vardef = (!empty($module->mbvardefs->vardefs['fields'][$field_name]))? $module->mbvardefs->vardefs['fields'][$field_name]: array();
 
@@ -315,7 +341,7 @@ class ViewModulefield extends SugarView
 
         $triggers = array () ;
         $existing_field_names = array () ;
-        foreach ( $module->mbvardefs->vardefs['fields'] as $field )
+        foreach($module->mbvardefs->vardefs['fields'] as $field)
         {
             if ($field [ 'type' ] == 'enum' || $field [ 'type'] == 'multienum' )
             {

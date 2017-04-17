@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -66,3 +66,5 @@ $GLOBALS['logic_hook']->call_custom_logic('Users', 'after_logout');
 
 /** @var AuthenticationController $authController */
 $authController->authController->logout();
+
+// vim: ts=4 sw=4 et

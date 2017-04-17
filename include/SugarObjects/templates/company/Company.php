@@ -36,6 +36,7 @@
 
 require_once('include/SugarObjects/templates/basic/Basic.php');
 
+
 class Company extends Basic
 {
     /**

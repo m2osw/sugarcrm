@@ -358,7 +358,7 @@ class ModuleBuilderController extends SugarController
     {
         require_once 'modules/ModuleBuilder/parsers/parser.label.php' ;
         $parser = new ParserLabel ( $_REQUEST['view_module'] , isset ( $_REQUEST [ 'view_package' ] ) ? $_REQUEST [ 'view_package' ] : null ) ;
-        $parser->handleSave ( $_REQUEST, $_REQUEST [ 'selected_lang' ] ) ;
+        $parser->handleSave($_REQUEST, $_REQUEST['selected_lang']);
         if (isset ( $_REQUEST [ 'view_package' ] )) //MODULE BUILDER
         {
             $this->view = 'modulelabels' ;
@@ -368,19 +368,20 @@ class ModuleBuilderController extends SugarController
         }
     }
 
-    function action_SaveLabel ()
+    function action_SaveLabel()
     {
-        if (! empty ( $_REQUEST [ 'view_module' ] ) && !empty($_REQUEST [ 'labelValue' ]))
+        if(!empty($_REQUEST['view_module'])
+        && !empty($_REQUEST['labelValue']))
         {
-            $_REQUEST [ "label_" . $_REQUEST [ 'label' ] ] = $_REQUEST [ 'labelValue' ] ;
-            require_once 'modules/ModuleBuilder/parsers/parser.label.php' ;
+            $_REQUEST["label_" . $_REQUEST['label']] = $_REQUEST['labelValue'];
+            require_once "modules/ModuleBuilder/parsers/parser.label.php";
 
             $req = $_REQUEST;
-            foreach (ModuleBuilder::getModuleAliases($_REQUEST['view_module']) as $key)
+            foreach(ModuleBuilder::getModuleAliases($_REQUEST['view_module']) as $key)
             {
                 $req['view_module'] = $key;
                 $parser = new ParserLabel($req['view_module'], isset($req['view_package']) ? $req['view_package'] : null);
-                $parser->handleSave($req, $GLOBALS['current_language']);
+                $parser->handleSave($req, $GLOBALS['current_language'], $req['view_module'], array());
             }
         }
         $this->view = 'modulefields' ;
@@ -403,21 +404,23 @@ class ModuleBuilderController extends SugarController
         }
     }
 
-    function action_SaveField ()
+    function action_SaveField()
     {
-        require_once ('modules/DynamicFields/FieldCases.php') ;
-        $field = get_widget ( $_REQUEST [ 'type' ] ) ;
-        $_REQUEST [ 'name' ] = trim ( $_REQUEST [ 'name' ] ) ;
+        require_once "modules/DynamicFields/FieldCases.php";
 
-        $field->populateFromPost () ;
+        $field = get_widget($_REQUEST['type']);
+        $_REQUEST['name'] = trim($_REQUEST['name']);
 
-        if (!isset ( $_REQUEST [ 'view_package' ] ))
+        $field->populateFromPost();
+
+        if(!isset($_REQUEST['view_package']))
         {
-            require_once ('modules/DynamicFields/DynamicField.php') ;
-            if (! empty ( $_REQUEST [ 'view_module' ] ))
+            require_once "modules/DynamicFields/DynamicField.php";
+            if(!empty($_REQUEST['view_module']))
             {
-                $module = $_REQUEST [ 'view_module' ] ;
-                if ( $module == 'Employees' ) {
+                $module = $_REQUEST['view_module'];
+                if($module == 'Employees')
+                {
                     $module = 'Users';
                 }
 
@@ -432,55 +435,59 @@ class ModuleBuilderController extends SugarController
                     }
                 }
 
-                $df = new DynamicField ( $module ) ;
-                $class_name = $GLOBALS [ 'beanList' ] [ $module ] ;
-                require_once ($GLOBALS [ 'beanFiles' ] [ $class_name ]) ;
-                $mod = new $class_name ( ) ;
-                $df->setup ( $mod ) ;
+                $df = new DynamicField($module);
+                $class_name = $GLOBALS['beanList'][$module];
+                require_once $GLOBALS['beanFiles'][$class_name];
+                $mod = new $class_name();
+                $df->setup($mod);
 
-                $field->save ( $df ) ;
-                $this->action_SaveLabel () ;
-                include_once ('modules/Administration/QuickRepairAndRebuild.php') ;
+                $field->save($df);
+                $this->action_SaveLabel();
+                include_once "modules/Administration/QuickRepairAndRebuild.php";
                 global $mod_strings;
                 $mod_strings['LBL_ALL_MODULES'] = 'all_modules';
-                require_once('ModuleInstall/ModuleInstaller.php');
+                require_once "ModuleInstall/ModuleInstaller.php";
                 $mi = new ModuleInstaller();
                 $mi->silent = true;
                 $mi->rebuild_extensions();
                 $repair = new RepairAndClear();
 
                 $repair->repairAndClearAll(array('rebuildExtensions', 'clearVardefs', 'clearTpls'), array($class_name), true, false);
-                if ( $module == 'Users' ) {
+                if($module == 'Users')
+                {
                     $repair->repairAndClearAll(array('rebuildExtensions', 'clearVardefs', 'clearTpls'), array('Employee'), true, false);
-
                 }
 
                 //#28707 ,clear all the js files in cache
                 $repair->module_list = array();
                 $repair->clearJsFiles();
             }
-        } else
+        }
+        else
         {
-            $mb = new ModuleBuilder ( ) ;
-            $module = & $mb->getPackageModule ( $_REQUEST [ 'view_package' ], $_REQUEST [ 'view_module' ] ) ;
-            $field->save ( $module ) ;
-            $module->mbvardefs->save () ;
+            $mb = new ModuleBuilder();
+            $module = $mb->getPackageModule($_REQUEST['view_package'], $_REQUEST['view_module']);
+            $field->save($module);
+            $module->mbvardefs->save();
             // get the module again to refresh the labels we might have saved with the $field->save (e.g., for address fields)
-            $module = & $mb->getPackageModule ( $_REQUEST [ 'view_package' ], $_REQUEST [ 'view_module' ] ) ;
-            if (isset ( $_REQUEST [ 'label' ] ) && isset ( $_REQUEST [ 'labelValue' ] ))
-                $module->setLabel ( $GLOBALS [ 'current_language' ], $_REQUEST [ 'label' ], $_REQUEST [ 'labelValue' ] ) ;
+            $module = $mb->getPackageModule($_REQUEST['view_package'], $_REQUEST['view_module']);
+            if(isset($_REQUEST['label'])
+            && isset($_REQUEST['labelValue']))
+            {
+                $module->setLabel($GLOBALS['current_language'], $_REQUEST['label'], $_REQUEST['labelValue']);
+            }
             $module->save();
         }
-        $this->view = 'modulefields' ;
+        $this->view = 'modulefields';
     }
 
     function action_saveSugarField ()
     {
         global $mod_strings;
-        require_once ('modules/DynamicFields/FieldCases.php') ;
+        require_once "modules/DynamicFields/FieldCases.php";
 
-        $field = get_widget ( $_REQUEST [ 'type' ] ) ;
-        $_REQUEST [ 'name' ] = trim ( $_POST [ 'name' ] ) ;
+        $field = get_widget($_REQUEST['type']);
+        $_REQUEST['name'] = trim($_POST['name']);
 
         $field->populateFromPost () ;
         require_once ('modules/ModuleBuilder/parsers/StandardField.php') ;
@@ -687,8 +694,11 @@ class ModuleBuilderController extends SugarController
         $module->removeFieldFromLayouts( $field->name );
         $this->view = 'modulefields' ;
 
-        if (isset($GLOBALS['current_language']) && isset($_REQUEST['label']) &&
-                isset($_REQUEST['labelValue']) && isset($_REQUEST['view_module'])) {
+        if(isset($GLOBALS['current_language'])
+        && isset($_REQUEST['label'])
+        && isset($_REQUEST['labelValue'])
+        && isset($_REQUEST['view_module']))
+        {
             $this->DeleteLabel($GLOBALS['current_language'], $_REQUEST['label'], $_REQUEST['labelValue'], $_REQUEST['view_module']);
         }
     }
@@ -743,7 +753,7 @@ class ModuleBuilderController extends SugarController
         $parser = new ParserLabel ( $modules , isset ( $_REQUEST [ 'view_package' ] ) ? $_REQUEST [ 'view_package' ] : null ) ;
         // if no language provided, then use the user's current language which is most likely what they intended
         $language = (isset($_REQUEST [ 'selected_lang' ])) ? $_REQUEST [ 'selected_lang' ] : $GLOBALS['current_language'] ;
-        $parser->handleSave ( $_REQUEST, $language ) ;
+        $parser->handleSave($_REQUEST, $language);
         $json = getJSONobj();
         echo $json->encode(array("east" => array("action" => "deactivate")));
     }
@@ -781,24 +791,32 @@ class ModuleBuilderController extends SugarController
     function action_saveAndPublishLayout ()
     {
         $parser = ParserFactory::getParser ( $_REQUEST [ 'view' ], $_REQUEST [ 'view_module' ], isset ( $_REQUEST [ 'view_package' ] ) ? $_REQUEST [ 'view_package' ] : null ) ;
-        $this->view = 'layoutview' ;
-        $parser->handleSave () ;
+        $this->view = 'layoutview';
+        $parser->handleSave();
 
-        if(!empty($_REQUEST [ 'sync_detail_and_edit' ]) && $_REQUEST['sync_detail_and_edit'] != false && $_REQUEST['sync_detail_and_edit'] != "false"){
-            if(strtolower ($parser->_view) == MB_EDITVIEW){
-                $parser2 = ParserFactory::getParser ( MB_DETAILVIEW, $_REQUEST [ 'view_module' ], isset ( $_REQUEST [ 'view_package' ] ) ? $_REQUEST [ 'view_package' ] : null ) ;
+        if(!empty($_REQUEST['sync_detail_and_edit'])
+        && $_REQUEST['sync_detail_and_edit'] != false
+        && $_REQUEST['sync_detail_and_edit'] != "false")
+        {
+            if(strtolower($parser->_view) == MB_EDITVIEW)
+            {
+                $parser2 = ParserFactory::getParser(
+                            MB_DETAILVIEW,
+                            $_REQUEST['view_module'],
+                            isset($_REQUEST['view_package'])
+                                    ? $_REQUEST['view_package']
+                                    : null);
                 $parser2->setUseTabs($parser->getUseTabs());
-                $parser2->handleSave () ;
+                $parser2->handleSave();
             }
         }
     }
 
-    function action_manageBackups ()
+    function action_manageBackups()
     {
-
     }
 
-    function action_listViewSave ()
+    function action_listViewSave()
     {
         $GLOBALS [ 'log' ]->info ( "action_listViewSave" ) ;
 
@@ -807,7 +825,7 @@ class ModuleBuilderController extends SugarController
         require_once 'modules/ModuleBuilder/parsers/ParserFactory.php' ;
         $parser = ParserFactory::getParser ( $_REQUEST [ 'view' ], $_REQUEST [ 'view_module' ], $packageName, $subpanelName ) ;
         $this->view = 'listView' ;
-        $parser->handleSave () ;
+        $parser->handleSave();
 
     }
 
@@ -816,7 +834,7 @@ class ModuleBuilderController extends SugarController
         $packageName = (isset ( $_REQUEST [ 'view_package' ] ) && (strtolower($_REQUEST['view_package']) != 'studio')) ? $_REQUEST [ 'view_package' ] : null ;
         require_once 'modules/ModuleBuilder/parsers/ParserFactory.php' ;
         $parser = ParserFactory::getParser ( $_REQUEST [ 'view' ], $_REQUEST [ 'view_module' ], $packageName ) ;
-        $parser->handleSave () ;
+        $parser->handleSave();
     }
 
     function action_popupSave(){
@@ -824,7 +842,7 @@ class ModuleBuilderController extends SugarController
         $packageName = (isset ( $_REQUEST [ 'view_package' ] ) && (strtolower($_REQUEST['view_package']) != 'studio')) ? $_REQUEST [ 'view_package' ] : null ;
         require_once 'modules/ModuleBuilder/parsers/ParserFactory.php' ;
         $parser = ParserFactory::getParser ( $_REQUEST [ 'view' ], $_REQUEST [ 'view_module' ], $packageName ) ;
-        $parser->handleSave () ;
+        $parser->handleSave();
         if(empty($packageName)){
             include_once ('modules/Administration/QuickRepairAndRebuild.php') ;
             global $mod_strings;
@@ -843,7 +861,7 @@ class ModuleBuilderController extends SugarController
         $packageName = (isset ( $_REQUEST [ 'view_package' ] )) ? $_REQUEST [ 'view_package' ] : null ;
         require_once 'modules/ModuleBuilder/parsers/views/SearchViewMetaDataParser.php' ;
         $parser = new SearchViewMetaDataParser ( $_REQUEST [ 'view' ], $_REQUEST [ 'view_module' ], $packageName ) ;
-        $parser->handleSave () ;
+        $parser->handleSave();
 
 
         //Repair or create a custom SearchFields.php file as needed

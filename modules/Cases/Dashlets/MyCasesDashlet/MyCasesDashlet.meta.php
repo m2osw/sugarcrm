@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,13 +35,11 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-
-
-
 global $app_strings;
 
 $dashletMeta['MyCasesDashlet'] = array('module'		=> 'Cases',
 									   'title'       => translate('LBL_LIST_MY_CASES', 'Cases'), 
                                        'description' => 'A customizable view into Cases',
                                        'category'    => 'Module Views');
-?>
+
+// vim: ts=4 sw=4 et

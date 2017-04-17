@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -37,6 +37,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
 
 require_once('include/Dashlets/Dashlet.php');
 require_once('include/generic/LayoutManager.php');
+
 
 abstract class DashletGenericChart extends Dashlet
 {
@@ -134,7 +135,7 @@ abstract class DashletGenericChart extends Dashlet
      */
     public function setRefreshIcon()
     {
-    	$additionalTitle = '';
+        $additionalTitle = '';
         if($this->isRefreshable)
 
             $additionalTitle .= '<a href="#" onclick="SUGAR.mySugar.retrieveDashlet(\''
@@ -160,9 +161,9 @@ abstract class DashletGenericChart extends Dashlet
     public function displayScript()
     {
 
-		require_once('include/SugarCharts/SugarChartFactory.php');
-		$sugarChart = SugarChartFactory::getInstance();
-		return $sugarChart->getDashletScript($this->id);
+        require_once('include/SugarCharts/SugarChartFactory.php');
+        $sugarChart = SugarChartFactory::getInstance();
+        return $sugarChart->getDashletScript($this->id);
 
     }
 
@@ -267,11 +268,11 @@ abstract class DashletGenericChart extends Dashlet
         $this->getConfigureSmartyInstance()->assign('showClearButton', $this->isConfigPanelClearShown);
         
         if($this->isAutoRefreshable()) {
-       		$this->getConfigureSmartyInstance()->assign('isRefreshable', true);
-			$this->getConfigureSmartyInstance()->assign('autoRefresh', $GLOBALS['app_strings']['LBL_DASHLET_CONFIGURE_AUTOREFRESH']);
-			$this->getConfigureSmartyInstance()->assign('autoRefreshOptions', $this->getAutoRefreshOptions());
-			$this->getConfigureSmartyInstance()->assign('autoRefreshSelect', $this->autoRefresh);
-		}
+            $this->getConfigureSmartyInstance()->assign('isRefreshable', true);
+            $this->getConfigureSmartyInstance()->assign('autoRefresh', $GLOBALS['app_strings']['LBL_DASHLET_CONFIGURE_AUTOREFRESH']);
+            $this->getConfigureSmartyInstance()->assign('autoRefreshOptions', $this->getAutoRefreshOptions());
+            $this->getConfigureSmartyInstance()->assign('autoRefreshSelect', $this->autoRefresh);
+        }
 
         return parent::displayOptions() . $this->getConfigureSmartyInstance()->fetch($this->_configureTpl);
     }
@@ -315,9 +316,9 @@ abstract class DashletGenericChart extends Dashlet
      *
      * @return string HTML that displays Dashlet
      */
-    public function display()
+    public function display($text = '')
     {
-        return parent::display() . $this->processAutoRefresh();
+        return parent::display($text) . $this->processAutoRefresh();
     }
 
     /**
@@ -330,18 +331,23 @@ abstract class DashletGenericChart extends Dashlet
     {
         global $sugar_config;
 
-        if ( empty($dashletOffset) ) {
+        if(empty($dashletOffset))
+        {
             $dashletOffset = 0;
             $module = $_REQUEST['module'];
-            if(isset($_REQUEST[$module.'2_'.strtoupper($this->getSeedBean()->object_name).'_offset'])) {
-            	$dashletOffset = $_REQUEST[$module.'2_'.strtoupper($this->getSeedBean()->object_name).'_offset'];
+            if(isset($_REQUEST[$module.'2_'.strtoupper($this->getSeedBean()->object_name).'_offset']))
+            {
+                $dashletOffset = $_REQUEST[$module.'2_'.strtoupper($this->getSeedBean()->object_name).'_offset'];
             }
         }
 
-        if ( !$this->isRefreshable ) {
+        if(!$this->isRefreshable)
+        {
             return '';
         }
-        if ( !empty($sugar_config['dashlet_auto_refresh_min']) && $sugar_config['dashlet_auto_refresh_min'] == -1 ) {
+        if(!empty($sugar_config['dashlet_auto_refresh_min'])
+        && $sugar_config['dashlet_auto_refresh_min'] == -1)
+        {
             return '';
         }
         $autoRefreshSS = new Sugar_Smarty();
@@ -351,10 +357,13 @@ abstract class DashletGenericChart extends Dashlet
         $autoRefreshSS->assign('dashletRefreshInterval', $this->getAutoRefresh());
         $autoRefreshSS->assign('url', "predefined_chart");
         $tpl = 'include/Dashlets/DashletGenericAutoRefresh.tpl';
-        if ( $_REQUEST['action'] == "DynamicAction" ) {
+        if($_REQUEST['action'] == "DynamicAction")
+        {
             $tpl = 'include/Dashlets/DashletGenericAutoRefreshDynamic.tpl';
         }
 
         return $autoRefreshSS->fetch($tpl);
     }
 }
+
+// vim: ts=4 sw=4 et

@@ -69,7 +69,8 @@ class PopupSmarty extends ListViewSmarty
     var $module;
     var $massUpdateData = '';
 
-    function PopupSmarty($seed, $module){
+    function PopupSmarty($seed, $module)
+    {
         parent::ListViewSmarty();
         $this->th = new TemplateHandler();
         $this->th->loadSmarty();
@@ -271,7 +272,7 @@ class PopupSmarty extends ListViewSmarty
     /*
      * Setup up the smarty template. we added an extra step here to add the order by from the popupdefs.
      */
-    function setup($file)
+    function setupPopup($file)
     {
         if(isset($this->_popupMeta))
         {

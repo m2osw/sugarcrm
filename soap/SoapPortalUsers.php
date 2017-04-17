@@ -116,16 +116,22 @@ function portal_login($portal_auth, $user_name, $application_name){
 /*
 this validates the session and starts the session;
 */
-function portal_validate_authenticated($session_id){
+function portal_validate_authenticated($session_id)
+{
     $old_error_reporting = error_reporting(0);
     session_id($session_id);
 
     // This little construct checks to see if the session validated
-    if(session_start()) {
+    if(session_start())
+    {
         $valid_session = true;
 
-		if(!empty($_SESSION['is_valid_session']) && $_SESSION['ip_address'] == query_client_ip() && $valid_session != null && ($_SESSION['type'] == 'contact' || $_SESSION['type'] == 'lead' || $_SESSION['type'] == 'portal')){
-			global $current_user;
+        if(!empty($_SESSION['is_valid_session'])
+        && $_SESSION['ip_address'] == query_client_ip()
+        && $valid_session != null
+        && ($_SESSION['type'] == 'contact' || $_SESSION['type'] == 'lead' || $_SESSION['type'] == 'portal'))
+        {
+            global $current_user;
             $current_user = new User();
             $current_user->retrieve($_SESSION['portal_id']);
             login_success();
@@ -133,9 +139,11 @@ function portal_validate_authenticated($session_id){
             return true;
         }
     }
+
     session_destroy();
     $GLOBALS['log']->fatal('SECURITY: The session ID is invalid');
     error_reporting($old_error_reporting);
+
     return false;
 }
 
@@ -376,64 +384,81 @@ function portal_set_entry($session,$module_name, $name_value_list){
     $is_update = false;
     $values_set = array();
 
-    foreach($name_value_list as $value){
-        if($value['name'] == 'id' && !empty($value['value'])) {
+    foreach($name_value_list as $value)
+    {
+        if($value['name'] == 'id' && !empty($value['value']))
+        {
             $seed->disable_row_level_security = true;
             $seed->retrieve($value['value']);
             $is_update = true;
             break;
         }
         $values_set[$value['name']] = $value['value'];
-        $seed->$value['name'] = $value['value'];
+        $seed->{$value['name']} = $value['value'];
     }
 
     // If it was an update, we have to set the values again
-    if($is_update) {
-        foreach($name_value_list as $value){
-            $seed->$value['name'] = $value['value'];
+    if($is_update)
+    {
+        foreach($name_value_list as $value)
+        {
+            $seed->{$value['name']} = $value['value'];
         }
     }
 
-    if(!isset($_SESSION['viewable'][$module_name])){
+    if(!isset($_SESSION['viewable'][$module_name]))
+    {
         $_SESSION['viewable'][$module_name] = array();
     }
 
-    if(!$is_update){
-        if(isset($_SESSION['assigned_user_id']) && (!key_exists('assigned_user_id', $values_set) || empty($values_set['assigned_user_id']))){
+    if(!$is_update)
+    {
+        if(isset($_SESSION['assigned_user_id'])
+        && (!key_exists('assigned_user_id', $values_set) || empty($values_set['assigned_user_id'])))
+        {
             $seed->assigned_user_id = $_SESSION['assigned_user_id'];
         }
-        if(isset($_SESSION['account_id']) && (!key_exists('account_id', $values_set) || empty($values_set['account_id']))){
+        if(isset($_SESSION['account_id'])
+        && (!key_exists('account_id', $values_set) || empty($values_set['account_id'])))
+        {
             $seed->account_id = $_SESSION['account_id'];
         }
         $seed->portal_flag = 1;
         $seed->portal_viewable = true;
     }
     $id = $seed->save();
-    set_module_in(array('in'=>"('".$GLOBALS['db']->quote($id)."')", 'list'=>array($id)), $module_name);
-    if($_SESSION['type'] == 'contact' && $module_name != 'Contacts' && !$is_update){
-        if($module_name == 'Notes'){
+    set_module_in(array('in' => "('".$GLOBALS['db']->quote($id)."')", 'list'=>array($id)), $module_name);
+    if($_SESSION['type'] == 'contact'
+    && $module_name != 'Contacts'
+    && !$is_update)
+    {
+        if($module_name == 'Notes')
+        {
             $seed->contact_id = $_SESSION['user_id'];
-            if(isset( $_SESSION['account_id'])){
+            if(isset( $_SESSION['account_id']))
+            {
                 $seed->parent_type = 'Accounts';
                 $seed->parent_id = $_SESSION['account_id'];
-
             }
             $id = $seed->save();
-        }else{
+        }
+        else
+        {
             $contact = new Contact();
             $contact->disable_row_level_security = TRUE;
             $contact->retrieve($_SESSION['user_id']);
             $seed->contact_id = $contact;
 
-            if(isset( $_SESSION['account_id'])){
+            if(isset( $_SESSION['account_id']))
+            {
                 $seed->account_id = $_SESSION['account_id'];
-
             }
             $seed->save_relationship_changes(false);
         }
     }
-    return array('id'=>$id, 'error'=>$error->get_soap_array());
 
+    return array('id'=>$id,
+                 'error'=>$error->get_soap_array());
 }
 
 
@@ -753,7 +778,8 @@ $server->register(
     array('return'=>'tns:error_value'),
     $NAMESPACE);
 
-function portal_set_newsletters($session, $subscribe_ids, $unsubscribe_ids){
+function portal_set_newsletters($session, $subscribe_ids, $unsubscribe_ids)
+{
     global  $beanList, $beanFiles;
 
     $error = new SoapError();
@@ -779,4 +805,4 @@ function portal_set_newsletters($session, $subscribe_ids, $unsubscribe_ids){
     return $error->get_soap_array();
 }
 
-?>
+// vim: ts=4 sw=4 et

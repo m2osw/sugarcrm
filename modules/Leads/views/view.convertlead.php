@@ -177,7 +177,7 @@ class ViewConvertLead extends SugarView
         //Switch up list depending on copy or move
         if($sugar_config['lead_conv_activity_opt'] == 'move')
         {
-            $smarty->assign('convertModuleListOptions', get_select_options_with_id(array('None'=>$app_strings['LBL_NONE'], 'Contacts' => $app_list_strings["moduleListSingular"]['Contacts']), ''));	
+            $smarty->assign('convertModuleListOptions', get_select_options_with_id(array('None'=>$app_strings['LBL_NONE'], 'Contacts' => $app_list_strings["moduleListSingular"]['Contacts']), ''));
         }
         else if($sugar_config['lead_conv_activity_opt'] == 'copy')
         {
@@ -248,7 +248,7 @@ class ViewConvertLead extends SugarView
                             $focus->$field = $this->focus->$tmp_field;
                         }
                         $focus->field_defs[$field]["type"] = "text";
-                    }    					
+                    }
                     else if (isset($this->focus->$field))
                     {
                         $focus->$field = $this->focus->$field;
@@ -465,7 +465,7 @@ class ViewConvertLead extends SugarView
                 $fieldDef = $beans['Contacts']->field_defs[$select];
                 if (!empty($fieldDef['id_name']) && !empty($_REQUEST[$fieldDef['id_name']]))
                 {
-                    $beans['Contacts']->$fieldDef['id_name'] = $_REQUEST[$fieldDef['id_name']];
+                    $beans['Contacts']->{$fieldDef['id_name']} = $_REQUEST[$fieldDef['id_name']];
                     $selects[$module] = $_REQUEST[$fieldDef['id_name']];
                     if (!empty($_REQUEST[$select]))
                     {
@@ -564,14 +564,14 @@ class ViewConvertLead extends SugarView
             $this->copyAddressFields($bean, $beans['Contacts']);
 
             $bean->save();
-            //if campaign id exists then there should be an entry in campaign_log table for the newly created contact: bug 44522	
+            //if campaign id exists then there should be an entry in campaign_log table for the newly created contact: bug 44522
             if (isset($lead->campaign_id) && $lead->campaign_id != null && $bean->object_name == "Contact")
             {
                 campaign_log_lead_or_contact_entry($lead->campaign_id, $lead, $beans['Contacts'], 'contact');
             }
         }
-        if (!empty($lead))
-        {	//Mark the original Lead converted
+        if(!empty($lead))
+        { //Mark the original Lead converted
             $lead->status = "Converted";
             $lead->converted = '1';
             $lead->in_workflow = true;
@@ -868,7 +868,7 @@ class ViewConvertLead extends SugarView
             {
                 $bean->id = create_guid();
                 $bean->new_with_id = true;
-                $contact->$fieldDef['id_name'] = $bean->id ;
+                $contact->{$fieldDef['id_name']} = $bean->id ;
                 if ($fieldDef['id_name'] != $select) {
                     $rname = isset($fieldDef['rname']) ? $fieldDef['rname'] : "";
                     if (!empty($rname) && isset($bean->$rname))

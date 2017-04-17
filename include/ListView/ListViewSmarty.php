@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,14 +35,12 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-
 require_once('include/ListView/ListViewDisplay.php');
-
-
 require_once('include/contextMenus/contextMenu.php');
 
-class ListViewSmarty extends ListViewDisplay{
 
+class ListViewSmarty extends ListViewDisplay
+{
 	var $data;
 	var $ss; // the smarty object
 	var $displayColumns;
@@ -246,4 +244,4 @@ class ListViewSmarty extends ListViewDisplay{
     }
 }
 
-?>
+// vim: ts=4 sw=4 et

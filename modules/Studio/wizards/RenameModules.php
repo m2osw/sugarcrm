@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -544,9 +544,11 @@ class RenameModules
         $linkedFields = $bean->get_linked_fields();
         foreach($linkedFields as $field => $defs)
         {
-            if ($bean->load_relationship($defs['name'])){
-                $relModule = $bean->$defs['name']->getRelatedModuleName();
-                if (in_array($relModule, $changedModules)) {
+            if($bean->load_relationship($defs['name']))
+            {
+                $relModule = $bean->{$defs['name']}->getRelatedModuleName();
+                if(in_array($relModule, $changedModules))
+                {
                     $defs['module'] = $relModule;
                     $arrayToRename[$field] = $defs;
                 }
