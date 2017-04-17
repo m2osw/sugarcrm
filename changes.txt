@@ -5,7 +5,7 @@
 * Made a few more files pass out test.sh script.
 * Fixed several inherited function parameters.
 * Fixed and end() call which had an inline array.
-* Fixed many more accesses of fields by name from an array (missing {})
+* Fixed many more accesses of fields by name from an array (missing {}).
 * Fixed many display() function declarations for widgets.
 * Fixed the call to display(), the last parameter is a bool.
 * Fixed the formatting of many files.
