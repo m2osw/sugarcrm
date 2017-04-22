@@ -45,13 +45,13 @@ class SugarWidgetFieldText extends SugarWidgetFieldVarchar
         parent::SugarWidgetFieldVarchar($layout_manager);
     }
 
-    function queryFilterEquals($layout_def)
+    function queryFilterEquals(&$layout_def)
     {
         return $this->reporter->db->convert($this->_get_column_select($layout_def), "text2char").
             " = ".$this->reporter->db->quoted($layout_def['input_name0']);
     }
 
-    function queryFilterNot_Equals_Str($layout_def)
+    function queryFilterNot_Equals_Str(&$layout_def)
     {
         $column = $this->_get_column_select($layout_def);
         return "($column IS NULL OR ". $this->reporter->db->convert($column, "text2char")." != ".

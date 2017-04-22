@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,8 +35,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-
-
+require_once "include/generic/SugarWidgets/SugarWidgetField.php";
 
 
 //TODO Rename this to edit link
@@ -45,34 +44,38 @@ class SugarWidgetSubPanelEditButton extends SugarWidgetField
     protected static $defs = array();
     protected static $edit_icon_html;
 
-	function displayHeaderCell($layout_def)
-	{
-		return '';
-	}
+    function displayHeaderCell($layout_def)
+    {
+        return '';
+    }
 
-	function displayList($layout_def)
-	{
-		global $app_strings;
+    function displayList($layout_def)
+    {
+        global $app_strings;
         global $subpanel_item_count;
-		$unique_id = $layout_def['subpanel_id']."_edit_".$subpanel_item_count; //bug 51512
 
-        if ($layout_def['EditView']) {
+        $unique_id = $layout_def['subpanel_id']."_edit_".$subpanel_item_count; //bug 51512
+
+        if($layout_def['EditView'])
+        {
 
             // @see SugarWidgetSubPanelTopButtonQuickCreate::get_subpanel_relationship_name()
             $relationship_name = '';
-            if (!empty($layout_def['linked_field'])) {
+            if(!empty($layout_def['linked_field']))
+            {
                 $relationship_name = $layout_def['linked_field'];
                 $bean = BeanFactory::getBean($layout_def['module']);
-                if (!empty($bean->field_defs[$relationship_name]['relationship'])) {
+                if(!empty($bean->field_defs[$relationship_name]['relationship']))
+                {
                     $relationship_name = $bean->field_defs[$relationship_name]['relationship'];
                 }
             }
 
             $handler = 'subp_nav(\'' . $layout_def['module'] . '\', \'' . $layout_def['fields']['ID'] . '\', \'e\', this';
-            if (!empty($relationship_name)) {
-                $handler .= ', \'' . $relationship_name . '\'';
-            }
-            $handler .= ');';
+                    if (!empty($relationship_name)) {
+                    $handler .= ', \'' . $relationship_name . '\'';
+                    }
+                    $handler .= ');';
 
             return '<a href="#" onmouseover="' . $handler . '" onfocus="' . $handler .
                 '" class="listViewTdToolsS1" id="' . $unique_id . '">' . $app_strings['LNK_EDIT'] . '</a>';
@@ -80,7 +83,6 @@ class SugarWidgetSubPanelEditButton extends SugarWidgetField
 
         return '';
     }
-
 }
 
-?>
+// vim: ts=4 sw=4 et

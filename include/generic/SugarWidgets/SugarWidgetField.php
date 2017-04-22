@@ -115,12 +115,12 @@ class SugarWidgetField extends SugarWidget
         $this->local_current_module = $_REQUEST['module'];
         $this->is_dynamic = true;
         // don't show sort links if name isn't defined
-        if ((empty($layout_def['name']) || (isset($layout_def['sortable']) && !$layout_def['sortable']))
+        if((empty($layout_def['name']) || (isset($layout_def['sortable']) && !$layout_def['sortable']))
         && !empty($layout_def['label']))
         {
             return $layout_def['label'];
         }
-        if(isset ($layout_def['sortable']) && !$layout_def['sortable'])
+        if(isset($layout_def['sortable']) && !$layout_def['sortable'])
         {
             return $this->displayHeaderCellPlain($layout_def);
         }
@@ -138,7 +138,8 @@ class SugarWidgetField extends SugarWidget
             $this->base_URL .= '&inline=true&to_pdf=true&action=SubPanelViewer&subpanel=';
         }
         $sort_by_name = $layout_def['name'];
-        if (isset ($layout_def['sort_by'])) {
+        if(isset ($layout_def['sort_by']))
+        {
             $sort_by_name = $layout_def['sort_by'];
         }
 
@@ -161,17 +162,21 @@ class SugarWidgetField extends SugarWidget
         $header_cell .= " ".$arrow_start.$arrow_end."</a>";
 
         return $header_cell;
-
     }
 
-    function displayList($layout_def) {
+    function displayList($layout_def)
+    {
         return $this->displayListPlain($layout_def);
     }
 
-    function displayListPlain($layout_def) {
+    function displayListPlain($layout_def)
+    {
         $value= $this->_get_list_value($layout_def);
-        if (isset($layout_def['widget_type']) && $layout_def['widget_type'] =='checkbox') {
-            if ($value != '' &&  ($value == 'on' || intval($value) == 1 || $value == 'yes'))
+        if(isset($layout_def['widget_type'])
+        && $layout_def['widget_type'] =='checkbox')
+        {
+            if($value != ''
+            &&  ($value == 'on' || intval($value) == 1 || $value == 'yes'))
             {
                 return "<input name='checkbox_display' class='checkbox' type='checkbox' disabled='true' checked>";
             }
@@ -183,33 +188,40 @@ class SugarWidgetField extends SugarWidget
     function _get_list_value(& $layout_def) 
     {
         $key = '';
-        if ( isset($layout_def['varname']) ) {
+        if(isset($layout_def['varname']))
+        {
             $key = strtoupper($layout_def['varname']);
         } 
-        else {
+        else
+        {
             $key = strtoupper($this->_get_column_alias($layout_def));
         }
 
-        if ( isset($layout_def['fields'][$key]) ) {
+        if(isset($layout_def['fields'][$key]))
+        {
             return $layout_def['fields'][$key];
         }
         
         return '';
     }
 
-    function & displayEditLabel($layout_def) {
+    function & displayEditLabel($layout_def)
+    {
         return '';
     }
 
-    function & displayEdit($layout_def) {
+    function & displayEdit($layout_def)
+    {
         return '';
     }
 
-    function & displaySearchLabel($layout_def) {
+    function & displaySearchLabel($layout_def)
+    {
         return '';
     }
 
-    function & displaySearch($layout_def) {
+    function & displaySearch($layout_def)
+    {
         return '';
     }
 

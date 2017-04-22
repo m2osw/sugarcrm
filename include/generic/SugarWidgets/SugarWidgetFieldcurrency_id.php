@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,6 +35,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+require_once "include/generic/SugarWidgets/SugarWidgetFieldenum.php";
+
 
 class SugarWidgetFieldcurrency_id extends SugarWidgetFieldEnum
 {
@@ -47,7 +49,8 @@ class SugarWidgetFieldcurrency_id extends SugarWidgetFieldEnum
     static public function getCurrenciesList($refresh = false)
     {
         static $list = false;
-        if ($list === false || $refresh == true)
+
+        if($list === false || $refresh == true)
         {
             $currency = new Currency();
             $list = $currency->get_full_list('name');
@@ -74,7 +77,7 @@ class SugarWidgetFieldcurrency_id extends SugarWidgetFieldEnum
     {
         static $currencies;
         $value = $this->_get_list_value($layout_def);
-        if (empty($currencies[$value]))
+        if(empty($currencies[$value]))
         {
             $currency = new Currency();
             $currency->retrieve($value);
@@ -93,13 +96,13 @@ class SugarWidgetFieldcurrency_id extends SugarWidgetFieldEnum
     {
         $tmpList = self::getCurrenciesList();
         $list = array();
-        foreach ($tmpList as $bean)
+        foreach($tmpList as $bean)
         {
             $list[$bean->id] = $bean->symbol . ' ' . $bean->iso4217;
         }
 
         $field_def = $this->reporter->all_fields[$layout_def['column_key']];
-        if (!empty ($field_def['sort_on']))
+        if(!empty ($field_def['sort_on']))
         {
             $order_by = $layout_def['table_alias'].".".$field_def['sort_on'];
         }
@@ -108,7 +111,8 @@ class SugarWidgetFieldcurrency_id extends SugarWidgetFieldEnum
             $order_by = $this->_get_column_select($layout_def);
         }
 
-        if (empty ($layout_def['sort_dir']) || $layout_def['sort_dir'] == 'a')
+        if(empty($layout_def['sort_dir'])
+        || $layout_def['sort_dir'] == 'a')
         {
             $order_dir = "ASC";
         }
@@ -119,3 +123,5 @@ class SugarWidgetFieldcurrency_id extends SugarWidgetFieldEnum
         return $this->reporter->db->orderByEnum($order_by, $list, $order_dir);
     }
 }
+
+// vim: ts=4 sw=4 et

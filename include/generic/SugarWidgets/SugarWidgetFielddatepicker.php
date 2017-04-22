@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -35,12 +35,12 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
-
+require_once "include/generic/SugarWidgets/SugarWidgetFielddatetime.php";
 
 
 class SugarWidgetFieldDatePicker extends SugarWidgetFieldDateTime
 {
-	function displayInput($layout_def)
+    function displayInput($layout_def)
     {
         global $timedate;
 
@@ -52,8 +52,14 @@ class SugarWidgetFieldDatePicker extends SugarWidgetFieldDateTime
 <input onblur="parseDate(this, '{$cal_dateformat}');" class="text" name="{$layout_def['name']}" size='12' maxlength='10' id='{$layout_def['name']}' value='{$value}'>
 <!--not_in_theme!--><img src="$jscalendarImage" alt="{$LBL_ENTER_DATE}" id="{$layout_def['name']}_trigger" align="absmiddle">
 <script type="text/javascript">
-Calendar.setup ({
-    inputField : "{$layout_def['name']}", ifFormat : "{$cal_dateformat}", showsTime : false, button : "{$layout_def['name']}_trigger", singleClick : true, step : 1, weekNumbers:false
+Calendar.setup({
+inputField: "{$layout_def['name']}",
+ifFormat: "{$cal_dateformat}",
+showsTime: false,
+button: "{$layout_def['name']}_trigger",
+singleClick: true,
+step: 1,
+weekNumbers:false
 });
 </script>
 EOHTML;
@@ -62,3 +68,5 @@ EOHTML;
     }
 }
 
+
+// vim: ts=4 sw=4 et

@@ -77,14 +77,16 @@ class SugarWidgetSubPanelTopSelectButton extends SugarWidgetSubPanelTopButton
             if( isset($this->button_properties['form_value'])) {
                 $this->value = $app_strings[$this->button_properties['form_value']];
             }
-            if( isset($this->button_properties['module'])) {
+            if(isset($this->button_properties['module']))
+            {
                 $this->module_name = $this->button_properties['module'];
             }
         }
 
-
         $focus = $layout_def['focus'];
-        if(ACLController::moduleSupportsACL($layout_def['module']) && !ACLController::checkAccess($layout_def['module'], 'list', true)){
+        if(ACLController::moduleSupportsACL($layout_def['module'])
+        && !ACLController::checkAccess($layout_def['module'], 'list', true))
+        {
             $button = ' <input type="button" name="' . $this->getWidgetId() . '" id="' . $this->getWidgetId() . '" class="button"' . "\n"
                 . ' title="' . $this->title . '"'
                 . ' value="' . $this->value . "\"\n"
@@ -94,7 +96,8 @@ class SugarWidgetSubPanelTopSelectButton extends SugarWidgetSubPanelTopButton
 
         //refresh the whole page after end of action?
         $refresh_page = 0;
-        if(!empty($layout_def['subpanel_definition']->_instance_properties['refresh_page'])){
+        if(!empty($layout_def['subpanel_definition']->_instance_properties['refresh_page']))
+        {
             $refresh_page = 1;
         }
 
@@ -102,7 +105,8 @@ class SugarWidgetSubPanelTopSelectButton extends SugarWidgetSubPanelTopButton
         $button_definition = $subpanel_definition->get_buttons();
 
         $subpanel_name = $subpanel_definition->get_name();
-        if (empty($this->module_name)) {
+        if(empty($this->module_name))
+        {
             $this->module_name = $subpanel_definition->get_module_name();
         }
         $link_field_name = $subpanel_definition->get_data_source_name(true);
@@ -157,19 +161,20 @@ class SugarWidgetSubPanelTopSelectButton extends SugarWidgetSubPanelTopButton
                 );
 
         // bugfix #57850 add marketing_id to the request data to allow filtering based on it
-        if (!empty($_REQUEST['mkt_id']))
+        if(!empty($_REQUEST['mkt_id']))
         {
             $popup_request_data['passthru_data']['marketing_id'] = $_REQUEST['mkt_id'];
         }
 
-        if (is_array($this->button_properties) && !empty($this->button_properties['add_to_passthru_data'])) 
+        if(is_array($this->button_properties) && !empty($this->button_properties['add_to_passthru_data'])) 
         {
             $popup_request_data['passthru_data']= array_merge($popup_request_data['passthru_data'],$this->button_properties['add_to_passthru_data']);
         }
 
-        if (is_array($this->button_properties) && !empty($this->button_properties['add_to_passthru_data']['return_type'])) {
-
-            if ($this->button_properties['add_to_passthru_data']['return_type']=='report') {
+        if(is_array($this->button_properties) && !empty($this->button_properties['add_to_passthru_data']['return_type']))
+        {
+            if($this->button_properties['add_to_passthru_data']['return_type']=='report')
+            {
                 $initial_filter = "&module_name=". urlencode($layout_def['module']);
             }
         }
