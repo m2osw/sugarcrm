@@ -640,12 +640,17 @@ abstract class DBManager
         $tablename = $bean->getTableName();
         $msg = "Error creating table: $tablename:";
         $this->query($sql,true,$msg);
-        if(!$this->supports("inline_keys")) {
+        if(!$this->supports("inline_keys"))
+        {
             // handle constraints and indices
             $indicesArr = $this->createConstraintSql($bean);
-            if (count($indicesArr) > 0)
-                foreach ($indicesArr as $indexSql)
+            if(count($indicesArr) > 0)
+            {
+                foreach($indicesArr as $indexSql)
+                {
                     $this->query($indexSql, true, $msg);
+                }
+            }
         }
     }
 
@@ -1546,16 +1551,20 @@ abstract class DBManager
      */
     public function quoteType($type, $value)
     {
-        if($type == 'date') {
+        if($type == 'date')
+        {
             return $this->convert($this->quoted($value), "date");
         }
-        if($type == 'time') {
+        if($type == 'time')
+        {
             return $this->convert($this->quoted($value), "time");
         }
-        if(isset($this->type_class[$type]) &&  $this->type_class[$type] == "date") {
+        if(isset($this->type_class[$type]) &&  $this->type_class[$type] == "date")
+        {
             return $this->convert($this->quoted($value), "datetime");
         }
-        if($this->isNumericType($type)) {
+        if($this->isNumericType($type))
+        {
             return 0+$value; // ensure it's numeric
         }
 
@@ -1572,7 +1581,8 @@ abstract class DBManager
      */
     public function arrayQuote(array &$array)
     {
-        foreach($array as &$val) {
+        foreach($array as &$val)
+        {
             $val = $this->quote($val);
         }
         return $array;
@@ -1585,10 +1595,12 @@ abstract class DBManager
      */
     protected function freeResult($result = false)
     {
-        if($result) {
+        if($result)
+        {
             $this->freeDbResult($result);
         }
-        if($this->lastResult) {
+        if($this->lastResult)
+        {
             $this->freeDbResult($this->lastResult);
             $this->lastResult = null;
         }
@@ -1617,17 +1629,24 @@ abstract class DBManager
     public function getOne($sql, $dieOnError = false, $msg = '')
     {
         $this->log->info("Get One: |$sql|");
-        if(!$this->hasLimit($sql)) {
+        if(!$this->hasLimit($sql))
+        {
             $queryresult = $this->limitQuery($sql, 0, 1, $dieOnError, $msg);
-        } else {
+        }
+        else
+        {
             // support old code that passes LIMIT to sql
             // works only for mysql, so do not rely on this
             $queryresult = $this->query($sql, $dieOnError, $msg);
         }
         $this->checkError($msg.' Get One Failed:' . $sql, $dieOnError);
-        if (!$queryresult) return false;
+        if(!$queryresult)
+        {
+            return false;
+        }
         $row = $this->fetchByAssoc($queryresult);
-        if(!empty($row)) {
+        if(!empty($row))
+        {
             return array_shift($row);
         }
         return false;
@@ -1769,11 +1788,18 @@ abstract class DBManager
      */
     public function concat($table, array $fields, $space = ' ')
     {
-        if(empty($fields)) return '';
+        if(empty($fields))
+        {
+            return '';
+        }
         $elems = array();
         $space = $this->quoted($space);
-        foreach ( $fields as $field ) {
-            if(!empty($elems)) $elems[] = $space;
+        foreach($fields as $field)
+        {
+            if(!empty($elems))
+            {
+                $elems[] = $space;
+            }
             $elems[] = $this->convert("$table.$field", 'IFNULL', array("''"));
         }
         $first = array_shift($elems);
