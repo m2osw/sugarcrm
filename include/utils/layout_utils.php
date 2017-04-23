@@ -330,18 +330,18 @@ function insert_popup_header(
 EOHTML;
     }
 
-    if (isset($sugar_config['meta_tags']) && isset($sugar_config['meta_tags']['IE_COMPAT_MODE']))
+    if(isset($sugar_config['meta_tags']) && isset($sugar_config['meta_tags']['IE_COMPAT_MODE']))
     {
         echo $sugar_config['meta_tags']['IE_COMPAT_MODE'];
     }
 
     echo "<title>{$app_strings['LBL_BROWSER_TITLE']}</title>" . $themeCSS;
-    if ($includeJS)
+    if($includeJS)
     {
         $charset = isset($app_strings['LBL_CHARSET']) ? $app_strings['LBL_CHARSET'] : $sugar_config['default_charset'];
-        echo '<meta http-equiv="Content-Type" content="text/html; charset="{$charset}">';
-        echo '<script type="text/javascript" src="' . getJSPath('cache/include/javascript/sugar_grp1_yui.js') . '"></script>';
-        echo '<script type="text/javascript" src="' . getJSPath('cache/include/javascript/sugar_grp1.js') . '"></script>';
+        echo '<meta http-equiv="Content-Type" content="text/html; charset="', $charset, '">';
+        echo '<script type="text/javascript" src="', getJSPath('cache/include/javascript/sugar_grp1_yui.js'), '"></script>';
+        echo '<script type="text/javascript" src="', getJSPath('cache/include/javascript/sugar_grp1.js'), '"></script>';
         echo '</head>';
     }
     echo  '<body class="popupBody">';

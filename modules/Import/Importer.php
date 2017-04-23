@@ -118,7 +118,7 @@ class Importer
         }
 
         // save mapping if requested
-        if ( isset($_REQUEST['save_map_as']) && $_REQUEST['save_map_as'] != '' )
+        if(isset($_REQUEST['save_map_as']) && $_REQUEST['save_map_as'] != '')
         {
             $this->saveMappingFile();
         }

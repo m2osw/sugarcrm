@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -287,22 +287,32 @@ function handleSave($prefix,$redirect=true,$useRequired=false) {
     if( (isset($_POST['isSaveFromDetailView']) && $_POST['isSaveFromDetailView'] == 'true') ||
         (isset($_POST['is_ajax_call']) && !empty($_POST['is_ajax_call']) && !empty($focus->id) ||
         (isset($_POST['return_action']) && $_POST['return_action'] == 'SubPanelViewer') && !empty($focus->id))
-    ){
+    )
+    {
         $focus->save(true);
         $return_id = $focus->id;
-    }else{
-
-        if($focus->status == 'Held' && $this->isEmptyReturnModuleAndAction() && !$this->isSaveFromDCMenu()){
+    }
+    else
+    {
+        if($focus->status == 'Held'
+        && $this->isEmptyReturnModuleAndAction()
+        && !$this->isSaveFromDCMenu())
+        {
     		//if we are closing the meeting, and the request does not have a return module AND return action set and it is not a save
             //being triggered by the DCMenu (shortcut bar) then the request is coming from a dashlet or subpanel close icon and there is no
             //need to process user invitees, just save the current values.
     		$focus->save(true);
-	    }else{
+	    }
+        else
+        {
 	    	///////////////////////////////////////////////////////////////////////////
 	    	////	REMOVE INVITEE RELATIONSHIPS
-	    	if(!empty($_POST['user_invitees'])) {
-	    	   $userInvitees = explode(',', trim($_POST['user_invitees'], ','));
-	    	} else {
+	    	if(!empty($_POST['user_invitees']))
+            {
+	    	   $userInvitees = explode(',', trim($_POST['user_invitees'], ', '));
+	    	}
+            else
+            {
 	    	   $userInvitees = array();
 	    	}
 
@@ -313,10 +323,14 @@ function handleSave($prefix,$redirect=true,$useRequired=false) {
 	    	$q = 'SELECT mu.user_id, mu.accept_status FROM calls_users mu WHERE mu.call_id = \''.$focus->id.'\'';
 	    	$r = $focus->db->query($q);
 	    	$acceptStatusUsers = array();
-	    	while($a = $focus->db->fetchByAssoc($r)) {
-	    		  if(!in_array($a['user_id'], $userInvitees)) {
+	    	while($a = $focus->db->fetchByAssoc($r))
+            {
+	    		  if(!in_array($a['user_id'], $userInvitees))
+                  {
 	    		  	 $deleteUsers[$a['user_id']] = $a['user_id'];
-	    		  } else {
+	    		  }
+                  else
+                  {
 	    		     $acceptStatusUsers[$a['user_id']] = $a['accept_status'];
 	    		  }
 	    	}
@@ -334,9 +348,12 @@ function handleSave($prefix,$redirect=true,$useRequired=false) {
 	    	}
 
 	        // Get all contacts for the call
-	    	if(!empty($_POST['contact_invitees'])) {
-	    	   $contactInvitees = explode(',', trim($_POST['contact_invitees'], ','));
-	    	} else {
+	    	if(!empty($_POST['contact_invitees']))
+            {
+	    	   $contactInvitees = explode(',', trim($_POST['contact_invitees'], ', '));
+	    	}
+            else
+            {
 	    	   $contactInvitees = array();
 	    	}
 

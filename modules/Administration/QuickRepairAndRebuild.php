@@ -463,6 +463,7 @@ class RepairAndClear
 	private function _getModuleNamePlural($module_name_singular)
 	{
 		global $beanList;
+		reset($beanList);
 		while ($curr_module = current($beanList))
 		{
 			if ($curr_module == $module_name_singular)

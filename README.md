@@ -27,26 +27,26 @@ The only changes I want to do are of three categories:
 I ran PHP directly in my console against all the classes and that tells me
 when there is a problem. I fixed many more functions that did not have
 the correct signature between base classes and derived classes. These may
-still happen, but it looks like it should be pretty good. This change
+still happen, but it looks like it should be quite rare now. This change
 involved (a few times) the renaming of some functions. This means I may
-have missed changing the name of the function from callers... that means
-it still won't work as expected.
+have missed changing the name of the function from callers... in other words,
+it could be that it still won't work as expected!
 
-As far as I'm concerned, I finish worked on the installation and it works
-as expected in "Custom" mode. I do not know about the other mode(s) as
-I'm not using them. The only quirk is the SugarCRM registration page which
-has a permission error, like I care.
+As far as I'm concerned, I finished work on the installation and it works
+as expected in "Custom" mode and MySQL. I do not know about the other
+mode(s) as I'm not using them. The only quirk is the SugarCRM registration
+page which has a permission error, like I care.
 
-Once installed, I get to the Dashboard as expected.
+Once installed, I get to the Dashboard as expected and can create/manage
+leads without problems. That included adding fields or options in a
+dropdown in the Admin/Studio area.
 
-That's it for now.
+I still have one issue which happens because some AJAX call does not
+want to include the proper JavaScript in some situations. I still need
+to understand which functions do not get called in those cases. You
+can see the issue details here:
 
-I will be working on the other pages, adding contacts, managing contacts,
-calendar, etc. It's a huge project so it make take some time before we
-have a version that is seemless.
-
-Note that at this point, if you are not a programmer, you may still find
-it rather difficult to install and use.
+https://github.com/m2osw/sugarcrm/issues/1
 
 # Help Wanted
 
