@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -59,7 +59,7 @@ class SubPanelTiles
 	var $hidden_tabs=array(); //consumer of this class can array of tabs that should be hidden. the tab name
 							//should be the array.
 
-	function SubPanelTiles(&$focus, $layout_def_key='', $layout_def_override = '')
+	function SubPanelTiles(&$focus, $layout_def_key = '', $layout_def_override = '')
 	{
 		$this->focus = $focus;
 		$this->id = $focus->id;
@@ -180,39 +180,42 @@ class SubPanelTiles
             //echo '<td width="100%">&nbsp;</td></tr></table>';
         }
         return $tabs;
-
     }
 
-	function display($showContainer = true, $forceTabless = false)
-	{
-		global $layout_edit_mode, $sugar_version, $sugar_config, $current_user, $app_strings;
-		if(isset($layout_edit_mode) && $layout_edit_mode){
-			return;
-		}
+    function display($showContainer = true, $forceTabless = false)
+    {
+        global $layout_edit_mode, $sugar_version, $sugar_config, $current_user, $app_strings;
 
-		global $modListHeader;
+        if(isset($layout_edit_mode)
+        && $layout_edit_mode)
+        {
+            return '';
+        }
 
-		ob_start();
-    echo '<script type="text/javascript" src="'. getJSPath('include/SubPanel/SubPanelTiles.js') . '"></script>';
+        global $modListHeader;
+
+        ob_start();
+        echo '<script type="text/javascript" src="'. getJSPath('include/SubPanel/SubPanelTiles.js') . '"></script>';
 ?>
 <script>
-if(document.DetailView != null &&
-   document.DetailView.elements != null &&
-   document.DetailView.elements.layout_def_key != null &&
-   typeof document.DetailView.elements['layout_def_key'] != 'undefined'){
-    document.DetailView.elements['layout_def_key'].value = '<?php echo $this->layout_def_key; ?>';
+if(document.DetailView!=null
+&& document.DetailView.elements!=null
+&& document.DetailView.elements.layout_def_key!=null
+&& typeof document.DetailView.elements['layout_def_key']!='undefined'){
+  document.DetailView.elements['layout_def_key'].value='<?php echo $this->layout_def_key; ?>';
 }
 </script>
 <?php
 
 		$tabs = array();
 		$default_div_display = 'inline';
-		if(!empty($sugar_config['hide_subpanels_on_login'])){
-			if(!isset($_SESSION['visited_details'][$this->focus->module_dir])){
+		if(!empty($sugar_config['hide_subpanels_on_login']))
+        {
+			if(!isset($_SESSION['visited_details'][$this->focus->module_dir]))
+            {
 				setcookie($this->focus->module_dir . '_divs', '');
 				unset($_COOKIE[$this->focus->module_dir . '_divs']);
 				$_SESSION['visited_details'][$this->focus->module_dir] = true;
-
 			}
 			$default_div_display = 'none';
 		}
@@ -221,7 +224,7 @@ if(document.DetailView != null &&
 
 		//Display the group header. this section is executed only if the tabbed interface is being used.
 		$current_key = '';
-		if (! empty($this->show_tabs))
+		if(!empty($this->show_tabs))
 		{
 			require_once('include/tabs.php');
     		$tab_panel = new SugarWidgetTabs($tabs, $current_key, 'showSubPanel');

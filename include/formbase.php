@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -51,14 +51,14 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  */
 function checkRequired($prefix, $required)
 {
-	foreach($required as $key)
-	{
-		if(!isset($_POST[$prefix.$key]) || number_empty($_POST[$prefix.$key]))
-		{
-			return false;
-		}
-	}
-	return true;
+    foreach($required as $key)
+    {
+        if(!isset($_POST[$prefix.$key]) || number_empty($_POST[$prefix.$key]))
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 /**
@@ -72,21 +72,23 @@ function checkRequired($prefix, $required)
  */
 function populateFromPost($prefix, &$focus, $skipRetrieve = false, $checkACL = false)
 {
-	global $current_user;
+    global $current_user;
 
-	if(!empty($_REQUEST[$prefix.'record']) && !$skipRetrieve)
+    if(!empty($_REQUEST[$prefix.'record'])
+            && !$skipRetrieve)
     {
-		$focus->retrieve($_REQUEST[$prefix.'record']);
+        $focus->retrieve($_REQUEST[$prefix.'record']);
     }
 
-	if(!empty($_POST['assigned_user_id']) && 
-	    ($focus->assigned_user_id != $_POST['assigned_user_id']) && 
-	    ($_POST['assigned_user_id'] != $current_user->id)) {
-		$GLOBALS['check_notify'] = true;
-	}
+    if(!empty($_POST['assigned_user_id'])
+    && $focus->assigned_user_id != $_POST['assigned_user_id']
+    && $_POST['assigned_user_id'] != $current_user->id)
+    {
+        $GLOBALS['check_notify'] = true;
+    }
     require_once('include/SugarFields/SugarFieldHandler.php');
     $sfh = new SugarFieldHandler();
-   
+
     $isOwner = $focus->isOwner($current_user->id);
     $relatedFields = array();
     foreach ($focus->field_defs as $field => $def) {
@@ -102,15 +104,15 @@ function populateFromPost($prefix, &$focus, $skipRetrieve = false, $checkACL = f
         $relatedFields[$def['id_name']] = $field;
     }
 
-	foreach($focus->field_defs as $field=>$def) {
+    foreach($focus->field_defs as $field=>$def) {
         if ( $field == 'id' && !empty($focus->id) ) {
             // Don't try and overwrite the ID
             continue;
         }
 
 
-	    $type = !empty($def['custom_type']) ? $def['custom_type'] : $def['type'];
-		$sf = $sfh->getSugarField($type);
+        $type = !empty($def['custom_type']) ? $def['custom_type'] : $def['type'];
+        $sf = $sfh->getSugarField($type);
         if($sf != null)
         {
             $sf->save($focus, $_POST, $field, $def, $prefix);
@@ -120,46 +122,46 @@ function populateFromPost($prefix, &$focus, $skipRetrieve = false, $checkACL = f
             $GLOBALS['log']->fatal("Field '$field' does not have a SugarField handler");
         }
 
-/*
+        /*
+           if(isset($_POST[$prefix.$field])) {
+           if(is_array($_POST[$prefix.$field]) && !empty($focus->field_defs[$field]['isMultiSelect'])) {
+           if($_POST[$prefix.$field][0] === '' && !empty($_POST[$prefix.$field][1]) ) {
+           unset($_POST[$prefix.$field][0]);
+           }
+           $_POST[$prefix.$field] = encodeMultienumValue($_POST[$prefix.$field]);	
+           }
+
+           $focus->$field = $_POST[$prefix.$field];
+        /* 
+         * overrides the passed value for booleans.
+         * this will be fully deprecated when the change to binary booleans is complete.
+         /
+         if(isset($focus->field_defs[$prefix.$field]) && $focus->field_defs[$prefix.$field]['type'] == 'bool' && isset($focus->field_defs[$prefix.$field]['options'])) {
+         $opts = explode("|", $focus->field_defs[$prefix.$field]['options']);
+         $bool = $_POST[$prefix.$field];
+
+         if(is_int($bool) || ($bool === "0" || $bool === "1" || $bool === "2")) {
+        // 1=on, 2=off
+        $selection = ($_POST[$prefix.$field] == "0") ? 1 : 0;
+        } elseif(is_bool($_POST[$prefix.$field])) {
+        // true=on, false=off
+        $selection = ($_POST[$prefix.$field]) ? 0 : 1;
+        }
+        $focus->$field = $opts[$selection];
+        }
+        } else if(!empty($focus->field_defs[$field]['isMultiSelect']) && !isset($_POST[$prefix.$field]) && isset($_POST[$prefix.$field . '_multiselect'])) {
+        $focus->$field = '';
+        }
+         */
+    }
+
+    foreach($focus->additional_column_fields as $field) {
         if(isset($_POST[$prefix.$field])) {
-			if(is_array($_POST[$prefix.$field]) && !empty($focus->field_defs[$field]['isMultiSelect'])) {
-				if($_POST[$prefix.$field][0] === '' && !empty($_POST[$prefix.$field][1]) ) {
-					unset($_POST[$prefix.$field][0]);
-				}
-				$_POST[$prefix.$field] = encodeMultienumValue($_POST[$prefix.$field]);	
-			}
-
-			$focus->$field = $_POST[$prefix.$field];
-			/* 
-			 * overrides the passed value for booleans.
-			 * this will be fully deprecated when the change to binary booleans is complete.
-			 /
-			if(isset($focus->field_defs[$prefix.$field]) && $focus->field_defs[$prefix.$field]['type'] == 'bool' && isset($focus->field_defs[$prefix.$field]['options'])) {
-				$opts = explode("|", $focus->field_defs[$prefix.$field]['options']);
-				$bool = $_POST[$prefix.$field];
-
-				if(is_int($bool) || ($bool === "0" || $bool === "1" || $bool === "2")) {
-					// 1=on, 2=off
-					$selection = ($_POST[$prefix.$field] == "0") ? 1 : 0;
-				} elseif(is_bool($_POST[$prefix.$field])) {
-					// true=on, false=off
-					$selection = ($_POST[$prefix.$field]) ? 0 : 1;
-				}
-				$focus->$field = $opts[$selection];
-			}
-		} else if(!empty($focus->field_defs[$field]['isMultiSelect']) && !isset($_POST[$prefix.$field]) && isset($_POST[$prefix.$field . '_multiselect'])) {
-			$focus->$field = '';
-		}
-*/
-	}
-
-	foreach($focus->additional_column_fields as $field) {
-		if(isset($_POST[$prefix.$field])) {
-			$value = $_POST[$prefix.$field];
-			$focus->$field = $value;
-		}
-	}
-	return $focus;
+            $value = $_POST[$prefix.$field];
+            $focus->$field = $value;
+        }
+    }
+    return $focus;
 }
 
 function add_hidden_elements($key, $value)
@@ -413,16 +415,18 @@ function add_to_prospect_list($query_panel,$parent_module,$parent_type,$parent_i
     $GLOBALS['log']->debug('add_prospects_to_prospect_list:parameters:'.$link_type);
     require_once('include/SubPanel/SubPanelTiles.php');
 
-
-    if (!class_exists($parent_type)) {
+    if(!class_exists($parent_type))
+    {
         require_once('modules/'.cleanDirName($parent_module).'/'.cleanDirName($parent_type).'.php');
     }
     $focus = new $parent_type();
     $focus->retrieve($parent_id);
-    if(empty($focus->id)) {
+    if(empty($focus->id))
+    {
         return false;
     }
-    if(empty($parent)) {
+    if(empty($parent))
+    {
         return false;
     }
 
@@ -432,27 +436,33 @@ function add_to_prospect_list($query_panel,$parent_module,$parent_type,$parent_i
     //find all prospects based on the query
 
     $subpanel = new SubPanelTiles($parent, $parent->module_dir);
-    $thisPanel=$subpanel->subpanel_definitions->load_subpanel($query_panel);
-    if(empty($thisPanel)) {
+    $thisPanel = $subpanel->subpanel_definitions->load_subpanel($query_panel);
+    if(empty($thisPanel))
+    {
         return false;
     }
 
     // bugfix #57850  filter prospect list based on marketing_id (if it's present)
-    if (isset($_REQUEST['marketing_id']) && $_REQUEST['marketing_id'] != 'all')
+    if(isset($_REQUEST['marketing_id'])
+            && $_REQUEST['marketing_id'] != 'all')
     {
         $thisPanel->_instance_properties['function_parameters']['EMAIL_MARKETING_ID_VALUE'] = $_REQUEST['marketing_id'];
     }
 
     $result = SugarBean::get_union_related_list($parent, '', '', '', 0, -99,-99,'', $thisPanel);
 
-    if(!empty($result['list'])) {
-        foreach($result['list'] as $object) {
-            if ($link_type != 'default') {
-                $relationship_attribute=strtolower($object->$link_attribute);
+    if(!empty($result['list']))
+    {
+        foreach($result['list'] as $object)
+        {
+            if($link_type != 'default')
+            {
+                $relationship_attribute = strtolower($object->$link_attribute);
             }
             $GLOBALS['log']->debug('add_prospects_to_prospect_list:relationship_attribute:'.$relationship_attribute);
             // load relationship for the first time or on change of relationship atribute.
-            if (empty($focus->$relationship_attribute)) {
+            if(empty($focus->$relationship_attribute))
+            {
                 $focus->load_relationship($relationship_attribute);
             }
             //add
@@ -464,8 +474,7 @@ function add_to_prospect_list($query_panel,$parent_module,$parent_type,$parent_i
 //Link rows returned by a report to parent record.
 function save_from_report($report_id,$parent_id, $module_name, $relationship_attr_name)
 {
-    global $beanFiles;
-    global $beanList;
+    global $beanFiles, $beanList;
 
     $GLOBALS['log']->debug("Save2: Linking with report output");
     $GLOBALS['log']->debug("Save2:Report ID=".$report_id);
@@ -483,7 +492,6 @@ function save_from_report($report_id,$parent_id, $module_name, $relationship_att
     global $current_language, $report_modules, $modules_report;
 
     $mod_strings = return_module_language($current_language,"Reports");
-
 
     $saved = new SavedReport();
     $saved->disable_row_level_security = true;

@@ -277,7 +277,7 @@ class ListView
         //Either retrieve the is_fill_in_additional_fields property from the lone
         //subpanel or visit each subpanel's subpanels to retrieve the is_fill_in_addition_fields
         //property
-        $subpanel_list=array();
+        $subpanel_list = array();
         if($subpanel_def->isCollection()) {
             $subpanel_list=$subpanel_def->sub_subpanels;
         } else {
@@ -1431,13 +1431,17 @@ of: \$(el)
                         $this->response = $response;
                     }
                     //if query is present, then pass it in as parameter
-                    if (isset($response['query']) && !empty($response['query'])){
+                    if(isset($response['query']) && !empty($response['query']))
+                    {
                         $html_text .= $subpanelTiles->get_buttons($subpanel_def, $response['query']);
-                    }else{
+                    }
+                    else
+                    {
                         $html_text .= $subpanelTiles->get_buttons($subpanel_def);
                     }
                 }
-                else {
+                else
+                {
                     $html_text .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td align=\"left\"  nowrap>$select_link&nbsp;$export_link&nbsp;$delete_link&nbsp;$selected_objects_span";
                 }
                 $html_text .= "</td>\n<td nowrap align=\"right\">".$start_link."&nbsp;&nbsp;".$previous_link."&nbsp;&nbsp;<span class='pageNumbers'>(".$start_record." - ".$end_record." ".$this->local_app_strings['LBL_LIST_OF']." ".$row_count.")</span>&nbsp;&nbsp;".$next_link."&nbsp;&nbsp;".$end_link."</td></tr></table>\n";

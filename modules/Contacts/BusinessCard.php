@@ -1,5 +1,5 @@
 <?php
-if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__);
+if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE__);
 /*********************************************************************************
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
@@ -40,7 +40,6 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * Description:  Business Card Wizard
  * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
  * All Rights Reserved.
- * Contributor(s): ______________________________________..
  ********************************************************************************/
  
 global $app_strings;
@@ -51,8 +50,10 @@ global $theme;
 $error_msg = '';
 global $current_language;
 $mod_strings = return_module_language($current_language, 'Contacts');
-echo getClassicModuleTitle($mod_strings['LBL_MODULE_NAME'], array($mod_strings['LBL_MODULE_NAME'],$mod_strings['LBL_BUSINESSCARD']), true); 
-$xtpl=new XTemplate ('modules/Contacts/BusinessCard.html');
+echo getClassicModuleTitle($mod_strings['LBL_MODULE_NAME'],
+                           array($mod_strings['LBL_MODULE_NAME'], $mod_strings['LBL_BUSINESSCARD']),
+			   true); 
+$xtpl = new XTemplate ('modules/Contacts/BusinessCard.html');
 $xtpl->assign("MOD", $mod_strings);
 $xtpl->assign("APP", $app_strings);
 $xtpl->assign("PRINT_URL", "index.php?".$GLOBALS['request_string']);
@@ -60,24 +61,28 @@ $xtpl->assign("PRINT_URL", "index.php?".$GLOBALS['request_string']);
 $xtpl->assign("HEADER", $mod_strings['LBL_ADD_BUSINESSCARD']);
 
 $xtpl->assign("MODULE", $_REQUEST['module']);
-if ($error_msg != '')
+if($error_msg != '')
 {
 	$xtpl->assign("ERROR", $error_msg);
 	$xtpl->parse("main.error");
 }
 
-if(isset($_POST['handle']) && $_POST['handle'] == 'Save'){
-	
+if(isset($_POST['handle'])
+&& $_POST['handle'] == 'Save')
+{
 	require_once('modules/Contacts/ContactFormBase.php');
 	$contactForm = new ContactFormBase();
+
 	require_once('modules/Accounts/AccountFormBase.php');
 	$accountForm = new AccountFormBase();
-	
+
 	require_once('modules/Opportunities/OpportunityFormBase.php');
 	$oppForm = new OpportunityFormBase();
-	if(!isset($_POST['selectedContact']) && !isset($_POST['ContinueContact'])){
+	if(!isset($_POST['selectedContact']) && !isset($_POST['ContinueContact']))
+	{
 		$duplicateContacts = $contactForm->checkForDuplicates('Contacts');
-		if(isset($duplicateContacts)){
+		if(isset($duplicateContacts))
+		{
 			$formBody = $contactForm->buildTableForm($duplicateContacts);
 			$xtpl->assign('FORMBODY', $formBody);
 			$xtpl->parse('main.formnoborder');
@@ -86,8 +91,9 @@ if(isset($_POST['handle']) && $_POST['handle'] == 'Save'){
 			return;
 		}
 	}
-	
-	if(empty($_POST['selectedAccount']) && empty($_POST['ContinueAccount'])){
+
+	if(empty($_POST['selectedAccount']) && empty($_POST['ContinueAccount']))
+	{
 		$duplicateAccounts = $accountForm->checkForDuplicates('Accounts');
 		
 		if(isset($duplicateAccounts)){
@@ -364,4 +370,6 @@ $xtpl->parse("main");
 $xtpl->out("main");
 
 }
-?>
+
+
+// vim: ts=4 sw=4 et

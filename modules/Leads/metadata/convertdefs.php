@@ -40,8 +40,8 @@ $viewdefs['Contacts']['ConvertLead'] = array(
     'select' => "report_to_name",
     'default_action' => 'create',
     'templateMeta' => array(
-        'form'=>array(
-            'hidden'=>array(
+        'form' => array(
+            'hidden' => array(
                 '<input type="hidden" name="opportunity_id" value="{$smarty.request.opportunity_id}">',
     			'<input type="hidden" name="case_id" value="{$smarty.request.case_id}">',
     			'<input type="hidden" name="bug_id" value="{$smarty.request.bug_id}">',
@@ -49,7 +49,7 @@ $viewdefs['Contacts']['ConvertLead'] = array(
     			'<input type="hidden" name="inbound_email_id" value="{$smarty.request.inbound_email_id}">'
             )
         ),
-		'maxColumns' => '2', 
+        'maxColumns' => '2', 
         'widths' => array(
             array('label' => '10', 'field' => '30'), 
             array('label' => '10', 'field' => '30'),
@@ -189,10 +189,16 @@ $viewdefs['Notes']['ConvertLead'] = array(
     'panels' =>array (
         'LNK_NEW_NOTE' => array (
             array (
-                array('name'=>'name', 'displayParams'=>array('size'=>90)),
+                array(
+                    'name'=>'name',
+                    'displayParams' => array('size' => 90),
+                ),
             ), 
             array (
-                array('name' => 'description', 'displayParams' => array('rows'=>10, 'cols'=>90) ),
+                array(
+                    'name' => 'description',
+                    'displayParams' => array('rows' => 10, 'cols' => 90),
+                ),
             ),
         )
     ),
@@ -280,11 +286,11 @@ $viewdefs['Meetings']['ConvertLead'] = array(
     'panels' =>array (
         'LNK_NEW_MEETING' => array (
             array (
-                array('name'=>'name', 'displayParams'=>array('size'=>90)),
+                array('name'=>'name', 'displayParams' => array('size' => 90)),
             ), 
-            array (
+            array(
                'date_start', 
-	            array (
+                array(
                     'name' => 'duration_hours',
                     'label' => 'LBL_DURATION',
                     'customCode' => '{literal}
@@ -303,13 +309,16 @@ $viewdefs['Meetings']['ConvertLead'] = array(
 {html_options name="Meetingsduration_minutes" options=$minutes_values selected=$fields.duration_minutes.value} &nbsp;
 <span class="dateFormat">{sugar_translate label="LBL_HOURS_MINUTES" module="Calls"}',
                     'displayParams' => 
-                    array (
+                    array(
                       'required' => true,
                     ),
                 ),
             ),
-            array (
-                array('name' => 'description', 'displayParams' => array('rows'=>10, 'cols'=>90) ),
+            array(
+                array(
+                    'name' => 'description',
+                    'displayParams' => array('rows' => 10, 'cols' => 90)
+                ),
             ),
         )
     ),
@@ -334,21 +343,25 @@ $viewdefs['Tasks']['ConvertLead'] = array(
             array('label' => '10', 'field' => '30'),
         ),
     ),
-    'panels' =>array (
-        'LNK_NEW_TASK' => array (
-            array (
-                array('name'=>'name', 'displayParams'=>array('size'=>90)),
+    'panels' => array(
+        'LNK_NEW_TASK' => array(
+            array(
+                array(
+                    'name'=>'name',
+                    'displayParams' => array('size' => 90),
+                ),
             ), 
-			array (
+            array(
                'status', 'priority'
             ), 
-            
-            array (
-                array('name' => 'description', 'displayParams' => array('rows'=>10, 'cols'=>90) ),
+            array(
+                array(
+                    'name' => 'description',
+                    'displayParams' => array('rows' => 10, 'cols' => 90)
+                ),
             ),
         )
     ),
 );
 
-
-?>
+// vim: ts=4 sw=4 et
