@@ -3107,8 +3107,8 @@ textarea
 /* for the main screen navigation tabs */
 #moduleList 
 {
-    background-image : url('../../../../index.php?entryPoint=getImage&imageName=tabRowBg.gif');
-    background-repeat: repeat-x;
+    /*background-image : url('../../../../index.php?entryPoint=getImage&imageName=tabRowBg.gif');
+    background-repeat: repeat-x;*/
     border-bottom-color: #0046ad;
 }
 #moduleList > ul > li
