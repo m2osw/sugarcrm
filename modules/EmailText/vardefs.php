@@ -44,4 +44,7 @@ if(file_exists('custom/metadata/emails_beansMetaData.php')) {
 } else {
   require_once('metadata/emails_beansMetaData.php');
 }
+
+$dictionary = (array) $dictionary;
+
 $dictionary['EmailText'] = $dictionary['emails_text'];

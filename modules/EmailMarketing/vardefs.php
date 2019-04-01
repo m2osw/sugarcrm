@@ -35,6 +35,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+$dictionary = (array) $dictionary;
 
 $dictionary['EmailMarketing'] = array('table' => 'email_marketing'
                                ,'fields' => array (

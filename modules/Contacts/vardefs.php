@@ -38,6 +38,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE
 require_once "include/SugarObjects/VardefManager.php";
 require_once "include/SugarObjects/LanguageManager.php";
 
+$dictionary = (array) $dictionary;
 
 $dictionary['Contact'] = array('table' => 'contacts', 'audited'=>true,
 

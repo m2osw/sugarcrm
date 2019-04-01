@@ -34,6 +34,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * technical reasons, the Appropriate Legal Notices must display the words
  * "Powered by SugarCRM".
  ********************************************************************************/
+$dictionary = (array) $dictionary;
 
 $dictionary['Campaign'] = array ('audited'=>true,
 	'comment' => 'Campaigns are a series of operations undertaken to accomplish a purpose, usually acquiring leads',

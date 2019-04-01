@@ -2,3 +2,7 @@ install.log
 proxy.log
 testfile.txt
 testfile-small.txt
+cache/
+custom/
+upload/
+.htaccess

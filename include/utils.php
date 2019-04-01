@@ -3710,6 +3710,11 @@ function appendPortToHost($url, $port)
  */
 function getJSONobj() {
 	static $json = null;
+
+    if (!defined('JSON_LOOSE_TYPE')) {
+        define('JSON_LOOSE_TYPE', null);
+    }
+
 	if(!isset($json)) {
 		require_once('include/JSON.php');
 		$json = new JSON(JSON_LOOSE_TYPE);

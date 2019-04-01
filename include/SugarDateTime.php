@@ -645,7 +645,7 @@ class SugarDateTime extends DateTime
      * @param int $sec
      * @return SugarDateTime
      */
-    public function setTime($hour, $minute, $sec = 0)
+    public function setTime($hour, $minute, $sec=0, $microseconds=0)
     {
         parent::setTime($hour, $minute, $sec);
         return $this;
