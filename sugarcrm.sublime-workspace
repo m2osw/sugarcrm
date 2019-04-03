@@ -1,0 +1,1050 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"error",
+				"error_log"
+			],
+			[
+				"seat",
+				"seatVotes"
+			],
+			[
+				"no",
+				"nowrap"
+			],
+			[
+				"view",
+				"viewsets\tmodule"
+			],
+			[
+				"model",
+				"models\tmodule"
+			],
+			[
+				"ele",
+				"electoral\tmodule"
+			],
+			[
+				"templ",
+				"template_name\tstatement"
+			],
+			[
+				"Cue",
+				"CuentaKey\tclass"
+			],
+			[
+				"ap",
+				"apellidos"
+			],
+			[
+				"menu",
+				"menu_id\tparam"
+			],
+			[
+				"mode",
+				"module_name\tparam"
+			],
+			[
+				"par",
+				"parent_key\tparam"
+			],
+			[
+				"Mana",
+				"MenuManager\tclass"
+			],
+			[
+				"Gene",
+				"GenericMenu\tclass"
+			],
+			[
+				"Re",
+				"RenderableMenu\tclass"
+			],
+			[
+				"get_",
+				"get_renderable_menu\tfunction"
+			],
+			[
+				"none",
+				"None\tinstance"
+			],
+			[
+				"con",
+				"configure_parent\tfunction"
+			],
+			[
+				"co",
+				"configure_parents"
+			],
+			[
+				"appe",
+				"append_child\tfunction"
+			],
+			[
+				"Pare",
+				"parent_key\tparam"
+			],
+			[
+				"pa",
+				"parent_key\tparam"
+			],
+			[
+				"chi",
+				"child\tparam"
+			],
+			[
+				"se",
+				"search_by_key\tfunction"
+			],
+			[
+				"regi",
+				"register_module\tfunction"
+			],
+			[
+				"is",
+				"isinstance\tfunction"
+			],
+			[
+				"Gen",
+				"GenericMenu\tclass"
+			],
+			[
+				"de",
+				"debug\tmodule"
+			],
+			[
+				"line",
+				"line_number\tstatement"
+			],
+			[
+				"nONE",
+				"None\tinstance"
+			],
+			[
+				"noN",
+				"None\tinstance"
+			],
+			[
+				"it",
+				"item_menu_class\tparam"
+			],
+			[
+				"class",
+				"classmethod\tclass"
+			],
+			[
+				"Ge",
+				"GenericMenu\tclass"
+			],
+			[
+				"abtr",
+				"abstract_childs\tstatement"
+			],
+			[
+				"Abtr",
+				"AbstractList\tclass"
+			],
+			[
+				"non",
+				"None\tinstance"
+			],
+			[
+				"pk",
+				"pk_var\tstatement"
+			],
+			[
+				"opt",
+				"oprint\tfunction"
+			],
+			[
+				"as",
+				"as_view\tfunction"
+			],
+			[
+				"req",
+				"request\tparam"
+			],
+			[
+				"dele",
+				"delete_view"
+			],
+			[
+				"rende",
+				"render_list\tstatement"
+			],
+			[
+				"render",
+				"render_item\tstatement"
+			],
+			[
+				"get",
+				"get_saldo\tfunction"
+			],
+			[
+				"cac",
+				"cached_property\tclass"
+			],
+			[
+				"ejerc",
+				"Ejercicio\tclass"
+			],
+			[
+				"Cuenta",
+				"CuentaCache\tclass"
+			],
+			[
+				"fecha",
+				"fecha_inicio_actualizacion\tstatement"
+			],
+			[
+				"im",
+				"imputacion"
+			],
+			[
+				"fech",
+				"fecha_inicio_actualizacion\tstatement"
+			],
+			[
+				"uni",
+				"unique"
+			],
+			[
+				"Date",
+				"DateField\tclass"
+			],
+			[
+				"cuentacache",
+				"cuentacache_set"
+			],
+			[
+				"__has",
+				"__has_changed\tfunction"
+			],
+			[
+				"Reporte",
+				"ReporteData"
+			],
+			[
+				"es",
+				"es_actual\tfunction"
+			],
+			[
+				"index",
+				"index_movimiento\tstatement"
+			],
+			[
+				"th",
+				"th\tTag"
+			],
+			[
+				"Report",
+				"ReporteData\tclass"
+			],
+			[
+				"cuen",
+				"cuentas_list\tstatement"
+			],
+			[
+				"busca",
+				"buscar_cuentas\tfunction"
+			],
+			[
+				"busc",
+				"buscar_cuentas\tfunction"
+			],
+			[
+				"cu",
+				"cuenta_template\tparam"
+			],
+			[
+				"Che",
+				"CharField\tclass"
+			],
+			[
+				"fec",
+				"fecha_fin\tparam"
+			],
+			[
+				"codigo",
+				"codigos_list\tstatement"
+			],
+			[
+				"cuenta",
+				"cuenta_template\tparam"
+			],
+			[
+				"repo",
+				"reporte_template\tstatement"
+			],
+			[
+				"cue",
+				"cuentadata_set"
+			],
+			[
+				"in",
+				"index_actualizacion"
+			],
+			[
+				"registro",
+				"registroasiento_set"
+			],
+			[
+				"Pa",
+				"PartidaDoble\tclass"
+			],
+			[
+				"Repor",
+				"ReportTemplate\tclass"
+			],
+			[
+				"Fo",
+				"ForeignKey\tclass"
+			],
+			[
+				"date",
+				"DateField\tclass"
+			],
+			[
+				"CUenta",
+				"CuentaKey\tclass"
+			],
+			[
+				"exe",
+				"except"
+			],
+			[
+				"Nomr",
+				"NormalizeKey"
+			],
+			[
+				"len",
+				"max_length"
+			],
+			[
+				"No",
+				"NormalizeKey\tfunction"
+			],
+			[
+				"Cuen",
+				"CuentaKey"
+			],
+			[
+				"e",
+				"estructura\tstatement"
+			],
+			[
+				"Nor",
+				"NormalizeKey"
+			],
+			[
+				"pop",
+				"popup_template\tstatement"
+			],
+			[
+				"ex",
+				"exceptions\tmodule"
+			],
+			[
+				"deven",
+				"devengar_aportes\tfunction"
+			],
+			[
+				"cre",
+				"create_view"
+			],
+			[
+				"rever",
+				"reverse_lazy"
+			],
+			[
+				"tem",
+				"template_ods_name\tstatement"
+			],
+			[
+				"obje",
+				"objects"
+			],
+			[
+				"Cli",
+				"ClienteList\tclass"
+			],
+			[
+				"Ca",
+				"CampoRequerido\tclass"
+			],
+			[
+				"fil",
+				"filter_fields\tstatement"
+			],
+			[
+				"reve",
+				"reverse_lazy\tfunction"
+			],
+			[
+				"url",
+				"url_list"
+			],
+			[
+				"modu",
+				"module_name\tparam"
+			],
+			[
+				"reg",
+				"register_manager\tstatement"
+			],
+			[
+				"mana",
+				"manager\tmodule"
+			],
+			[
+				"Promo",
+				"PromoList\tclass"
+			],
+			[
+				"re",
+				"register_menu\tfunction"
+			],
+			[
+				"ci",
+				"clientes\tstatement"
+			],
+			[
+				"Lis",
+				"ListView"
+			],
+			[
+				"fie",
+				"field_names\tstatement"
+			],
+			[
+				"fiel",
+				"field_object"
+			],
+			[
+				"true",
+				"True\tinstance"
+			],
+			[
+				"cap",
+				"captcha_on\tparam"
+			],
+			[
+				"requ",
+				"required"
+			],
+			[
+				"Dat",
+				"DatosCupon\tclass"
+			],
+			[
+				"col",
+				"col-xs-12"
+			],
+			[
+				"widt",
+				"width"
+			],
+			[
+				"status",
+				"status_code\tstatement"
+			],
+			[
+				"pr",
+				"print\tkeyword"
+			],
+			[
+				"cle",
+				"cleaned_data"
+			],
+			[
+				"max",
+				"max_length"
+			],
+			[
+				"clean",
+				"cleaned_data\tstatement"
+			],
+			[
+				"vali",
+				"validate_reuired\tfunction"
+			],
+			[
+				"compra",
+				"compra_numero_serie\tstatement"
+			],
+			[
+				"on",
+				"onchange\tAttr"
+			],
+			[
+				"unique",
+				"unique_together"
+			],
+			[
+				"obj",
+				"objects"
+			],
+			[
+				"NO",
+				"None\tinstance"
+			],
+			[
+				"C",
+				"ChoiceField\tclass"
+			],
+			[
+				"min",
+				"min_value\tparam"
+			],
+			[
+				"promo",
+				"promo_id\tparam"
+			],
+			[
+				"generic",
+				"generic_views\tmodule"
+			],
+			[
+				"pro",
+				"promo"
+			],
+			[
+				"Inte",
+				"IntegerField\tclass"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 132.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: in",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ins",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: li",
+				"Package Control: List Unmanaged Packages"
+			],
+			[
+				"Package Control: l",
+				"Package Control: List Packages"
+			],
+			[
+				"Package Control: en",
+				"Package Control: Enable Package"
+			],
+			[
+				"Package Control: i",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"in",
+				"Package Control: Install Package"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"remo",
+				"Package Control: Remove Package"
+			],
+			[
+				"pack",
+				"Preferences: Browse Packages"
+			],
+			[
+				"repo",
+				"Preferences: Browse Packages"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 139.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/fernando/workspace/sugarcrm"
+	],
+	"file_history":
+	[
+		"/home/fernando/workspace/sugarcrm/.gitignore",
+		"/var/www/sugarcrm/.gitignore",
+		"/var/www/sugarcrm/include/utils.php",
+		"/var/www/sugarcrm/config.php",
+		"/var/www/sugarcrm/modules/Trackers/vardefs.php",
+		"/var/www/sugarcrm/install/performSetup.php",
+		"/var/www/sugarcrm/install/install_utils.php",
+		"/var/www/sugarcrm/modules/UserPreferences/vardefs.php",
+		"/var/www/sugarcrm/modules/Relationships/vardefs.php",
+		"/var/www/sugarcrm/modules/OAuthTokens/vardefs.php",
+		"/var/www/sugarcrm/modules/Documents/vardefs.php",
+		"/var/www/sugarcrm/modules/CampaignTrackers/vardefs.php",
+		"/var/www/sugarcrm/modules/Versions/vardefs.php",
+		"/var/www/sugarcrm/modules/vCals/vardefs.php",
+		"/var/www/sugarcrm/modules/Users/vardefs.php",
+		"/var/www/sugarcrm/modules/Tasks/vardefs.php",
+		"/var/www/sugarcrm/modules/SugarFeed/vardefs.php",
+		"/var/www/sugarcrm/modules/SchedulersJobs/vardefs.php",
+		"/var/www/sugarcrm/modules/Schedulers/vardefs.php",
+		"/var/www/sugarcrm/modules/SavedSearch/vardefs.php",
+		"/var/www/sugarcrm/modules/Roles/vardefs.php",
+		"/var/www/sugarcrm/modules/Releases/vardefs.php",
+		"/var/www/sugarcrm/modules/Prospects/vardefs.php",
+		"/var/www/sugarcrm/modules/ProspectLists/vardefs.php",
+		"/var/www/sugarcrm/modules/ProjectTask/vardefs.php",
+		"/var/www/sugarcrm/modules/Project/vardefs.php",
+		"/var/www/sugarcrm/modules/Opportunities/vardefs.php",
+		"/var/www/sugarcrm/modules/OAuthKeys/vardefs.php",
+		"/var/www/sugarcrm/modules/Notes/vardefs.php",
+		"/var/www/sugarcrm/modules/Emails/vardefs.php",
+		"/var/www/sugarcrm/modules/EmailTemplates/vardefs.php",
+		"/var/www/sugarcrm/modules/EmailText/vardefs.php",
+		"/var/www/sugarcrm/modules/Import/vardefs.php",
+		"/var/www/sugarcrm/modules/InboundEmail/vardefs.php",
+		"/var/www/sugarcrm/modules/Leads/vardefs.php",
+		"/var/www/sugarcrm/modules/Meetings/vardefs.php",
+		"/var/www/sugarcrm/modules/MergeRecords/vardefs.php",
+		"/var/www/sugarcrm/modules/Audit/vardefs.php",
+		"/var/www/sugarcrm/modules/ACLActions/vardefs.php",
+		"/var/www/sugarcrm/modules/Cases/vardefs.php",
+		"/var/www/sugarcrm/modules/ACLRoles/vardefs.php",
+		"/var/www/sugarcrm/modules/Accounts/vardefs.php",
+		"/var/www/sugarcrm/modules/Administration/vardefs.php",
+		"/var/www/sugarcrm/modules/EmailMarketing/vardefs.php",
+		"/var/www/sugarcrm/modules/Bugs/vardefs.php",
+		"/var/www/sugarcrm/modules/Calls/vardefs.php",
+		"/var/www/sugarcrm/modules/CampaignLog/vardefs.php",
+		"/var/www/sugarcrm/modules/Campaigns/vardefs.php",
+		"/var/www/sugarcrm/modules/Contacts/vardefs.php",
+		"/var/www/sugarcrm/modules/Currencies/vardefs.php",
+		"/var/www/sugarcrm/modules/DocumentRevisions/vardefs.php",
+		"/var/www/sugarcrm/modules/DynamicFields/vardefs.php",
+		"/var/www/sugarcrm/modules/EAPM/vardefs.php",
+		"/var/www/sugarcrm/modules/EmailMan/vardefs.php",
+		"/var/www/sugarcrm/include/SugarDateTime.php",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/dhondt/templates/dhondt/index.html",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/dhondt/views.py",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/dhondt/urls.py",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/gentelella/templates/gentelella/base_site.html",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/dhondt/static/dhondt/app.js",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/dhondt/static/dhondt/dhondt-calculator.js",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/electoral/models.py",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/electoral/admin.py",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/electo2019/urls.py",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/gentelella/templates/app/base_site.html",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/fixtures/elecciones2017.json",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/geopolitica/models.py",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/dhondt/migrations/0002_delete_partidos.py",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/electo2019/settings.py",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/dhondt/apps.py",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/electoral/app.py",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/geopolitica/app.py",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/dhondt/admin.py",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/dhondt/models.py",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/dhondt/templates/dhondt/base.html",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/gentelella/apps.py",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/gentelella/urls.py",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/electo2019/settings_secret.py",
+		"/home/fernando/.config/sublime-text-3/Packages/Pylinter/Pylinter.sublime-settings",
+		"/home/fernando/.config/sublime-text-3/Packages/Anaconda/Anaconda.sublime-settings",
+		"/home/fernando/workspace/comando electoral 2019/electo2019/.gitignore",
+		"/home/fernando/workspace/comando electoral 2019/javadhondt/javadhondt.html",
+		"/home/fernando/workspace/Portelli/dontable/dontable/settings_base.py",
+		"/home/fernando/workspace/Portelli/dontable/dontable/enviroments/tribunajoven/settings.py",
+		"/run/user/1000/gvfs/sftp:host=ocean.coopanisacate.com.ar/etc/icecast2/icecast.xml",
+		"/home/fernando/workspace/Portelli/dontable/contable/views.py",
+		"/home/fernando/workspace/Portelli/dontable/contable/models.py",
+		"/home/fernando/workspace/Portelli/dontable/dontable/enviroments/agua/settings.py",
+		"/home/fernando/workspace/Portelli/dontable/dontable/extras/create_database.sql",
+		"/home/fernando/workspace/Portelli/dontable/dontable/urls.py",
+		"/home/fernando/workspace/Portelli/dontable/requirements.txt",
+		"/home/fernando/workspace/Portelli/dontable/generic_views/static/ace_admin/assets/css/ace.css",
+		"/home/fernando/workspace/Portelli/dontable/cobranzas/views.py",
+		"/home/fernando/workspace/Portelli/dontable/dontable/templates/generic_views/base.html",
+		"/home/fernando/workspace/Portelli/dontable/dontable/enviroments/tribuna/settings.py",
+		"/run/user/1000/gvfs/sftp:host=ocean.coopanisacate.com.ar/etc/init.d/icecast2",
+		"/home/fernando/workspace/Portelli/dontable/dontable/enviroments/tribunajoven/wsgi.py",
+		"/home/fernando/workspace/Portelli/dontable/dontable/enviroments/tribuna/wsgi.py",
+		"/home/fernando/workspace/Portelli/dontable/dontable/enviroments/agua/wsgi.py",
+		"/home/fernando/workspace/tribunaperonista/organigrama/organigrama/settings.py",
+		"/home/fernando/workspace/Portelli/dontable/cobranzas/templatetags/cobranzas_extras.py",
+		"/home/fernando/workspace/Portelli/dontable/cobranzas/templates/cobranzas/movimientos_list.html",
+		"/home/fernando/workspace/Portelli/dontable/dontable/enviroments/entre_amigos/settings.py",
+		"/home/fernando/workspace/Portelli/dontable/contable_report/models.py",
+		"/home/fernando/workspace/Portelli/dontable/generic_views/templates/generic_views/menu/left_menu.html",
+		"/home/fernando/workspace/Portelli/dontable/generic_views/templatetags/render_menu.py",
+		"/home/fernando/workspace/Portelli/dontable/generic_views/menus.py",
+		"/home/fernando/workspace/Portelli/dontable/generic_views/views.py",
+		"/home/fernando/workspace/Portelli/dontable/generic_views/libs/generic_menu.py",
+		"/home/fernando/workspace/Portelli/dontable/generic_views/templates/generic_views/base.html",
+		"/home/fernando/workspace/Portelli/dontable/dontable/views.py",
+		"/home/fernando/workspace/Portelli/dontable/generic_views/manager.py",
+		"/home/fernando/workspace/Portelli/dontable/generic_views/templates/generic_views/menu/left_menu_li.html",
+		"/home/fernando/workspace/Portelli/dontable/generic_views/templates/generic_views/menu/left_menu_ul.html",
+		"/home/fernando/workspace/Portelli/dontable/generic_views/widgets.py",
+		"/home/fernando/workspace/temp/modificado.html",
+		"/home/fernando/workspace/temp/original.html",
+		"/home/fernando/workspace/Portelli/dontable/generic_views/menu.py",
+		"/home/fernando/workspace/Portelli/dontable/generic_views/templates/generic_views/menu_item.html",
+		"/home/fernando/workspace/Portelli/dontable/generic_views/generic_menu.py",
+		"/home/fernando/workspace/Portelli/dontable/contable_report/views.py",
+		"/home/fernando/workspace/Portelli/dontable/cobranzas/urls.py",
+		"/home/fernando/workspace/Portelli/dontable/contable_report/urls.py",
+		"/home/fernando/workspace/Portelli/dontable/contable_report/templates/contable_report/informe_show.html",
+		"/home/fernando/workspace/Portelli/dontable/generic_views/templates/generic_views/confirm_delete_view.html",
+		"/home/fernando/workspace/Portelli/dontable/contable_report/templates/contable_report/reporte_show.html",
+		"/home/fernando/workspace/Portelli/dontable/generic_views/templatetags/generic_views_tags.py",
+		"/home/fernando/workspace/Portelli/dontable/contable_report/templatetags/contable_report_renders.py"
+	],
+	"find":
+	{
+		"height": 39.0
+	},
+	"find_in_files":
+	{
+		"height": 101.0,
+		"where_history":
+		[
+			"/var/www/sugarcrm/install",
+			"/var/www/sugarcrm/modules",
+			"/var/www/sugarcrm",
+			"/home/fernando/workspace/Portelli/dontable",
+			"/home/fernando/workspace/Portelli/dontable/generic_views",
+			"/home/fernando/workspace/Portelli/dontable/generic_views/views.py",
+			"/home/fernando/workspace/Portelli/dontable/generic_views/templatetags",
+			"/home/fernando/workspace/Portelli/dontable/generic_views",
+			"/home/fernando/workspace/Portelli/dontable",
+			"",
+			"\"generic_views/base.html\"",
+			"/home/fernando/workspace/masterphone/masterphone_promo/accounts",
+			"/home/fernando/workspace/masterphone/masterphone_promo/generic_views/templates/generic_views",
+			"/home/fernando/workspace/masterphone/masterphone_promo",
+			"/home/fernando/workspace/masterphone/masterphone_promo/generic_views",
+			"/home/fernando/workspace/cooperativa-anisacate/InfoCoop_modif/InfoCoop/progs",
+			"/home/fernando/workspace/elalmanaquedemcfly/almanaque/economia",
+			"/home/fernando/workspace/comando electoral 2015/cjoven/cjoven/static/reveal.js"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"JSON_LOOSE_TYPE",
+			"bot",
+			"bottle",
+			"handleSugarConfig",
+			"bottle",
+			"\\$dictionary\\[.*\\] = ",
+			"$dictionary\\[.*\\] = ",
+			"dictionary\\[.*\\] =",
+			"/dictionary['.*'] =/g",
+			"\\$dictionary['.*'] =",
+			"$dictionary['.*'] =",
+			"$dictionary['MergeRecord'] =",
+			"$dictionary['",
+			"$dictionary['ACLAction']",
+			"null",
+			"setTime",
+			"date",
+			"cons",
+			"getVoting",
+			"alert",
+			"model",
+			"strip",
+			"/static/",
+			"elecciones2017.",
+			"Seccion",
+			"ZeroValue",
+			"parent",
+			"CuentaKeyField",
+			"save",
+			"clean",
+			"full_clean",
+			"save",
+			"cuentas",
+			"importar",
+			"mail",
+			"\"\"\"",
+			"seri",
+			"menu",
+			"MenuManager",
+			"sort",
+			" print ",
+			"print",
+			"types",
+			"level",
+			"left_menu",
+			"print",
+			"get_bre",
+			"oprint",
+			"bread",
+			"brea",
+			"print",
+			"context",
+			"get_saldo",
+			"cuentacac",
+			"cuentacache_set",
+			"cuentadata",
+			"__saldo__",
+			"parent",
+			"__getParentCodigo",
+			"full_clean",
+			"codigo_is_valid",
+			"NormalizeKey",
+			"\"base.html\"",
+			"send_deuda_mail",
+			"Exception",
+			"self",
+			"raise",
+			"cliente'",
+			"permi",
+			"base.html",
+			"url",
+			"in_line",
+			"inline",
+			"inli",
+			"modal",
+			"getFieldValue",
+			"\"base_scripts.html\"",
+			"basic_scripts.html",
+			"base_scripts.html",
+			"base_blank.html",
+			"base.html",
+			"offset",
+			"inline-bl",
+			"Numero",
+			"Sorteo",
+			"print",
+			"radio",
+			"option",
+			"fieldset",
+			"IVA",
+			"GrabarAuxiliar",
+			"proc GrabarAuxiliar",
+			"GrabarAuxiliar",
+			"EMIS",
+			"cesp",
+			"vEMISION",
+			"cesp",
+			"ley9147",
+			"vEMISION",
+			"muni",
+			"v1",
+			"emis",
+			"v21",
+			"tfa1",
+			"VENCIM",
+			"TAB_FACT",
+			"reparto",
+			"tab_fact",
+			"NUM_FACT",
+			"wind_get",
+			"NUM_FACT",
+			"FACT",
+			"F    1",
+			"vNum_fact",
+			"FACT",
+			"COIE",
+			"AHORRO",
+			"plan ",
+			"auxe",
+			"ersep",
+			"social",
+			"oim",
+			"CAL_IMPE",
+			"vIMPF",
+			"cosfi",
+			"FECHA",
+			"DNI",
+			"c:"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"this.model",
+			"{% static '/",
+			"electoral.",
+			"electoral",
+			"MenuManager.left_menu",
+			"saldo",
+			"\"generic_views/base.html\"",
+			"\"generic_views/base_scripts.html\"",
+			"generic_views/base_scripts.html",
+			"generic_views/base_blank.html",
+			"generic_views/base.html",
+			"_a_acreditar",
+			"penal",
+			"mesa.can_coordinar",
+			"mesas.can_coordinar",
+			"concepto",
+			"conceptos",
+			"Concepto",
+			"concepto",
+			"conceptos",
+			"#apuntes_input",
+			"-md-",
+			"POST"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 27.0
+	},
+	"input":
+	{
+		"height": 39.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 112.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.mdpopups":
+	{
+		"height": 0.0
+	},
+	"output.sftp":
+	{
+		"height": 100.0
+	},
+	"pinned_build_system": "",
+	"project": "sugarcrm.sublime-project",
+	"replace":
+	{
+		"height": 70.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"liqani",
+				"liqani.prg"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 355.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

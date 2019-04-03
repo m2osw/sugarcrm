@@ -70,6 +70,9 @@ class ContactsViewRetrieveEmail extends SugarView {
 				$data['email'] = '';
 			}
         }
+        if (!defined('JSON_LOOSE_TYPE')) {
+            define('JSON_LOOSE_TYPE', null);
+        }
 		$json = new JSON(JSON_LOOSE_TYPE);
 		echo $json->encode($data); 
  	}	

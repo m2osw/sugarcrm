@@ -111,6 +111,9 @@
 	$ss->assign('dropdown_name',(!empty($vardef['options']) ? $vardef['options'] : ''));
 
 	require_once('include/JSON.php');
+	if (!defined('JSON_LOOSE_TYPE')) {
+	    define('JSON_LOOSE_TYPE', null);
+	}
 	$json = new JSON(JSON_LOOSE_TYPE);
 	$ss->assign('app_list_strings', "''");
 	return $ss->fetch('modules/DynamicFields/templates/Fields/Forms/enum.tpl');

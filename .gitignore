@@ -6,3 +6,4 @@ cache/
 custom/
 upload/
 .htaccess
+*.sublime-proyect
