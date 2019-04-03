@@ -7,3 +7,4 @@ custom/
 upload/
 .htaccess
 *.sublime-proyect
+config.php
