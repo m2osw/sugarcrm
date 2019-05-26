@@ -34,6 +34,8 @@
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+$dictionary = (array) $dictionary;
+
 $dictionary['SugarFeed'] = array(
 	'table'=>'sugarfeed',
 	'audited'=>false,

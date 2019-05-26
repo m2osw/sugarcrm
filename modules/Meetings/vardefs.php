@@ -38,6 +38,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point: '.__FILE
 require_once "include/SugarObjects/VardefManager.php";
 require_once "include/SugarObjects/LanguageManager.php";
 
+$dictionary = (array) $dictionary;
+
 $dictionary['Meeting'] = array('table' => 'meetings',
 	'unified_search' => true, 'full_text_search' => true, 'unified_search_default_enabled' => true,
 	'comment' => 'Meeting activities'

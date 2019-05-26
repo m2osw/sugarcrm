@@ -1,0 +1,11 @@
+Mon Apr  1 12:04:25 2019 [19639][-none-][FATAL] Configuration variable date.timezone is not set, guessed timezone America/Sao_Paulo. Please set date.timezone="America/Sao_Paulo" in php.ini!
+Mon Apr  1 12:04:25 2019 [19639][-none-][FATAL] Configuration variable date.timezone is not set, guessed timezone America/Sao_Paulo. Please set date.timezone="America/Sao_Paulo" in php.ini!
+Mon Apr  1 12:04:34 2019 [28764][-none-][FATAL] Configuration variable date.timezone is not set, guessed timezone America/Sao_Paulo. Please set date.timezone="America/Sao_Paulo" in php.ini!
+Mon Apr  1 12:04:38 2019 [28764][-none-][FATAL] Configuration variable date.timezone is not set, guessed timezone America/Sao_Paulo. Please set date.timezone="America/Sao_Paulo" in php.ini!
+Mon Apr  1 12:07:10 2019 [19667][-none-][FATAL] Configuration variable date.timezone is not set, guessed timezone America/Sao_Paulo. Please set date.timezone="America/Sao_Paulo" in php.ini!
+Mon Apr  1 12:07:15 2019 [19667][1][FATAL] SugarPHPMailer encountered an error: An outgoing mail server is not configured to send emails. Please configure an outgoing mail server or select an outgoing mail server for the mail account that you are using in Settings >> Mail Account.
+Mon Apr  1 12:07:15 2019 [19667][1][FATAL] SugarPHPMailer encountered an error: SMTP connect() failed. https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting
+Mon Apr  1 12:07:18 2019 [19667][-none-][FATAL] Configuration variable date.timezone is not set, guessed timezone America/Sao_Paulo. Please set date.timezone="America/Sao_Paulo" in php.ini!
+Mon Apr  1 12:07:18 2019 [19667][-none-][FATAL] Configuration variable date.timezone is not set, guessed timezone America/Sao_Paulo. Please set date.timezone="America/Sao_Paulo" in php.ini!
+Mon Apr  1 12:07:57 2019 [28776][-none-][FATAL] Configuration variable date.timezone is not set, guessed timezone America/Sao_Paulo. Please set date.timezone="America/Sao_Paulo" in php.ini!
+Mon Apr  1 12:07:57 2019 [28777][-none-][FATAL] Configuration variable date.timezone is not set, guessed timezone America/Sao_Paulo. Please set date.timezone="America/Sao_Paulo" in php.ini!

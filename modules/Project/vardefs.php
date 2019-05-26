@@ -36,7 +36,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  ********************************************************************************/
 
 
-
+$dictionary = (array) $dictionary;
 
 $dictionary['Project'] = array(
 	'table' => 'project',

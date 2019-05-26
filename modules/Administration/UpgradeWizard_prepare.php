@@ -41,6 +41,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
 
 require_once('modules/Administration/UpgradeWizardCommon.php');
 
+// global $mod_strings;
+error_log(serialize($mod_strings));
 
 unset($_SESSION['rebuild_relationships']);
 unset($_SESSION['rebuild_extensions']);
@@ -164,7 +166,7 @@ switch( $install_type ){
 	case "full":
 	case "patch":
 		if( !is_writable( "config.php" ) ){
-			die( $mod_strings['ERR_UW_CONFIG'] );
+			die( $mod_strings['ERR_UW_CONFIG_FAILED'] );
 		}
 		break;
 	case "theme":
@@ -192,7 +194,7 @@ switch( $install_type ){
 		$hidden_fields .= "<input type=hidden name=\"new_lang_desc\" value=\"$new_lang_desc\"/>";
 
 		if( !is_writable( "config.php" ) ){
-			die( $mod_strings['ERR_UW_CONFIG'] );
+			die( $mod_strings['ERR_UW_CONFIG_FAILED'] );
 		}
 		break;
 	case "module":

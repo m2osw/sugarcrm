@@ -62,6 +62,9 @@ class Tree {
   var $_params=array();
   				   
   function Tree($name) {
+  	    if (!defined('JSON_LOOSE_TYPE')) {
+  	        define('JSON_LOOSE_TYPE', null);
+  	    }
 		$this->_name=$name;
 		$this->json=new JSON(JSON_LOOSE_TYPE);  
   }

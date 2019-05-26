@@ -154,6 +154,9 @@ if (!empty ($_REQUEST['return_id'])) {
 
 $temp_field_array = $focus->merge_bean->field_defs;
 $field_count = 1;
+if (!defined('JSON_LOOSE_TYPE')) {
+    define('JSON_LOOSE_TYPE', null);
+}
 $json = new JSON(JSON_LOOSE_TYPE);
 $diff_field_count=0;
 foreach ($temp_field_array as $field_array) {

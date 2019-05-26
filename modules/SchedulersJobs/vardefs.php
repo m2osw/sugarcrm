@@ -35,6 +35,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+$dictionary = (array) $dictionary;
 
 $dictionary['SchedulersJob'] = array('table' => 'job_queue',
     'comment' => 'Job queue keeps the list of the jobs executed by this instance',

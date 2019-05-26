@@ -738,6 +738,8 @@ function handleSugarConfig() {
     global $sugar_config;
     global $setup_site_log_level;
 
+    $bottle=[];
+    
     echo "<b>{$mod_strings['LBL_PERFORM_CONFIG_PHP']} (config.php)</b><br>";
     ///////////////////////////////////////////////////////////////////////////////
     ////    $sugar_config SETTINGS

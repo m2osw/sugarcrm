@@ -35,6 +35,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+$GLOBALS['dictionary'] = (array) $GLOBALS['dictionary'];
 
 $GLOBALS['dictionary']['UserPreference'] = array('table' => 'user_preferences',
 'fields' => array (
@@ -108,4 +109,5 @@ $GLOBALS['dictionary']['UserPreference'] = array('table' => 'user_preferences',
 );
 
 // cn: bug 12036 - $dictionary['x'] for SugarBean::createRelationshipMeta() from upgrades
+$dictionary = (array) $dictionary;
 $dictionary['UserPreference'] = $GLOBALS['dictionary']['UserPreference'];
