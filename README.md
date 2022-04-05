@@ -1,4 +1,15 @@
 
+# WARNING
+
+I'm not working on this project anymore.
+
+It has at least one security issue with the phpunit, which requires version
+3.7.\*. That includes an issue with an `eval()` which gives attackers a
+way to execute arbitrary code on your server.
+
+You need at least version 3.8.18 of phpunit to be safe. A distribution
+includes all the code, so it is likely that it would get included.
+
 # SugarCRM CE 6.5.x
 
 This source is a fork of SugarCRM CE 6.5.x that works (mostly) with PHP 7
@@ -48,9 +59,8 @@ can see the issue details here:
 
 https://github.com/m2osw/sugarcrm/issues/1
 
-# Help Wanted
+# Control Project
 
-If you are a programmer and want to help, I'll be happy to give you access.
-I still don't understand (or maybe I missed it?) why there wasn't yet a
-fork of SugarCRM that works in PHP 7.
+If you are a programmer and want to take over, I'll be happy to give you
+access.
 
