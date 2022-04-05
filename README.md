@@ -7,8 +7,9 @@ It has at least one security issue with the phpunit, which requires version
 3.7.\*. That includes an issue with an `eval()` which gives attackers a
 way to execute arbitrary code on your server.
 
-You need at least version 3.8.18 of phpunit to be safe. A distribution
-includes all the code, so it is likely that it would get included.
+You need at least version 4.8.28 of phpunit to be safe. A distribution
+includes all the code, so it is likely that it would get included, although
+I'm not too sure how phpunit gets used. You may still be safe.
 
 # SugarCRM CE 6.5.x
 
