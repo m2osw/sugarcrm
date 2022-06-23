@@ -41,6 +41,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc. All Rights
  * Reserved. Contributor(s): ______________________________________..
  * *******************************************************************************/
+$dictionary = (array) $dictionary;
 
 $dictionary['MergeRecord'] = array(
 	'table'=>'does_not_exist',

@@ -35,6 +35,8 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'.__FILE__
  * "Powered by SugarCRM".
  ********************************************************************************/
 
+$dictionary = (array) $dictionary;
+
 $dictionary['OAuthKey'] = array('table' => 'oauth_consumer',
 	'comment' => 'OAuth consumer keys',
 	'audited'=>false,

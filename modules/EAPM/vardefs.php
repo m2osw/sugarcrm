@@ -33,6 +33,7 @@
  * technical reasons, the Appropriate Legal Notices must display the words
  * "Powered by SugarCRM".
  ********************************************************************************/
+$dictionary = (array) $dictionary;
 
 $dictionary['EAPM'] = array(
 	'table'=>'eapm',

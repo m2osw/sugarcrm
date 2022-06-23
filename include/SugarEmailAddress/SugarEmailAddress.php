@@ -878,6 +878,9 @@ class SugarEmailAddress extends SugarBean
         }
 
         if(!empty($prefillDataArr)) {
+            if (!defined('JSON_LOOSE_TYPE')) {
+                define('JSON_LOOSE_TYPE', null);
+            }
             $json = new JSON(JSON_LOOSE_TYPE);
             $prefillData = $json->encode($prefillDataArr);
             $prefill = !empty($prefillDataArr) ? 'true' : 'false';
